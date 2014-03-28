@@ -8,7 +8,7 @@ Player = Entity.extend(function(x,y,name,owner){
 	this.friction = 0.2;
 	this.facing = 0;
 	this.maxSpd = 5;
-	
+
 	this.healCooldown = 200, this.healTimer = 0, this.healRate = 0.025;
 
 	this.type = PLAYER;

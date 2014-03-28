@@ -91,6 +91,18 @@ function init() {
 	}
 	registerLight(pLight);
 
+	var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",400,1);
+	rLight.update = function() {
+		var x = mouseX+viewX, y = mouseY+viewY;
+		var d = pDist(player.x,player.y,x,y);
+		//console.log(d);
+		this.brightness = Math.max(0,Math.min(1,d/50)*(1-d/400));
+		this.size = ((d+100)/300)*400;
+	}
+	rLight.getX = function(){this.update(); return mouseX+viewX;}
+	rLight.getY = function(){return mouseY+viewY;}
+	registerLight(rLight);
+
 	//start music
 	//setTimeout(startPlaylist,4900);
 
@@ -263,8 +275,13 @@ function include(filename,loadImmediately) {
 	  js.onload = function(){
 	  	scriptsLoaded++;
 	  	
+	  	var el = document.getElementById("loading-div");
+	  	el.innerHTML = "loading script "+scriptsLoaded+":";
+
 	  	if (scriptLoadQueue.length>0) {
-  			include(scriptLoadQueue.shift(),true);
+	  		var cscript = scriptLoadQueue.shift();
+  			include(cscript,true);
+  			el.innerHTML+="<br>"+cscript;
   		}
   		else {
   			isScriptLoading = false;

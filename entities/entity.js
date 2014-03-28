@@ -7,6 +7,9 @@ Entity = klass(function (x,y) {
 	this.life = 100;
 	this.maxlife = this.life;
 
+	this.width = tileWidth;
+	this.height = tileHeight;
+
 	this.dropchance = 0.1;
 
 	this.type = ENTITY;
@@ -135,7 +138,7 @@ Entity = klass(function (x,y) {
 
 			ctx.globalAlpha = 1;
 		}
-		ctx.drawImage(this.image,x-tileWidth/2,y-tileHeight/2,tileWidth,tileHeight);
+		ctx.drawImage(this.image,x-this.width/2,y-this.height/2,this.width,this.height);
 	},
 	destroy: function() {
 		/*entities.splice(this.arrIndex,1);

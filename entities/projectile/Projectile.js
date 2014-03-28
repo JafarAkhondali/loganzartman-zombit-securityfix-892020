@@ -21,7 +21,7 @@ Projectile = Entity.extend(function(x,y,sender){
     	for (var ec = 0; ec<entityManager.length(); ec++) {
 	    	ent = entityManager.get(ec);
 			if (ent instanceof Entity) {
-				if (ent!=senderObj && ent!=this && !(ent instanceof Projectile)) {
+				if (ent!=senderObj && ent!=this && !(ent instanceof Projectile) && !(ent instanceof DroppedItem)) {
 					if (collisionLine2(ent.x,ent.y,ent.width*0.5,x1,y1,x2,y2,false)) {
 						this.collide(ent);
 					}

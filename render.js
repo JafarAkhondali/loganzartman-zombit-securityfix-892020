@@ -274,8 +274,8 @@ function drawgameLevel(mode) {
   //loop through portion of gameLevel within view
   for (var x=~~(viewX/tileWidth); x<~~((viewX+viewWidth)/tileWidth)+1; x++) {
     for (var y=~~(viewY/tileHeight); y<~~((viewY+viewHeight)/tileHeight)+1; y++) {
-      var sx = x*tileWidth-viewX; //pixel x
-      var sy = y*tileHeight-viewY; //pixel y
+      var sx = ~~(x*tileWidth-viewX); //pixel x
+      var sy = ~~(y*tileHeight-viewY); //pixel y
 
       var tile = gameLevel.getTile(x,y); //get the tile at this position
 	  if (!mode || mode==0) { //normal rendering
@@ -291,7 +291,7 @@ function drawgameLevel(mode) {
 			var tr = gameLevel.getTile(x+1,y);
 			var tb = gameLevel.getTile(x,y+1);
 
-			var offset = (imgBorderTop.width-tileWidth)/2;
+			var offset = ~~((imgBorderTop.width-tileWidth)/2);
 			if (tl && tl.id != tile.id) {ctx.drawImage(imgBorderLeft, sx-offset, sy-offset);}
 			if (tt && tt.id != tile.id) {ctx.drawImage(imgBorderTop, sx-offset, sy-offset);}
 			if (tr && tr.id != tile.id) {ctx.drawImage(imgBorderRight, sx-offset, sy-offset);}
@@ -315,7 +315,7 @@ function drawgameLevel(mode) {
 			var tr = gameLevel.getTile(x+1,y);
 			var tb = gameLevel.getTile(x,y+1);
 
-			var offset = (imgBlockShadow.width-tileWidth)/2;
+			var offset = ~~((imgBlockShadow.width-tileWidth)/2);
 			if (tl.id != tile.id || tt.id != tile.id || tr.id != tile.id || tb.id != tile.id) {ctx.drawImage(imgBlockShadow, sx-offset, sy-offset);}
 		}
 	  }

@@ -42,6 +42,18 @@ window.requestAnimFrame = (function(){
           };
 })();
 
+window.addEventListener("resize", function(){
+    screenWidth = window.innerWidth;
+	screenHeight = window.innerHeight;
+	defaultScreenWidth = screenWidth;
+	defaultScreenHeight = screenHeight;
+	viewWidth = screenWidth/outputScale;
+	viewHeight = screenHeight/outputScale;
+    
+    initLight();
+	reinitCanvases();
+}, false);
+
 function init() {
 	preload();
     //create container to center canvas
@@ -174,9 +186,9 @@ function loadScripts() {
 }
 
 function reinitCanvases() {
-        try {canvContainer.removeChild(canvas);}
-        catch (e) {}
-    
+    try {canvContainer.removeChild(canvas);}
+    catch (e) {}
+
 	//create canvas element
 	canvas = document.createElement("canvas");
 	canvas.width = screenWidth;
@@ -214,7 +226,7 @@ function reinitCanvases() {
 	dout = oid.data;
 	for (var i=3; i<dout.length; i+=4) {dout[i] = 255;} //set to opaque
         
-        addListeners(); //add input listeners
+    addListeners(); //add input listeners
 }
 
 var imgOverlay, imgEntityGeneric, imgPlayer;

@@ -51,11 +51,11 @@ var LevelFactory = {
 	    return level;
 	},
 
-	addBlockNoise: function(level,w,h,type,frequency) {
-		for (var x=0; x<w; x++) {
-			for (var y=0; y<h; y++) {
+	addBlockNoise: function(level,x,y,x2,y2,type,frequency) {
+		for (var xx=x; xx<x2; xx++) {
+			for (var yy=y; yy<y2; yy++) {
 				if (Math.random()<frequency) {
-					level.setTile(x,y,new Tile(type,x,y));
+					level.setTile(new Tile(type,xx,yy),xx,yy);
 				}
 			}
 		}

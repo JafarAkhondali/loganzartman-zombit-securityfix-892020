@@ -8,7 +8,7 @@
     },
     "manifest_version": 2,
     "name": "Zombit",
-    "version": "111",
+    "version": "117",
     "description": "",
     "icons": {
         "16": "res/icon/icon16.png",

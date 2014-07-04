@@ -59,6 +59,8 @@ imgBorderBottom.src = "res/tile/border-bottom.png";
 var imgBlockShadow = new Image();
 imgBlockShadow.src = "res/tile/shadow.png";
 
+var imgTitle = new Image();
+imgTitle.src = "res/title.png";
 var imgOverlay = new Image();
 imgOverlay.src = "res/overlay.png";
 var imgScreenBlood = new Image();

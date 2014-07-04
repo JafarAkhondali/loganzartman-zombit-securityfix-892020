@@ -18,6 +18,10 @@ function kd(e) { //keydown
 			gamePaused = !gamePaused;
 		}
 
+		if (e.keyCode==VK_X && gamePaused && dmode===GAME) {
+			endGame();
+		}
+
 		if (e.keyCode==VK_F11) {
 			if (!window.screenTop && !window.screenLeft) {
 				fullscreen(true);
@@ -105,6 +109,17 @@ function md(e) {
 		mpChatOpen = false;
 		document.body.removeChild(mpChatInput);
 	}
+
+	if (dmode === MENU) {
+		if (uiPlayState === UI_HOVER && mouseY>120 && mouseY<140 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40) {
+			uiPlayState = UI_UP;
+			restartGame();
+		}
+		if (uiHelpState === UI_HOVER && mouseY>150 && mouseY<170 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40) {
+			uiHelpState = UI_UP;
+			showGameHelp();
+		}
+	}
 	
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, btn: 1, state: true});}
 }
@@ -133,6 +148,11 @@ function mp(e) {
 	var mcy = posy*(viewHeight/screenHeight);
 	mouseX = mcx;
 	mouseY = mcy;
+
+	if (dmode === MENU) {
+		uiPlayState = (mouseY>120 && mouseY<140 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40)?UI_HOVER:UI_UP;
+		uiHelpState = (mouseY>150 && mouseY<170 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40)?UI_HOVER:UI_UP;
+	}
 	
 	//if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, x: mouseX, y: mouseY});}
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, facing: player.facing});}
@@ -168,10 +188,14 @@ function fullscreen(on) {
 }
 
 var modalsOpen = 0;
-function makeModal(content,okcallback) {
+function makeModal(content,okcallback,width,height) {
 	var modal = document.createElement("div");
 	modal.className = "modal";
 	modal.innerHTML = content;
+	modal.style.width = ~~(width||500)+"px";
+	modal.style.height = ~~(height||200)+"px";
+	modal.style.marginLeft = ~~(-width/2||-250)+"px";
+	modal.style.marginTop = ~~(-height/2||-100)+"px";
 
 	var okBtn = document.createElement("div");
 	okBtn.className = "modalButton";
@@ -187,14 +211,14 @@ function makeModal(content,okcallback) {
 	return modal;
 }
 
-function showAlert(text,callback) {
+function showAlert(text,callback,width,height) {
 	var modal = makeModal(text, function(){
 		callback(true);
 		modal.destroy();
-	});
+	},width,height);
 }
 
-function showPrompt(text,callback) {
+function showPrompt(text,callback,width,height) {
 	var inpt = document.createElement("input");
 	inpt.className = "modalInput";
 	inpt.type = "text";
@@ -202,7 +226,7 @@ function showPrompt(text,callback) {
 	var modal = makeModal(text+"<br>", function() {
 		callback(inpt.value);
 		modal.destroy();
-	});
+	},width,height);
 	modal.appendChild(inpt);
 
 	inpt.focus();

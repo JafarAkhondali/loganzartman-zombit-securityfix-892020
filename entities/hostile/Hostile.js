@@ -8,6 +8,12 @@ Hostile = Entity.extend(function(x,y,vr){
 	this.pointValue = 10;
 
 	this.type = HOSTILE;
+
+	var dx = player.x-this.x;
+	var dy = player.y-this.y;
+	if (dx<viewWidth/2||dy<viewHeight/2) {
+		this.destroy();
+	}
 })
 .methods({
 	mpFrameUpdate: function() { //don't update automagically

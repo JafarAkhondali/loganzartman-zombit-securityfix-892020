@@ -103,17 +103,7 @@ Player = Entity.extend(function(x,y,name,owner){
 		this.healTimer = this.healCooldown;
 	},
 	die: function() {
-		gameScore = 0;
-		this.life = 100;
-		this.x = 50;
-		this.y = 50;
-		sndDie.play();
-		for (var ec = 0; ec<entityManager.length(); ec++) {
-	    	var ent = entityManager.get(ec);
-			if (ent instanceof Hostile) {
-				ent.destroy();
-			}
-		}
+		endGame();
 	},
 
 	/*

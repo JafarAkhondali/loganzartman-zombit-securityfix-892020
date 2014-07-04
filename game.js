@@ -9,7 +9,7 @@ var targetFPS = 60;
 var fps = targetFPS;
 var lt = new Date().getTime(); //used for timing
 var gameLevel = null; //currently loaded level
-var gamePaused = false;
+var gamePaused = true;
 
 var tileWidth = 16; //pixel width of a tile
 var tileHeight = 16;
@@ -18,6 +18,7 @@ var tileHeight = 16;
 var items = []; //stores all items (does this need to exist?)
 
 var gameScore = 0; //score...
+var gameTime = 0;
 
 //settings
 var enableShaders = false; //this works, but it's probably too slow
@@ -49,10 +50,13 @@ function init() {
         
 	reinitCanvases();
 	
+	//switch to title rendering mode in 5 sec
+	var introTimeout = setTimeout(function(){dmode=MENU;},5000);
+
 	//parse URL flags
 	var loc = document.location.href;
 	uArgs = loc.lastIndexOf("#")>loc.lastIndexOf("/")?loc.substring(loc.lastIndexOf("#")+1).split("&"):"";
-	if (uArgs.indexOf("nointro")>=0) {dmode = GAME;}
+	if (uArgs.indexOf("nointro")>=0) {dmode = MENU; clearTimeout(introTimeout)}
 	if (uArgs.indexOf("nomusic")<0) {/*setTimeout(startPlaylist,4900);*/}
 
 	//initialize drawing buffers for lighting
@@ -61,21 +65,24 @@ function init() {
 	loadAudio(); //load audio
 
 	mpMode = CLIENT; //this is not a sever.  this is for shared code
-
-	//create player
-	player = new Player(50,50,"Player");
-	player.inv.push(new Pistol());
-	player.inv.push(new AssaultRifle());
-	player.inv.push(new Typhoon());
-	player.inv.push(new Gauss());
-	player.inv.push(new WoodenBat());
-	player.inv.push(new GlowstickGun());
-	player.inv.push(new RandomGunTester(0.9));
-
-	startGame(); //generate and populate a level
 	
 	//set interval for processing
 	timer = setInterval(step,1000/targetFPS);
+
+	//start music
+	//setTimeout(startPlaylist,4900);
+
+	//start rendering
+	requestAnimFrame(render);
+}
+
+function restartGame() {
+	player = new Player(~~(180*tileWidth*0.5),~~(180*tileWidth*0.5),"Player");
+	player.inv.push(new Pistol());
+	player.inv.push(new AssaultRifle());
+	player.inv.push(new WoodenBat());
+
+	startGame(); //generate and populate a level
 
 	//set up some light
 	var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",200,1);
@@ -103,16 +110,49 @@ function init() {
 	rLight.getY = function(){return mouseY+viewY;}
 	registerLight(rLight);
 
-	//start music
-	//setTimeout(startPlaylist,4900);
+	dmode = GAME;
+	gamePaused = false;
+	if (typeof gui === "undefined") {createGUI();}
+}
 
-	//switch to game rendering mode in 5 sec
-	setTimeout(function(){dmode=GAME;},5000);
+function endGame() {
+	showScorescreen();
+	cleanupGame();
+	sndDie.play();
+}
 
-	//start rendering
-	requestAnimFrame(render);
-	
-	createGUI();
+function cleanupGame() {
+	gameTime = 0;
+	gameScore = 0;
+	dmode = MENU;
+	gamePaused = true;
+
+	clearInterval(spawnInterval);
+	lightArray = [];
+	entityManager.clearAll();
+}
+
+function showGameHelp() {
+	showAlert(
+		'<span style="color:blue; font-size: 100px;">HELP</span><br>'+
+		'<span style="font-size: 20px;">Currently, Zombit is a roguelike shooter where the goal is to score as many points as possible.  '+
+		'As of right now, there is no endgame.  Just kill zombies, find loot, and collect weapons.<br><br>'+
+		'<span style="font-size: 40px;">Controls:</span>'+
+		'<span style="font-size: 18px;"><br>'+
+		'<b>Movement:</b> WASD<br>'+
+		'<b>Shoot/Use:</b> Left mouse<br>'+
+		'<b>Switch item:</b> Scroll/Number keys<br>'+
+		'<b>Drop item:</b> Q<br>'+
+		'<b>Pause Game:</b> ESC<br>'+
+		'</span></span>'
+	,function(){},window.innerWidth*(3/4),window.innerHeight*(3/4));
+}
+
+function showScorescreen() {
+	showAlert(
+		'<span style="color:red; font-size: 100px;">YOU DIED.</span><br>'+
+		'<span style="font-size: 40px;">You acquired <span style="color: green;">'+gameScore+'</span> points before being slain.</span><br>'
+	,function(){},window.innerWidth*(3/4),window.innerHeight*(3/4));
 }
 
 function loadScripts() {
@@ -202,6 +242,7 @@ performance.now = (function() {
 })();
 prevtime = performance.now();
 function step() {
+	gameTime++;
 	time = performance.now();
 	//console.log("d "+(time-prevtime));
 	tdelta = (time-prevtime)/(1000/targetFPS);
@@ -213,22 +254,16 @@ function step() {
 	lastLoop = thisLoop;
 	fps = (1000/frameTime).toFixed(1);
 	
-	processStep(tdelta);
+	if (dmode === GAME) {
+		processStep(tdelta);
 
-	// Switch sprites on key events (for player)
-	/*if (keys[VK_LEFT]) {viewX-=3;}
-	if (keys[VK_RIGHT]) {viewX+=3;}
-	if (keys[VK_UP]) {viewY-=3;}
-	if (keys[VK_DOWN]) {viewY+=3;}*/
+		//clip viewport position
+		if (viewX<0) {viewX = 0;}
+		if (viewX>gameLevel.getWidth()*tileWidth-viewWidth) {viewX = gameLevel.getWidth()*tileWidth-viewWidth;}
+		if (viewY<0) {viewY = 0;}
+		if (viewY>gameLevel.getHeight()*tileHeight-viewHeight) {viewY = gameLevel.getHeight()*tileHeight-viewHeight;}
+	}
 
-	//clip viewport position
-	if (viewX<0) {viewX = 0;}
-	if (viewX>gameLevel.getWidth()*tileWidth-viewWidth) {viewX = gameLevel.getWidth()*tileWidth-viewWidth;}
-	if (viewY<0) {viewY = 0;}
-	if (viewY>gameLevel.getHeight()*tileHeight-viewHeight) {viewY = gameLevel.getHeight()*tileHeight-viewHeight;}
-
-	//now called by animation frame
-	//render();
 	prevtime = time;
 }
 

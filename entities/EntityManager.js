@@ -61,11 +61,79 @@ BLOODSPLAT = 1410;
 /**
  * Stores and manages all entities.
  */
-EntityManager = function() {
+EntityManager = function(level) {
+	this.level = level;
 	this.entities = []; //stores entities
 	this.freespace = []; //records indexes that are available
 	this.types = []; //types of entities
+	this.grid = null;
+	this.buildGrid();
 }
+
+EntityManager.GRID_CELL_SIZE = 16;
+/**
+ * Builds the localization grid.
+ * This grid is used to access spatially-close entities more efficiently.
+ */
+EntityManager.prototype.buildGrid = function (level) {
+	this.grid = [];
+	level = level || this.level;
+	var sizeWidth = Math.ceil(level.getWidth() / EntityManager.GRID_CELL_SIZE),
+		sizeHeight = Math.ceil(level.getHeight() / EntityManager.GRID_CELL_SIZE);
+	for (var x=0; x<sizeWidth; x++) {
+		this.grid[x] = [];
+		for (var y=0; y<sizeHeight; y++) {
+			this.grid[x][y] = [];
+		}
+	}
+};
+
+/**
+ * Gets the localization grid location of an entity.
+ */
+EntityManager.prototype.getGridLoc = function (entity) {
+	var tx = Math.floor(entity.x / tileWidth),
+		ty = Math.floor(entity.y / tileHeight);
+	return {
+		x: Math.round(tx / EntityManager.GRID_CELL_SIZE),
+		y: Math.round(ty / EntityManager.GRID_CELL_SIZE)
+	};
+};
+
+EntityManager.prototype.getNearby = function(entity, range) {
+	range = range || 0;
+	var pos = this.getGridLoc(entity);
+	if (range === 0) return this.grid[pos.x][pos.y];
+	else {
+		var list = [];
+		for (var xo = -range; xo <= range && pos.x+xo < this.grid.length && pos.x+xo >= 0; xo++) {
+			for (var yo = -range; yo <= range && pos.y+yo < this.grid[0].length && pos.y+yo >= 0; yo++) {
+				list = list.concat(this.grid[pos.x+xo][pos.y+yo]);
+			}
+		}
+		return list;
+	}
+}
+
+/**
+ * Adds an entity to the localization grid (performed once per step)
+ */
+EntityManager.prototype.localize = function (entity) {
+	var gridPos = this.getGridLoc(entity);
+	this.grid[gridPos.x][gridPos.y].push(entity);
+};
+
+/**
+ * Performs all necessary actions to complete a step.
+ * Includes relocalization.
+ */
+EntityManager.prototype.step = function () {
+	this.buildGrid();
+	for (var i=this.entities.length-1; i>=0; i--) {
+		var e = this.entities[i];
+		if (e instanceof Entity) this.localize(e);
+	}
+};
 
 /**
  * Register a new entity.  This should be performed upon the creation of a new entity
@@ -82,6 +150,7 @@ EntityManager.prototype.register = function(entity) {
 			ind = this.entities.length;
 			this.entities[ind] = entity;
 		}
+		this.localize(entity);
 		return ind;
 	}
 }
@@ -96,7 +165,7 @@ EntityManager.prototype.unregister = function(entity) {
 	if (ind>=0) {
 		if (this.freespace.indexOf(ind)<0) {this.freespace.push(ind);}
 		this.entities[ind] = undefined;
-	} 
+	}
 }
 
 /**

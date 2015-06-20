@@ -1,10 +1,7 @@
 //Portion of initialization code shared between client and server
 
-preload = function() {
-	entityManager = new EntityManager();
-}
-
 spawnInterval = null;
+var playerPathfinder = null;
 startGame = function() {
 	//generate gameLevel
 	gameLevel = LevelFactory.makeEmptyRoom(180,180);
@@ -31,9 +28,20 @@ startGame = function() {
 		~~(gameLevel.getWidth()/2)+10,
 		~~(gameLevel.getHeight()/2)+10,
 	FLOOR,0.2);
-	
+
 	//populate the level with light fixtures
 	if (mpMode==CLIENT) {addLightsToLevel(gameLevel,196,"rgb(175,161,152)",512,0.4,0.3,1);}
+
+	entityManager = new EntityManager(gameLevel);
+
+	if (mpMode === CLIENT) {
+		player = new Player(~~(180*tileWidth*0.5),~~(180*tileWidth*0.5),"Player");
+		player.inv.push(new Pistol());
+		player.inv.push(new AssaultRifle());
+		player.inv.push(new WoodenBat());
+	}
+
+	playerPathfinder = new Pathfinder(gameLevel, player);
 
 	//spawn some zombies
 	for (var i=0; i<15; i++) {
@@ -44,12 +52,13 @@ startGame = function() {
 			ta = tileAt(tx,ty);
 			if (ta!=null && ta.id==FLOOR) {break;}
 		} while (true);
-		new Zombie(tx*tileWidth+tileWidth/2, ty*tileHeight+tileHeight/2, 80);
+		var zed = new Zombie(tx*tileWidth+tileWidth/2, ty*tileHeight+tileHeight/2, 80);
+		zed.pathfinder = playerPathfinder;
 	}
 
 	//tell zombies to spawn continuously
 	spawnInterval = setInterval(function(){
-		if (Zombie.count<120) {
+		if (Zombie.count<30) {
 		for (var i=0; i<1; i++) {
 			var tx,ty,ta;
 			do {
@@ -58,7 +67,8 @@ startGame = function() {
 				ta = tileAt(tx,ty);
 				if (ta!=null && ta.id==FLOOR) {break;}
 			} while (true);
-			new Zombie(tx*tileWidth+tileWidth/2, ty*tileHeight+tileHeight/2, 80);
+			var zed = new Zombie(tx*tileWidth+tileWidth/2, ty*tileHeight+tileHeight/2, 80);
+			zed.pathfinder = playerPathfinder;
 		}}
 	},50);
 
@@ -79,6 +89,8 @@ startGame = function() {
 
 processStep = function(tdelta) {
 	if (!gamePaused) {
+		playerPathfinder.recalculate();
+
 		//process entities
 		for (var ec in entityManager.entities) {
 			var ent = entityManager.get(ec);

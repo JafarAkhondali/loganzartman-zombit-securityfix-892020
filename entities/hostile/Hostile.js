@@ -8,11 +8,14 @@ Hostile = Entity.extend(function(x,y,vr){
 	this.pointValue = 10;
 
 	this.type = HOSTILE;
+	this.pathfinder = null;
 
-	var dx = player.x-this.x;
-	var dy = player.y-this.y;
-	if (dx<viewWidth/2||dy<viewHeight/2) {
-		this.destroy();
+	if (typeof player !== "undefined") {
+		var dx = player.x-this.x;
+		var dy = player.y-this.y;
+		if (dx<viewWidth/2||dy<viewHeight/2) {
+			this.destroy();
+		}
 	}
 })
 .methods({
@@ -24,29 +27,29 @@ Hostile = Entity.extend(function(x,y,vr){
 		if (this.target>=0) {this.target = getEntityReference(this.target);}
 
 		if (this.target==T_SEARCH) { //need to find a target (the player for now)
-			//find the nearest target
-			var minDist=Infinity,targ=null;
-			for (var i=0; i<entityManager.length(); i++) {
-				var ent = entityManager.get(i);
-				if (ent instanceof Player) {
-					var dist = pDist(this.x,this.y,ent.x,ent.y);
-					if (dist<minDist) {
-						minDist = dist;
-						targ = ent;
-					}
-				}
-			}
-			if (targ!=null) {
-				if (pDist(this.x,this.y,targ.x,targ.y)<this.visionRadius) { //see if in range
-					this.target = targ;
-					this.mpUpdate();
+			var nearby = this.getNearby(2);
+			if (nearby.indexOf(player) >= 0) {
+				//todo: raycast for line of sight
+				var dist = pDist(this.x, this.y, player.x, player.y);
+				if (dist < this.visionRadius) {
+					this.target = player;
 				}
 			}
 		}
 		else {
 			var targ = getEntityReference(this.target);
 			var targetDist = pDist(this.x,this.y,targ.x,targ.y);
-			var targetDir = pDir(this.x,this.y,targ.x,targ.y);
+			var targetDir;
+			if (this.pathfinder !== null) {
+				var targetDx = this.pathfinder.getBestDirection(
+					Math.floor(this.x/tileWidth),
+					Math.floor(this.y/tileHeight)
+				);
+				targetDir = Math.atan2(targetDx[1], targetDx[0]);
+			}
+			else {
+				targetDir = pDir(this.x,this.y,targ.x,targ.y);
+			}
 			this.facing = targetDir;
 
 			if (targetDist>this.visionRadius*2) { //see if too far to follow
@@ -76,8 +79,8 @@ Hostile = Entity.extend(function(x,y,vr){
 		//can be overriden to provide custom attack behavior
 	},
 
-	die: function() {
-		this.supr();
+	die: function(killer) {
+		this.supr(killer);
 		if (mpMode != SERVER) {gameScore+=this.pointValue;}
 		sndSplat.random().play(pDist(this.x,this.y,player.x,player.y));
 	}

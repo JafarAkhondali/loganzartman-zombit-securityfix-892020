@@ -12,6 +12,9 @@ Zombie = Hostile.extend(function(x,y,vr){
 	this.pointValue = Math.round(0.5*this.life);
 	this.inv.push(new ZombieAttack());
 
+	if (typeof playerPathfinder !== "undefined")
+		this.pathfinder = playerPathfinder;
+
 	this.type = ZOMBIE;
 	this.emitConstruct();
 })
@@ -35,11 +38,11 @@ Zombie = Hostile.extend(function(x,y,vr){
 	doDrops: function() {
 		var gun = new RandomGun((this.maxlife/ZOMBIEMAXLIFE)*0.7);
 		new DroppedItem(this.x,this.y,gun);
-		
+
 	},
 
-	die: function() {
-		this.supr();
+	die: function(killer) {
+		this.supr(killer);
 	},
 
 	destroy: function() {

@@ -1,0 +1,650 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'A:\\Applications\\nodejs\\\\node.exe',
+1 verbose cli   'A:\\Applications\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   '-g',
+1 verbose cli   'jsdoc' ]
+2 info using npm@1.3.24
+3 info using node@v0.10.25
+4 verbose node symlink A:\Applications\nodejs\\node.exe
+5 verbose cache add [ 'jsdoc', null ]
+6 verbose cache add name=undefined spec="jsdoc" args=["jsdoc",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: 'jsdoc',
+7 verbose parsed url   path: 'jsdoc',
+7 verbose parsed url   href: 'jsdoc' }
+8 silly lockFile 03633e6a-jsdoc jsdoc
+9 verbose lock jsdoc C:\Users\Logan\AppData\Roaming\npm-cache\03633e6a-jsdoc.lock
+10 silly lockFile 03633e6a-jsdoc jsdoc
+11 silly lockFile 03633e6a-jsdoc jsdoc
+12 verbose addNamed [ 'jsdoc', '' ]
+13 verbose addNamed [ null, '*' ]
+14 silly lockFile 5ca36d7c-jsdoc jsdoc@
+15 verbose lock jsdoc@ C:\Users\Logan\AppData\Roaming\npm-cache\5ca36d7c-jsdoc.lock
+16 silly addNameRange { name: 'jsdoc', range: '*', hasData: false }
+17 verbose url raw jsdoc
+18 verbose url resolving [ 'https://registry.npmjs.org/', './jsdoc' ]
+19 verbose url resolved https://registry.npmjs.org/jsdoc
+20 info trying registry request attempt 1 at 00:46:32
+21 verbose etag "7NOGG9I8WA3YW0ZRGH4AKW7O3"
+22 http GET https://registry.npmjs.org/jsdoc
+23 http 304 https://registry.npmjs.org/jsdoc
+24 silly registry.get cb [ 304,
+24 silly registry.get   { date: 'Mon, 03 Mar 2014 06:46:31 GMT',
+24 silly registry.get     server: 'Apache',
+24 silly registry.get     connection: 'Keep-Alive',
+24 silly registry.get     'keep-alive': 'timeout=10, max=50',
+24 silly registry.get     etag: '"7NOGG9I8WA3YW0ZRGH4AKW7O3"',
+24 silly registry.get     'cache-control': 'max-age=1',
+24 silly registry.get     vary: 'Accept' } ]
+25 verbose etag jsdoc from cache
+26 silly addNameRange number 2 { name: 'jsdoc', range: '*', hasData: true }
+27 silly addNameRange versions [ 'jsdoc',
+27 silly addNameRange   [ '0.0.0',
+27 silly addNameRange     '3.2.0-dev',
+27 silly addNameRange     '3.2.0',
+27 silly addNameRange     '3.2.1',
+27 silly addNameRange     '3.2.2',
+27 silly addNameRange     '3.3.0-alpha1',
+27 silly addNameRange     '3.3.0-alpha2',
+27 silly addNameRange     '3.3.0-alpha3',
+27 silly addNameRange     '3.3.0-alpha4' ] ]
+28 verbose addNamed [ 'jsdoc', '3.3.0-alpha4' ]
+29 verbose addNamed [ '3.3.0-alpha4', '3.3.0-alpha4' ]
+30 silly lockFile 25469d20-jsdoc-3-3-0-alpha4 jsdoc@3.3.0-alpha4
+31 verbose lock jsdoc@3.3.0-alpha4 C:\Users\Logan\AppData\Roaming\npm-cache\25469d20-jsdoc-3-3-0-alpha4.lock
+32 silly lockFile 25469d20-jsdoc-3-3-0-alpha4 jsdoc@3.3.0-alpha4
+33 silly lockFile 25469d20-jsdoc-3-3-0-alpha4 jsdoc@3.3.0-alpha4
+34 silly lockFile 5ca36d7c-jsdoc jsdoc@
+35 silly lockFile 5ca36d7c-jsdoc jsdoc@
+36 silly resolved [ { name: 'jsdoc',
+36 silly resolved     version: '3.3.0-alpha4',
+36 silly resolved     revision: '1390711878557',
+36 silly resolved     description: 'An API documentation generator for JavaScript.',
+36 silly resolved     keywords: [ 'documentation', 'javascript' ],
+36 silly resolved     licenses: [ [Object] ],
+36 silly resolved     repository: { type: 'git', url: 'https://github.com/jsdoc3/jsdoc' },
+36 silly resolved     dependencies:
+36 silly resolved      { async: '~0.1.22',
+36 silly resolved        catharsis: '~0.7.0',
+36 silly resolved        esprima: '~1.0.4',
+36 silly resolved        js2xmlparser: '~0.1.0',
+36 silly resolved        marked: '~0.2.8',
+36 silly resolved        taffydb: 'git+https://github.com/hegemonic/taffydb.git',
+36 silly resolved        underscore: '~1.4.2',
+36 silly resolved        wrench: '~1.3.9' },
+36 silly resolved     devDependencies:
+36 silly resolved      { grunt: '~0.4.2',
+36 silly resolved        'grunt-bumpup': '~0.4.2',
+36 silly resolved        'grunt-contrib-jshint': '~0.8.0',
+36 silly resolved        'grunt-shell': '~0.6.1',
+36 silly resolved        istanbul: '~0.2.1',
+36 silly resolved        'load-grunt-tasks': '~0.2.1',
+36 silly resolved        tv4: 'git+https://github.com/hegemonic/tv4.git#own-properties' },
+36 silly resolved     engines: { node: '>=0.10' },
+36 silly resolved     scripts:
+36 silly resolved      { postinstall: 'node ./node/postinstall.js',
+36 silly resolved        test: 'grunt test' },
+36 silly resolved     bin: { jsdoc: './jsdoc.js' },
+36 silly resolved     bugs: { url: 'https://github.com/jsdoc3/jsdoc/issues' },
+36 silly resolved     author: { name: 'Michael Mathews', email: 'micmath@gmail.com' },
+36 silly resolved     contributors: [ [Object] ],
+36 silly resolved     maintainers: { name: 'Jeff Williams', email: 'jeffrey.l.williams@gmail.com' },
+36 silly resolved     readme: 'JSDoc 3\n=======\n[![Build Status](https://secure.travis-ci.org/jsdoc3/jsdoc.png?branch=master)](http://travis-ci.org/jsdoc3/jsdoc)\n\nAn API documentation generator for JavaScript.\n\nWant to contribute to JSDoc? Please read `CONTRIBUTING.md`.\n\n\nInstallation and Usage\n----------------------\n\nYou can run JSDoc on either Node.js or Mozilla Rhino.\n\n### Node.js\n\nNative support for Node.js is available in JSDoc 3.3.0 and later. JSDoc\nsupports Node.js 0.10 and later.\n\n#### Installing JSDoc for Node.js\n\nYou can install JSDoc in your project\'s `node_modules` folder, or you can\ninstall it globally.\n\nTo install the latest alpha version:\n\n    npm install jsdoc@"<=3.3.0"\n\nTo install the latest development version:\n\n    npm install git+https://github.com/jsdoc3/jsdoc.git\n\n#### Running JSDoc with Node.js\n\nIf you installed JSDoc locally, the JSDoc command-line tool is available in\n`./node_modules/.bin`. To generate documentation for the file\n`yourJavaScriptFile.js`:\n\n    ./node_modules/.bin/jsdoc yourJavaScriptFile.js\n\nOr if you installed JSDoc globally, simply run the `jsdoc` command:\n\n    jsdoc yourJavaScriptFile.js\n\nBy default, the generated documentation is saved in a directory named `out`. You\ncan use the `--destination` (`-d`) option to specify another directory.\n\nRun `jsdoc --help` for a complete list of command-line options.\n\n### Mozilla Rhino\n\nAll versions of JSDoc 3 run on a customized version of Mozilla Rhino, which\nrequires Java. You can run JSDoc 3 on Java 1.6 and later.\n\n#### Installing JSDoc for Mozilla Rhino\n\nTo install JSDoc, download a .zip file for the\n[latest development version](https://github.com/jsdoc3/jsdoc/archive/master.zip)\nor a [previous release](https://github.com/jsdoc3/jsdoc/tags).\n\nYou can also use git to clone the\n[JSDoc repository](https://github.com/jsdoc3/jsdoc):\n\n    git clone git+https://github.com/jsdoc3/jsdoc.git\n\nThe JSDoc repository includes a\n[customized version of Mozilla Rhino](https://github.com/jsdoc3/rhino). Make\nsure your Java classpath does not include any other versions of Rhino. (On OS X,\nyou may need to remove the file `~/Library/Java/Extensions/js.jar`.)\n\n#### Running JSDoc with Mozilla Rhino\n\nOn OS X, Linux, and other POSIX systems, to generate documentation for the file\n`yourJavaScriptFile.js`:\n\n    ./jsdoc yourJavaScriptFile.js\n\nOr on Windows:\n\n    jsdoc yourJavaScriptFile.js\n\nBy default, the generated documentation is saved in a directory named `out`. You\ncan use the `--destination` (`-d`) option to specify another directory.\n\nRun `jsdoc --help` for a complete list of command-line options.\n\n\nFor More Information\n--------------------\n\nProject Documentation: <http://usejsdoc.org/>\nProject Documentation Source: <https://github.com/jsdoc3/jsdoc3.github.com>  \nJSDoc User\'s Group: <http://groups.google.com/group/jsdoc-users>  \nJSDoc 3 Ant Task: <https://github.com/jannon/jsdoc3-ant-task>  \nProject Announcements: <http://twitter.com/jsdoc3>\n\n\nLicense\n-------\n\nJSDoc 3 is copyright (c) 2011-2013 Michael Mathews <micmath@gmail.com> and the\n[contributors to JSDoc](https://github.com/jsdoc3/jsdoc/graphs/contributors).\n\nJSDoc 3 is free software, licensed under the Apache License, Version 2.0. See\nthe file `LICENSE.md` in this distribution for more details.\n',
+36 silly resolved     readmeFilename: 'README.md',
+36 silly resolved     homepage: 'https://github.com/jsdoc3/jsdoc',
+36 silly resolved     _id: 'jsdoc@3.3.0-alpha4',
+36 silly resolved     _from: 'jsdoc@' } ]
+37 info install jsdoc@3.3.0-alpha4 into C:\Users\Logan\AppData\Roaming\npm
+38 info installOne jsdoc@3.3.0-alpha4
+39 info C:\Users\Logan\AppData\Roaming\npm\node_modules\jsdoc unbuild
+40 verbose tar unpack C:\Users\Logan\AppData\Roaming\npm-cache\jsdoc\3.3.0-alpha4\package.tgz
+41 silly lockFile 19ad1220-a-Roaming-npm-node-modules-jsdoc tar://C:\Users\Logan\AppData\Roaming\npm\node_modules\jsdoc
+42 verbose lock tar://C:\Users\Logan\AppData\Roaming\npm\node_modules\jsdoc C:\Users\Logan\AppData\Roaming\npm-cache\19ad1220-a-Roaming-npm-node-modules-jsdoc.lock
+43 silly lockFile ca73f7bd-e-jsdoc-3-3-0-alpha4-package-tgz tar://C:\Users\Logan\AppData\Roaming\npm-cache\jsdoc\3.3.0-alpha4\package.tgz
+44 verbose lock tar://C:\Users\Logan\AppData\Roaming\npm-cache\jsdoc\3.3.0-alpha4\package.tgz C:\Users\Logan\AppData\Roaming\npm-cache\ca73f7bd-e-jsdoc-3-3-0-alpha4-package-tgz.lock
+45 silly gunzTarPerm modes [ '755', '644' ]
+46 silly gunzTarPerm extractEntry package.json
+47 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+48 silly gunzTarPerm extractEntry .npmignore
+49 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+50 silly gunzTarPerm extractEntry README.md
+51 silly gunzTarPerm modified mode [ 'README.md', 438, 420 ]
+52 silly gunzTarPerm extractEntry cli.js
+53 silly gunzTarPerm modified mode [ 'cli.js', 438, 420 ]
+54 silly gunzTarPerm extractEntry Gruntfile.js
+55 silly gunzTarPerm modified mode [ 'Gruntfile.js', 438, 420 ]
+56 silly gunzTarPerm extractEntry jsdoc.js
+57 silly gunzTarPerm modified mode [ 'jsdoc.js', 438, 420 ]
+58 silly gunzTarPerm extractEntry CONTRIBUTING.md
+59 silly gunzTarPerm modified mode [ 'CONTRIBUTING.md', 438, 420 ]
+60 silly gunzTarPerm extractEntry jsdoc
+61 silly gunzTarPerm modified mode [ 'jsdoc', 438, 420 ]
+62 silly gunzTarPerm extractEntry Apache_License_2.0.txt
+63 silly gunzTarPerm modified mode [ 'Apache_License_2.0.txt', 438, 420 ]
+64 silly gunzTarPerm extractEntry lib/jsdoc/augment.js
+65 silly gunzTarPerm modified mode [ 'lib/jsdoc/augment.js', 438, 420 ]
+66 silly gunzTarPerm extractEntry lib/jsdoc/fs.js
+67 silly gunzTarPerm modified mode [ 'lib/jsdoc/fs.js', 438, 420 ]
+68 silly gunzTarPerm extractEntry lib/jsdoc/name.js
+69 silly gunzTarPerm modified mode [ 'lib/jsdoc/name.js', 438, 420 ]
+70 silly gunzTarPerm extractEntry lib/jsdoc/tutorial.js
+71 silly gunzTarPerm modified mode [ 'lib/jsdoc/tutorial.js', 438, 420 ]
+72 silly gunzTarPerm extractEntry lib/jsdoc/doclet.js
+73 silly gunzTarPerm modified mode [ 'lib/jsdoc/doclet.js', 438, 420 ]
+74 silly gunzTarPerm extractEntry lib/jsdoc/path.js
+75 silly gunzTarPerm modified mode [ 'lib/jsdoc/path.js', 438, 420 ]
+76 silly gunzTarPerm extractEntry lib/jsdoc/borrow.js
+77 silly gunzTarPerm modified mode [ 'lib/jsdoc/borrow.js', 438, 420 ]
+78 silly gunzTarPerm extractEntry lib/jsdoc/readme.js
+79 silly gunzTarPerm modified mode [ 'lib/jsdoc/readme.js', 438, 420 ]
+80 silly gunzTarPerm extractEntry lib/jsdoc/schema.js
+81 silly gunzTarPerm modified mode [ 'lib/jsdoc/schema.js', 438, 420 ]
+82 silly gunzTarPerm extractEntry lib/jsdoc/template.js
+83 silly gunzTarPerm modified mode [ 'lib/jsdoc/template.js', 438, 420 ]
+84 silly gunzTarPerm extractEntry lib/jsdoc/config.js
+85 silly gunzTarPerm modified mode [ 'lib/jsdoc/config.js', 438, 420 ]
+86 silly gunzTarPerm extractEntry lib/jsdoc/tag.js
+87 silly gunzTarPerm modified mode [ 'lib/jsdoc/tag.js', 438, 420 ]
+88 silly gunzTarPerm extractEntry lib/jsdoc/package.js
+89 silly gunzTarPerm modified mode [ 'lib/jsdoc/package.js', 438, 420 ]
+90 silly gunzTarPerm extractEntry lib/jsdoc/plugins.js
+91 silly gunzTarPerm modified mode [ 'lib/jsdoc/plugins.js', 438, 420 ]
+92 silly gunzTarPerm extractEntry lib/jsdoc/tag/dictionary.js
+93 silly gunzTarPerm modified mode [ 'lib/jsdoc/tag/dictionary.js', 438, 420 ]
+94 silly gunzTarPerm extractEntry lib/jsdoc/tag/inline.js
+95 silly gunzTarPerm modified mode [ 'lib/jsdoc/tag/inline.js', 438, 420 ]
+96 silly gunzTarPerm extractEntry lib/jsdoc/tag/type.js
+97 silly gunzTarPerm modified mode [ 'lib/jsdoc/tag/type.js', 438, 420 ]
+98 silly gunzTarPerm extractEntry lib/jsdoc/tag/validator.js
+99 silly gunzTarPerm modified mode [ 'lib/jsdoc/tag/validator.js', 438, 420 ]
+100 silly gunzTarPerm extractEntry lib/jsdoc/tag/dictionary/definitions.js
+101 silly gunzTarPerm modified mode [ 'lib/jsdoc/tag/dictionary/definitions.js', 438, 420 ]
+102 silly gunzTarPerm extractEntry lib/jsdoc/src/astbuilder.js
+103 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/astbuilder.js', 438, 420 ]
+104 silly gunzTarPerm extractEntry lib/jsdoc/src/astnode.js
+105 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/astnode.js', 438, 420 ]
+106 silly gunzTarPerm extractEntry lib/jsdoc/src/filter.js
+107 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/filter.js', 438, 420 ]
+108 silly gunzTarPerm extractEntry lib/jsdoc/src/handlers.js
+109 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/handlers.js', 438, 420 ]
+110 silly gunzTarPerm extractEntry lib/jsdoc/src/parser.js
+111 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/parser.js', 438, 420 ]
+112 silly gunzTarPerm extractEntry lib/jsdoc/src/scanner.js
+113 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/scanner.js', 438, 420 ]
+114 silly gunzTarPerm extractEntry lib/jsdoc/src/syntax.js
+115 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/syntax.js', 438, 420 ]
+116 silly gunzTarPerm extractEntry lib/jsdoc/src/visitor.js
+117 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/visitor.js', 438, 420 ]
+118 silly gunzTarPerm extractEntry lib/jsdoc/src/walker.js
+119 silly gunzTarPerm modified mode [ 'lib/jsdoc/src/walker.js', 438, 420 ]
+120 silly gunzTarPerm extractEntry lib/jsdoc/tutorial/resolver.js
+121 silly gunzTarPerm modified mode [ 'lib/jsdoc/tutorial/resolver.js', 438, 420 ]
+122 silly gunzTarPerm extractEntry lib/jsdoc/opts/argparser.js
+123 silly gunzTarPerm modified mode [ 'lib/jsdoc/opts/argparser.js', 438, 420 ]
+124 silly gunzTarPerm extractEntry lib/jsdoc/opts/args.js
+125 silly gunzTarPerm modified mode [ 'lib/jsdoc/opts/args.js', 438, 420 ]
+126 silly gunzTarPerm extractEntry lib/jsdoc/util/doop.js
+127 silly gunzTarPerm modified mode [ 'lib/jsdoc/util/doop.js', 438, 420 ]
+128 silly gunzTarPerm extractEntry lib/jsdoc/util/dumper.js
+129 silly gunzTarPerm modified mode [ 'lib/jsdoc/util/dumper.js', 438, 420 ]
+130 silly gunzTarPerm extractEntry lib/jsdoc/util/error.js
+131 silly gunzTarPerm modified mode [ 'lib/jsdoc/util/error.js', 438, 420 ]
+132 silly gunzTarPerm extractEntry lib/jsdoc/util/logger.js
+133 silly gunzTarPerm modified mode [ 'lib/jsdoc/util/logger.js', 438, 420 ]
+134 silly gunzTarPerm extractEntry lib/jsdoc/util/markdown.js
+135 silly gunzTarPerm modified mode [ 'lib/jsdoc/util/markdown.js', 438, 420 ]
+136 silly gunzTarPerm extractEntry lib/jsdoc/util/runtime.js
+137 silly gunzTarPerm modified mode [ 'lib/jsdoc/util/runtime.js', 438, 420 ]
+138 silly gunzTarPerm extractEntry lib/jsdoc/util/templateHelper.js
+139 silly gunzTarPerm modified mode [ 'lib/jsdoc/util/templateHelper.js', 438, 420 ]
+140 silly gunzTarPerm extractEntry LICENSE.md
+141 silly gunzTarPerm modified mode [ 'LICENSE.md', 438, 420 ]
+142 silly gunzTarPerm extractEntry node/fs.js
+143 silly gunzTarPerm modified mode [ 'node/fs.js', 438, 420 ]
+144 silly gunzTarPerm extractEntry node/postinstall.js
+145 silly gunzTarPerm modified mode [ 'node/postinstall.js', 438, 420 ]
+146 silly gunzTarPerm extractEntry conf.json.EXAMPLE
+147 silly gunzTarPerm modified mode [ 'conf.json.EXAMPLE', 438, 420 ]
+148 silly gunzTarPerm extractEntry plugins/commentConvert.js
+149 silly gunzTarPerm modified mode [ 'plugins/commentConvert.js', 438, 420 ]
+150 silly gunzTarPerm extractEntry plugins/escapeHtml.js
+151 silly gunzTarPerm modified mode [ 'plugins/escapeHtml.js', 438, 420 ]
+152 silly gunzTarPerm extractEntry plugins/eventDumper.js
+153 silly gunzTarPerm modified mode [ 'plugins/eventDumper.js', 438, 420 ]
+154 silly gunzTarPerm extractEntry plugins/markdown.js
+155 silly gunzTarPerm modified mode [ 'plugins/markdown.js', 438, 420 ]
+156 silly gunzTarPerm extractEntry plugins/commentsOnly.js
+157 silly gunzTarPerm modified mode [ 'plugins/commentsOnly.js', 438, 420 ]
+158 silly gunzTarPerm extractEntry plugins/partial.js
+159 silly gunzTarPerm modified mode [ 'plugins/partial.js', 438, 420 ]
+160 silly gunzTarPerm extractEntry plugins/railsTemplate.js
+161 silly gunzTarPerm modified mode [ 'plugins/railsTemplate.js', 438, 420 ]
+162 silly gunzTarPerm extractEntry plugins/shout.js
+163 silly gunzTarPerm modified mode [ 'plugins/shout.js', 438, 420 ]
+164 silly gunzTarPerm extractEntry plugins/sourcetag.js
+165 silly gunzTarPerm modified mode [ 'plugins/sourcetag.js', 438, 420 ]
+166 silly gunzTarPerm extractEntry plugins/overloadHelper.js
+167 silly gunzTarPerm modified mode [ 'plugins/overloadHelper.js', 438, 420 ]
+168 silly gunzTarPerm extractEntry plugins/test/fixtures/overloadHelper.js
+169 silly gunzTarPerm modified mode [ 'plugins/test/fixtures/overloadHelper.js', 438, 420 ]
+170 silly gunzTarPerm extractEntry plugins/test/fixtures/seetag-markdown.js
+171 silly gunzTarPerm modified mode [ 'plugins/test/fixtures/seetag-markdown.js', 438, 420 ]
+172 silly gunzTarPerm extractEntry plugins/test/fixtures/railsTemplate.js.erb
+173 silly gunzTarPerm modified mode [ 'plugins/test/fixtures/railsTemplate.js.erb', 438, 420 ]
+174 silly gunzTarPerm extractEntry plugins/test/specs/commentConvert.js
+175 silly gunzTarPerm modified mode [ 'plugins/test/specs/commentConvert.js', 438, 420 ]
+176 silly gunzTarPerm extractEntry plugins/test/specs/escapeHtml.js
+177 silly gunzTarPerm modified mode [ 'plugins/test/specs/escapeHtml.js', 438, 420 ]
+178 silly gunzTarPerm extractEntry plugins/test/specs/markdown.js
+179 silly gunzTarPerm modified mode [ 'plugins/test/specs/markdown.js', 438, 420 ]
+180 silly gunzTarPerm extractEntry plugins/test/specs/overloadHelper.js
+181 silly gunzTarPerm modified mode [ 'plugins/test/specs/overloadHelper.js', 438, 420 ]
+182 silly gunzTarPerm extractEntry plugins/test/specs/railsTemplate.js
+183 silly gunzTarPerm modified mode [ 'plugins/test/specs/railsTemplate.js', 438, 420 ]
+184 silly gunzTarPerm extractEntry plugins/test/specs/shout.js
+185 silly gunzTarPerm modified mode [ 'plugins/test/specs/shout.js', 438, 420 ]
+186 silly gunzTarPerm extractEntry plugins/test/specs/sourcetag.js
+187 silly gunzTarPerm modified mode [ 'plugins/test/specs/sourcetag.js', 438, 420 ]
+188 silly gunzTarPerm extractEntry changes.md
+189 silly gunzTarPerm modified mode [ 'changes.md', 438, 420 ]
+190 silly gunzTarPerm extractEntry templates/README.md
+191 silly gunzTarPerm modified mode [ 'templates/README.md', 438, 420 ]
+192 silly gunzTarPerm extractEntry templates/default/README.md
+193 silly gunzTarPerm modified mode [ 'templates/default/README.md', 438, 420 ]
+194 silly gunzTarPerm extractEntry templates/default/publish.js
+195 silly gunzTarPerm modified mode [ 'templates/default/publish.js', 438, 420 ]
+196 silly gunzTarPerm extractEntry templates/default/static/scripts/linenumber.js
+197 silly gunzTarPerm modified mode [ 'templates/default/static/scripts/linenumber.js', 438, 420 ]
+198 silly gunzTarPerm extractEntry templates/default/static/scripts/prettify/lang-css.js
+199 silly gunzTarPerm modified mode [ 'templates/default/static/scripts/prettify/lang-css.js',
+199 silly gunzTarPerm   438,
+199 silly gunzTarPerm   420 ]
+200 silly gunzTarPerm extractEntry templates/default/static/scripts/prettify/prettify.js
+201 silly gunzTarPerm modified mode [ 'templates/default/static/scripts/prettify/prettify.js',
+201 silly gunzTarPerm   438,
+201 silly gunzTarPerm   420 ]
+202 silly gunzTarPerm extractEntry templates/default/static/scripts/prettify/Apache-License-2.0.txt
+203 silly gunzTarPerm modified mode [ 'templates/default/static/scripts/prettify/Apache-License-2.0.txt',
+203 silly gunzTarPerm   438,
+203 silly gunzTarPerm   420 ]
+204 silly gunzTarPerm extractEntry templates/default/static/styles/jsdoc-default.css
+205 silly gunzTarPerm modified mode [ 'templates/default/static/styles/jsdoc-default.css', 438, 420 ]
+206 silly gunzTarPerm extractEntry templates/default/static/styles/prettify-jsdoc.css
+207 silly gunzTarPerm modified mode [ 'templates/default/static/styles/prettify-jsdoc.css',
+207 silly gunzTarPerm   438,
+207 silly gunzTarPerm   420 ]
+208 silly gunzTarPerm extractEntry templates/default/static/styles/prettify-tomorrow.css
+209 silly gunzTarPerm modified mode [ 'templates/default/static/styles/prettify-tomorrow.css',
+209 silly gunzTarPerm   438,
+209 silly gunzTarPerm   420 ]
+210 silly gunzTarPerm extractEntry templates/default/tmpl/members.tmpl
+211 silly gunzTarPerm modified mode [ 'templates/default/tmpl/members.tmpl', 438, 420 ]
+212 silly gunzTarPerm extractEntry templates/default/tmpl/container.tmpl
+213 silly gunzTarPerm modified mode [ 'templates/default/tmpl/container.tmpl', 438, 420 ]
+214 silly gunzTarPerm extractEntry templates/default/tmpl/example.tmpl
+215 silly gunzTarPerm modified mode [ 'templates/default/tmpl/example.tmpl', 438, 420 ]
+216 silly gunzTarPerm extractEntry templates/default/tmpl/examples.tmpl
+217 silly gunzTarPerm modified mode [ 'templates/default/tmpl/examples.tmpl', 438, 420 ]
+218 silly gunzTarPerm extractEntry templates/default/tmpl/exceptions.tmpl
+219 silly gunzTarPerm modified mode [ 'templates/default/tmpl/exceptions.tmpl', 438, 420 ]
+220 silly gunzTarPerm extractEntry templates/default/tmpl/layout.tmpl
+221 silly gunzTarPerm modified mode [ 'templates/default/tmpl/layout.tmpl', 438, 420 ]
+222 silly gunzTarPerm extractEntry templates/default/tmpl/mainpage.tmpl
+223 silly gunzTarPerm modified mode [ 'templates/default/tmpl/mainpage.tmpl', 438, 420 ]
+224 silly gunzTarPerm extractEntry templates/default/tmpl/details.tmpl
+225 silly gunzTarPerm modified mode [ 'templates/default/tmpl/details.tmpl', 438, 420 ]
+226 silly gunzTarPerm extractEntry templates/default/tmpl/method.tmpl
+227 silly gunzTarPerm modified mode [ 'templates/default/tmpl/method.tmpl', 438, 420 ]
+228 silly gunzTarPerm extractEntry templates/default/tmpl/params.tmpl
+229 silly gunzTarPerm modified mode [ 'templates/default/tmpl/params.tmpl', 438, 420 ]
+230 silly gunzTarPerm extractEntry templates/default/tmpl/properties.tmpl
+231 silly gunzTarPerm modified mode [ 'templates/default/tmpl/properties.tmpl', 438, 420 ]
+232 silly gunzTarPerm extractEntry templates/default/tmpl/returns.tmpl
+233 silly gunzTarPerm modified mode [ 'templates/default/tmpl/returns.tmpl', 438, 420 ]
+234 silly gunzTarPerm extractEntry templates/default/tmpl/source.tmpl
+235 silly gunzTarPerm modified mode [ 'templates/default/tmpl/source.tmpl', 438, 420 ]
+236 silly gunzTarPerm extractEntry templates/default/tmpl/tutorial.tmpl
+237 silly gunzTarPerm modified mode [ 'templates/default/tmpl/tutorial.tmpl', 438, 420 ]
+238 silly gunzTarPerm extractEntry templates/default/tmpl/type.tmpl
+239 silly gunzTarPerm modified mode [ 'templates/default/tmpl/type.tmpl', 438, 420 ]
+240 silly gunzTarPerm extractEntry templates/haruki/README.md
+241 silly gunzTarPerm modified mode [ 'templates/haruki/README.md', 438, 420 ]
+242 silly gunzTarPerm extractEntry templates/haruki/publish.js
+243 silly gunzTarPerm modified mode [ 'templates/haruki/publish.js', 438, 420 ]
+244 silly lockFile 19ad1220-a-Roaming-npm-node-modules-jsdoc tar://C:\Users\Logan\AppData\Roaming\npm\node_modules\jsdoc
+245 silly lockFile 19ad1220-a-Roaming-npm-node-modules-jsdoc tar://C:\Users\Logan\AppData\Roaming\npm\node_modules\jsdoc
+246 silly lockFile ca73f7bd-e-jsdoc-3-3-0-alpha4-package-tgz tar://C:\Users\Logan\AppData\Roaming\npm-cache\jsdoc\3.3.0-alpha4\package.tgz
+247 silly lockFile ca73f7bd-e-jsdoc-3-3-0-alpha4-package-tgz tar://C:\Users\Logan\AppData\Roaming\npm-cache\jsdoc\3.3.0-alpha4\package.tgz
+248 info preinstall jsdoc@3.3.0-alpha4
+249 verbose readDependencies using package.json deps
+250 verbose readDependencies using package.json deps
+251 verbose cache add [ 'async@~0.1.22', null ]
+252 verbose cache add name=undefined spec="async@~0.1.22" args=["async@~0.1.22",null]
+253 verbose parsed url { protocol: null,
+253 verbose parsed url   slashes: null,
+253 verbose parsed url   auth: null,
+253 verbose parsed url   host: null,
+253 verbose parsed url   port: null,
+253 verbose parsed url   hostname: null,
+253 verbose parsed url   hash: null,
+253 verbose parsed url   search: null,
+253 verbose parsed url   query: null,
+253 verbose parsed url   pathname: 'async@~0.1.22',
+253 verbose parsed url   path: 'async@~0.1.22',
+253 verbose parsed url   href: 'async@~0.1.22' }
+254 verbose cache add name="async" spec="~0.1.22" args=["async","~0.1.22"]
+255 verbose parsed url { protocol: null,
+255 verbose parsed url   slashes: null,
+255 verbose parsed url   auth: null,
+255 verbose parsed url   host: null,
+255 verbose parsed url   port: null,
+255 verbose parsed url   hostname: null,
+255 verbose parsed url   hash: null,
+255 verbose parsed url   search: null,
+255 verbose parsed url   query: null,
+255 verbose parsed url   pathname: '~0.1.22',
+255 verbose parsed url   path: '~0.1.22',
+255 verbose parsed url   href: '~0.1.22' }
+256 verbose addNamed [ 'async', '~0.1.22' ]
+257 verbose addNamed [ null, '>=0.1.22-0 <0.2.0-0' ]
+258 silly lockFile 3af71045-async-0-1-22 async@~0.1.22
+259 verbose lock async@~0.1.22 C:\Users\Logan\AppData\Roaming\npm-cache\3af71045-async-0-1-22.lock
+260 verbose cache add [ 'catharsis@~0.7.0', null ]
+261 verbose cache add name=undefined spec="catharsis@~0.7.0" args=["catharsis@~0.7.0",null]
+262 verbose parsed url { protocol: null,
+262 verbose parsed url   slashes: null,
+262 verbose parsed url   auth: null,
+262 verbose parsed url   host: null,
+262 verbose parsed url   port: null,
+262 verbose parsed url   hostname: null,
+262 verbose parsed url   hash: null,
+262 verbose parsed url   search: null,
+262 verbose parsed url   query: null,
+262 verbose parsed url   pathname: 'catharsis@~0.7.0',
+262 verbose parsed url   path: 'catharsis@~0.7.0',
+262 verbose parsed url   href: 'catharsis@~0.7.0' }
+263 verbose cache add name="catharsis" spec="~0.7.0" args=["catharsis","~0.7.0"]
+264 verbose parsed url { protocol: null,
+264 verbose parsed url   slashes: null,
+264 verbose parsed url   auth: null,
+264 verbose parsed url   host: null,
+264 verbose parsed url   port: null,
+264 verbose parsed url   hostname: null,
+264 verbose parsed url   hash: null,
+264 verbose parsed url   search: null,
+264 verbose parsed url   query: null,
+264 verbose parsed url   pathname: '~0.7.0',
+264 verbose parsed url   path: '~0.7.0',
+264 verbose parsed url   href: '~0.7.0' }
+265 verbose addNamed [ 'catharsis', '~0.7.0' ]
+266 verbose addNamed [ null, '>=0.7.0-0 <0.8.0-0' ]
+267 silly lockFile 2acb3837-catharsis-0-7-0 catharsis@~0.7.0
+268 verbose lock catharsis@~0.7.0 C:\Users\Logan\AppData\Roaming\npm-cache\2acb3837-catharsis-0-7-0.lock
+269 verbose cache add [ 'esprima@~1.0.4', null ]
+270 verbose cache add name=undefined spec="esprima@~1.0.4" args=["esprima@~1.0.4",null]
+271 verbose parsed url { protocol: null,
+271 verbose parsed url   slashes: null,
+271 verbose parsed url   auth: null,
+271 verbose parsed url   host: null,
+271 verbose parsed url   port: null,
+271 verbose parsed url   hostname: null,
+271 verbose parsed url   hash: null,
+271 verbose parsed url   search: null,
+271 verbose parsed url   query: null,
+271 verbose parsed url   pathname: 'esprima@~1.0.4',
+271 verbose parsed url   path: 'esprima@~1.0.4',
+271 verbose parsed url   href: 'esprima@~1.0.4' }
+272 verbose cache add name="esprima" spec="~1.0.4" args=["esprima","~1.0.4"]
+273 verbose parsed url { protocol: null,
+273 verbose parsed url   slashes: null,
+273 verbose parsed url   auth: null,
+273 verbose parsed url   host: null,
+273 verbose parsed url   port: null,
+273 verbose parsed url   hostname: null,
+273 verbose parsed url   hash: null,
+273 verbose parsed url   search: null,
+273 verbose parsed url   query: null,
+273 verbose parsed url   pathname: '~1.0.4',
+273 verbose parsed url   path: '~1.0.4',
+273 verbose parsed url   href: '~1.0.4' }
+274 verbose addNamed [ 'esprima', '~1.0.4' ]
+275 verbose addNamed [ null, '>=1.0.4-0 <1.1.0-0' ]
+276 silly lockFile 7a587a80-esprima-1-0-4 esprima@~1.0.4
+277 verbose lock esprima@~1.0.4 C:\Users\Logan\AppData\Roaming\npm-cache\7a587a80-esprima-1-0-4.lock
+278 verbose cache add [ 'js2xmlparser@~0.1.0', null ]
+279 verbose cache add name=undefined spec="js2xmlparser@~0.1.0" args=["js2xmlparser@~0.1.0",null]
+280 verbose parsed url { protocol: null,
+280 verbose parsed url   slashes: null,
+280 verbose parsed url   auth: null,
+280 verbose parsed url   host: null,
+280 verbose parsed url   port: null,
+280 verbose parsed url   hostname: null,
+280 verbose parsed url   hash: null,
+280 verbose parsed url   search: null,
+280 verbose parsed url   query: null,
+280 verbose parsed url   pathname: 'js2xmlparser@~0.1.0',
+280 verbose parsed url   path: 'js2xmlparser@~0.1.0',
+280 verbose parsed url   href: 'js2xmlparser@~0.1.0' }
+281 verbose cache add name="js2xmlparser" spec="~0.1.0" args=["js2xmlparser","~0.1.0"]
+282 verbose parsed url { protocol: null,
+282 verbose parsed url   slashes: null,
+282 verbose parsed url   auth: null,
+282 verbose parsed url   host: null,
+282 verbose parsed url   port: null,
+282 verbose parsed url   hostname: null,
+282 verbose parsed url   hash: null,
+282 verbose parsed url   search: null,
+282 verbose parsed url   query: null,
+282 verbose parsed url   pathname: '~0.1.0',
+282 verbose parsed url   path: '~0.1.0',
+282 verbose parsed url   href: '~0.1.0' }
+283 verbose addNamed [ 'js2xmlparser', '~0.1.0' ]
+284 verbose addNamed [ null, '>=0.1.0-0 <0.2.0-0' ]
+285 silly lockFile b91aab89-js2xmlparser-0-1-0 js2xmlparser@~0.1.0
+286 verbose lock js2xmlparser@~0.1.0 C:\Users\Logan\AppData\Roaming\npm-cache\b91aab89-js2xmlparser-0-1-0.lock
+287 verbose cache add [ 'marked@~0.2.8', null ]
+288 verbose cache add name=undefined spec="marked@~0.2.8" args=["marked@~0.2.8",null]
+289 verbose parsed url { protocol: null,
+289 verbose parsed url   slashes: null,
+289 verbose parsed url   auth: null,
+289 verbose parsed url   host: null,
+289 verbose parsed url   port: null,
+289 verbose parsed url   hostname: null,
+289 verbose parsed url   hash: null,
+289 verbose parsed url   search: null,
+289 verbose parsed url   query: null,
+289 verbose parsed url   pathname: 'marked@~0.2.8',
+289 verbose parsed url   path: 'marked@~0.2.8',
+289 verbose parsed url   href: 'marked@~0.2.8' }
+290 verbose cache add name="marked" spec="~0.2.8" args=["marked","~0.2.8"]
+291 verbose parsed url { protocol: null,
+291 verbose parsed url   slashes: null,
+291 verbose parsed url   auth: null,
+291 verbose parsed url   host: null,
+291 verbose parsed url   port: null,
+291 verbose parsed url   hostname: null,
+291 verbose parsed url   hash: null,
+291 verbose parsed url   search: null,
+291 verbose parsed url   query: null,
+291 verbose parsed url   pathname: '~0.2.8',
+291 verbose parsed url   path: '~0.2.8',
+291 verbose parsed url   href: '~0.2.8' }
+292 verbose addNamed [ 'marked', '~0.2.8' ]
+293 verbose addNamed [ null, '>=0.2.8-0 <0.3.0-0' ]
+294 silly lockFile 42f986f3-marked-0-2-8 marked@~0.2.8
+295 verbose lock marked@~0.2.8 C:\Users\Logan\AppData\Roaming\npm-cache\42f986f3-marked-0-2-8.lock
+296 verbose cache add [ 'taffydb@git+https://github.com/hegemonic/taffydb.git', null ]
+297 verbose cache add name=undefined spec="taffydb@git+https://github.com/hegemonic/taffydb.git" args=["taffydb@git+https://github.com/hegemonic/taffydb.git",null]
+298 verbose parsed url { protocol: null,
+298 verbose parsed url   slashes: null,
+298 verbose parsed url   auth: null,
+298 verbose parsed url   host: null,
+298 verbose parsed url   port: null,
+298 verbose parsed url   hostname: null,
+298 verbose parsed url   hash: null,
+298 verbose parsed url   search: null,
+298 verbose parsed url   query: null,
+298 verbose parsed url   pathname: 'taffydb@git+https://github.com/hegemonic/taffydb.git',
+298 verbose parsed url   path: 'taffydb@git+https://github.com/hegemonic/taffydb.git',
+298 verbose parsed url   href: 'taffydb@git+https://github.com/hegemonic/taffydb.git' }
+299 verbose cache add name="taffydb" spec="git+https://github.com/hegemonic/taffydb.git" args=["taffydb","git+https://github.com/hegemonic/taffydb.git"]
+300 verbose parsed url { protocol: 'git+https:',
+300 verbose parsed url   slashes: true,
+300 verbose parsed url   auth: null,
+300 verbose parsed url   host: 'github.com',
+300 verbose parsed url   port: null,
+300 verbose parsed url   hostname: 'github.com',
+300 verbose parsed url   hash: null,
+300 verbose parsed url   search: null,
+300 verbose parsed url   query: null,
+300 verbose parsed url   pathname: '/hegemonic/taffydb.git',
+300 verbose parsed url   path: '/hegemonic/taffydb.git',
+300 verbose parsed url   href: 'git+https://github.com/hegemonic/taffydb.git' }
+301 silly lockFile 3723d5e7-github-com-hegemonic-taffydb-git git+https://github.com/hegemonic/taffydb.git
+302 verbose lock git+https://github.com/hegemonic/taffydb.git C:\Users\Logan\AppData\Roaming\npm-cache\3723d5e7-github-com-hegemonic-taffydb-git.lock
+303 verbose cache add [ 'underscore@~1.4.2', null ]
+304 verbose cache add name=undefined spec="underscore@~1.4.2" args=["underscore@~1.4.2",null]
+305 verbose parsed url { protocol: null,
+305 verbose parsed url   slashes: null,
+305 verbose parsed url   auth: null,
+305 verbose parsed url   host: null,
+305 verbose parsed url   port: null,
+305 verbose parsed url   hostname: null,
+305 verbose parsed url   hash: null,
+305 verbose parsed url   search: null,
+305 verbose parsed url   query: null,
+305 verbose parsed url   pathname: 'underscore@~1.4.2',
+305 verbose parsed url   path: 'underscore@~1.4.2',
+305 verbose parsed url   href: 'underscore@~1.4.2' }
+306 verbose cache add name="underscore" spec="~1.4.2" args=["underscore","~1.4.2"]
+307 verbose parsed url { protocol: null,
+307 verbose parsed url   slashes: null,
+307 verbose parsed url   auth: null,
+307 verbose parsed url   host: null,
+307 verbose parsed url   port: null,
+307 verbose parsed url   hostname: null,
+307 verbose parsed url   hash: null,
+307 verbose parsed url   search: null,
+307 verbose parsed url   query: null,
+307 verbose parsed url   pathname: '~1.4.2',
+307 verbose parsed url   path: '~1.4.2',
+307 verbose parsed url   href: '~1.4.2' }
+308 verbose addNamed [ 'underscore', '~1.4.2' ]
+309 verbose addNamed [ null, '>=1.4.2-0 <1.5.0-0' ]
+310 silly lockFile 0234e20e-underscore-1-4-2 underscore@~1.4.2
+311 verbose lock underscore@~1.4.2 C:\Users\Logan\AppData\Roaming\npm-cache\0234e20e-underscore-1-4-2.lock
+312 verbose cache add [ 'wrench@~1.3.9', null ]
+313 verbose cache add name=undefined spec="wrench@~1.3.9" args=["wrench@~1.3.9",null]
+314 verbose parsed url { protocol: null,
+314 verbose parsed url   slashes: null,
+314 verbose parsed url   auth: null,
+314 verbose parsed url   host: null,
+314 verbose parsed url   port: null,
+314 verbose parsed url   hostname: null,
+314 verbose parsed url   hash: null,
+314 verbose parsed url   search: null,
+314 verbose parsed url   query: null,
+314 verbose parsed url   pathname: 'wrench@~1.3.9',
+314 verbose parsed url   path: 'wrench@~1.3.9',
+314 verbose parsed url   href: 'wrench@~1.3.9' }
+315 verbose cache add name="wrench" spec="~1.3.9" args=["wrench","~1.3.9"]
+316 verbose parsed url { protocol: null,
+316 verbose parsed url   slashes: null,
+316 verbose parsed url   auth: null,
+316 verbose parsed url   host: null,
+316 verbose parsed url   port: null,
+316 verbose parsed url   hostname: null,
+316 verbose parsed url   hash: null,
+316 verbose parsed url   search: null,
+316 verbose parsed url   query: null,
+316 verbose parsed url   pathname: '~1.3.9',
+316 verbose parsed url   path: '~1.3.9',
+316 verbose parsed url   href: '~1.3.9' }
+317 verbose addNamed [ 'wrench', '~1.3.9' ]
+318 verbose addNamed [ null, '>=1.3.9-0 <1.4.0-0' ]
+319 silly lockFile 608c1511-wrench-1-3-9 wrench@~1.3.9
+320 verbose lock wrench@~1.3.9 C:\Users\Logan\AppData\Roaming\npm-cache\608c1511-wrench-1-3-9.lock
+321 silly addNameRange { name: 'async', range: '>=0.1.22-0 <0.2.0-0', hasData: false }
+322 silly addNameRange { name: 'js2xmlparser',
+322 silly addNameRange   range: '>=0.1.0-0 <0.2.0-0',
+322 silly addNameRange   hasData: false }
+323 silly addNameRange { name: 'marked', range: '>=0.2.8-0 <0.3.0-0', hasData: false }
+324 silly addNameRange { name: 'esprima', range: '>=1.0.4-0 <1.1.0-0', hasData: false }
+325 silly addNameRange { name: 'catharsis',
+325 silly addNameRange   range: '>=0.7.0-0 <0.8.0-0',
+325 silly addNameRange   hasData: false }
+326 silly addNameRange { name: 'underscore',
+326 silly addNameRange   range: '>=1.4.2-0 <1.5.0-0',
+326 silly addNameRange   hasData: false }
+327 silly addNameRange { name: 'wrench', range: '>=1.3.9-0 <1.4.0-0', hasData: false }
+328 verbose addRemoteGit [ 'https://github.com/hegemonic/taffydb.git', 'master' ]
+329 verbose url raw async
+330 verbose url resolving [ 'https://registry.npmjs.org/', './async' ]
+331 verbose url resolved https://registry.npmjs.org/async
+332 info trying registry request attempt 1 at 00:46:32
+333 verbose etag "7BSEN4RBQB8Z9OYZCITFPALJC"
+334 http GET https://registry.npmjs.org/async
+335 verbose url raw js2xmlparser
+336 verbose url resolving [ 'https://registry.npmjs.org/', './js2xmlparser' ]
+337 verbose url resolved https://registry.npmjs.org/js2xmlparser
+338 info trying registry request attempt 1 at 00:46:32
+339 verbose etag "EKGGKPI4CTLFYTXCPMG5MA3JJ"
+340 http GET https://registry.npmjs.org/js2xmlparser
+341 verbose url raw marked
+342 verbose url resolving [ 'https://registry.npmjs.org/', './marked' ]
+343 verbose url resolved https://registry.npmjs.org/marked
+344 info trying registry request attempt 1 at 00:46:32
+345 verbose etag "1ZLJFTZEH5A8P6GSGGCJZU8E1"
+346 http GET https://registry.npmjs.org/marked
+347 verbose url raw esprima
+348 verbose url resolving [ 'https://registry.npmjs.org/', './esprima' ]
+349 verbose url resolved https://registry.npmjs.org/esprima
+350 info trying registry request attempt 1 at 00:46:32
+351 verbose etag "57HMI75YG9GPIFBBKU4ECI5UY"
+352 http GET https://registry.npmjs.org/esprima
+353 verbose url raw underscore
+354 verbose url resolving [ 'https://registry.npmjs.org/', './underscore' ]
+355 verbose url resolved https://registry.npmjs.org/underscore
+356 info trying registry request attempt 1 at 00:46:32
+357 verbose etag "9AHO75VRYD1Z5EY3OJM9MSLR8"
+358 http GET https://registry.npmjs.org/underscore
+359 verbose url raw catharsis
+360 verbose url resolving [ 'https://registry.npmjs.org/', './catharsis' ]
+361 verbose url resolved https://registry.npmjs.org/catharsis
+362 info trying registry request attempt 1 at 00:46:32
+363 verbose etag "65NT9YAY1A3CB3TZIZ4CH0X2J"
+364 http GET https://registry.npmjs.org/catharsis
+365 verbose url raw wrench
+366 verbose url resolving [ 'https://registry.npmjs.org/', './wrench' ]
+367 verbose url resolved https://registry.npmjs.org/wrench
+368 info trying registry request attempt 1 at 00:46:32
+369 verbose etag "9B44NSL50EWBYWK21R2DAPBI5"
+370 http GET https://registry.npmjs.org/wrench
+371 silly lockFile 386cf83c-github-com-hegemonic-taffydb-git https://github.com/hegemonic/taffydb.git
+372 verbose about to build C:\Users\Logan\AppData\Roaming\npm\node_modules\jsdoc
+373 info C:\Users\Logan\AppData\Roaming\npm\node_modules\jsdoc unbuild
+374 info preuninstall jsdoc@3.3.0-alpha4
+375 info uninstall jsdoc@3.3.0-alpha4
+376 verbose true,C:\Users\Logan\AppData\Roaming\npm\node_modules,C:\Users\Logan\AppData\Roaming\npm\node_modules unbuild jsdoc@3.3.0-alpha4
+377 verbose C:\Users\Logan\AppData\Roaming\npm,[object Object] binRoot
+378 info postuninstall jsdoc@3.3.0-alpha4
+379 error not found: git
+380 error Failed using git.
+380 error This is most likely not a problem with npm itself.
+380 error Please check if you have git installed and in your PATH.
+381 error System Windows_NT 6.2.9200
+382 error command "A:\\Applications\\nodejs\\\\node.exe" "A:\\Applications\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "-g" "jsdoc"
+383 error cwd C:\Users\Logan\Documents\GitHub\zombit\screenshot
+384 error node -v v0.10.25
+385 error npm -v 1.3.24
+386 error code ENOGIT
+387 verbose exit [ 1, true ]

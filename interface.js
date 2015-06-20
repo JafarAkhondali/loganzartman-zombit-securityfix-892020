@@ -34,7 +34,7 @@ function kd(e) { //keydown
 			showPrompt("Enter nickname: ", function(serv){
 				serv = serv!=""?serv:mpServer;
 
-				showPrompt("Enter server IP or domain: ", function(port){ 
+				showPrompt("Enter server IP or domain: ", function(port){
 					port = port!=""?port:mpPort;
 
 					showPrompt("Enter server port: ", function(nick) {
@@ -74,7 +74,7 @@ function kd(e) { //keydown
 				mpChatOpen = false;
 				document.body.removeChild(mpChatInput);
 			} catch (e) {}
-			
+
 		}
 		if (!mpChatOpen) {
 			keys[e.keyCode] = true;
@@ -120,7 +120,7 @@ function md(e) {
 			showGameHelp();
 		}
 	}
-	
+
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, btn: 1, state: true});}
 }
 function mu(e) {
@@ -128,7 +128,7 @@ function mu(e) {
 	e.preventDefault();
 	mp(e);
 	mouseLeft = false;
-	
+
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, btn: 1, state: false});}
 }
 function mp(e) {
@@ -153,7 +153,7 @@ function mp(e) {
 		uiPlayState = (mouseY>120 && mouseY<140 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40)?UI_HOVER:UI_UP;
 		uiHelpState = (mouseY>150 && mouseY<170 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40)?UI_HOVER:UI_UP;
 	}
-	
+
 	//if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, x: mouseX, y: mouseY});}
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, facing: player.facing});}
 }
@@ -173,7 +173,7 @@ function fullscreen(on) {
 		screenHeight = window.innerHeight;
 		sctx.webkitImageSmoothingEnabled = false;
 		sctx.mozImageSmoothingEnabled = false;
-		sctx.imageSmoothingEnabled = false;	
+		sctx.imageSmoothingEnabled = false;
 	}
 	else {
 		canvas.style.position = "relative";
@@ -183,7 +183,7 @@ function fullscreen(on) {
 		screenHeight = defaultScreenHeight;
 		sctx.webkitImageSmoothingEnabled = false;
 		sctx.mozImageSmoothingEnabled = false;
-		sctx.imageSmoothingEnabled = false;	
+		sctx.imageSmoothingEnabled = false;
 	}
 }
 
@@ -246,30 +246,31 @@ function createGUI() {
 
 	gui.remember(window);
 	gui.remember(player);
-	
+
 	var display = gui.addFolder("Display");
 	display.add(window, "viewWidth").min(0);
 	display.add(window, "viewHeight").min(0);
 	display.add(window, "screenWidth").min(0);
 	display.add(window, "screenHeight").min(0);
-	
+
 	display.add(window, "showDebug");
 	display.add(window, "enableShaders");
 	display.add(window, "drawParticles");
 	display.add(window, "drawOverlay");
 	display.add(window, "tileShadows");
 	display.add(window, "entityShadows");
-	
+
+	display.add(window, "enablePathDebug");
 	display.add(window, "enableLightRendering");
 	display.add(window, "enableLightTinting");
 	display.add(window, "enableGlare");
-	
+
 	display.add(window, "frameBlend").min(0).max(1).listen();
 	display.add(window, "minFrameBlend").min(0).max(1);
 	display.add(window, "defaultFrameBlend").min(0).max(1);
-	
+
 	display.add(window, "globalBrightness").min(0).max(2).step(0.1);
-	
+
 	var playr = gui.addFolder("Player");
 	playr.add(player, "life").min(1).max(player.maxlife).step(1).listen();
 	playr.add(player, "spdInc").step(0.01);
@@ -278,14 +279,15 @@ function createGUI() {
 	playr.add(window, "godMode");
 	playr.add(window, "randomGun");
 	playr.add(window, "giveNyanGun");
-	
+	playr.add(window, "giveZedGun");
+
 	var mpm = gui.addFolder("Multiplayer (Broken, do not use)");
 	mpm.add(window, "mpServer");
 	mpm.add(window, "mpPort");
 	mpm.add(window, "mpNick");
 	mpm.add(window, "mpStart");
 	mpm.add(window, "mpConnect");
-	
+
 	var audm = gui.addFolder("Audio");
 	audm.add(window, "volumeMaster").min(0).max(1).step(0.05);
 }

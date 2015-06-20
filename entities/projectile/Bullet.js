@@ -5,15 +5,15 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 	try{this.image = imgBullet;}
 	catch (e) {}
 	this.sender = makeEntityReference(sender);
-	
+
 	this.col1 = "255,205,0";
 	this.col2 = "220,170,0";
-	
+
 	this.light = null;
 	this.light2 = null;
 
 	this.type = BULLET;
-	
+
 	this.emitConstruct();
 })
 .methods({
@@ -25,8 +25,8 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 	},
 	collide: function(thing) {
 		if (thing instanceof Entity) {
-			thing.damage(this.damage);
-			
+			thing.damage(this.damage, this);
+
 			if (thing instanceof Hostile) {
 				var dx = -this.xs;
 				var dy = -this.ys;
@@ -60,7 +60,7 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 			this.light2 = new EntityLight(this,"rgba("+this.col1+",1)",120,0.2);
 			registerLight(this.light2);
 		}
-	
+
 		if (this.xp!=null) {
 		/*var grad= ctx.createLinearGradient(x, y, this.xp, this.yp);
 		grad.addColorStop(0, "rgba(255,255,255,1)");
@@ -69,11 +69,11 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 		var grad0= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
 		grad0.addColorStop(0, "rgba(255,255,255,1)");
 		grad0.addColorStop(1, "rgba(255,255,255,0.7)");
-		
+
 		var grad1= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
 		grad1.addColorStop(0, "rgba("+this.col1+",1)");
 		grad1.addColorStop(0.6, "rgba("+this.col2+",0)");
-		
+
 		ctx.lineCap = "round";
 
 		ctx.lineWidth = 2;
@@ -90,7 +90,7 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 		ctx.lineTo(x,y);
 		ctx.stroke();
 		}
-		
+
 	},
 	destroy: function() {
 		unregisterLight(this.light);

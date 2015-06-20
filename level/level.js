@@ -63,6 +63,7 @@ TYPHOON = 10009;
 GAUSS = 10010;
 NYANGUN = 10011;
 GLOWSTICKGUN = 10012;
+ZOMBIEGUN = 10013;
 
 itemIdMap = {};
 onScriptsLoaded.push(function(){
@@ -78,6 +79,7 @@ onScriptsLoaded.push(function(){
 	itemIdMap[GAUSS] = Gauss;
 	itemIdMap[NYANGUN] = NyanGun;
 	itemIdMap[GLOWSTICKGUN] = GlowstickGun;
+	itemIdMap[ZOMBIEGUN] = ZombieGun;
 });
 
 include("level/items/Item.js");
@@ -95,6 +97,7 @@ include("level/items/weapons/gun/Typhoon.js");
 include("level/items/weapons/melee/Melee.js");
 include("level/items/weapons/melee/WoodenBat.js");
 include("level/items/weapons/melee/ZombieAttack.js");
+include("level/items/weapons/gun/ZombieGun.js");
 
 constructItem = function(id) {
 	try {return new itemIdMap[id];}

@@ -55,7 +55,7 @@ function SpecialLightContainer(light) { //a light that has a custom drawing func
 	this.col = this.light.col||null;
 	this.brightness = this.light.brightness||null;
 
-	//define this.drawLight(dest,[brightness]) 
+	//define this.drawLight(dest,[brightness])
 }
 
 function generateLightImage(color, size, brightness) {
@@ -63,13 +63,11 @@ function generateLightImage(color, size, brightness) {
 	can.width = size;
 	can.height = size;
 	var ct = can.getContext("2d");
-	
+
 	ct.drawImage(imgLightRadial,0,0,size,size);
 	ct.globalCompositeOperation = "multiply";
 	ct.fillStyle = color;
 	ct.fillRect(0,0,size,size);
-	ct.globalCompositeOperation = "destination-out";
-	ct.drawImage(imgLightRadialMask,0,0,size,size);
 
 	return can;
 }
@@ -96,13 +94,13 @@ function compositeLight(dest,gco) {
 	dest.globalCompositeOperation = "source-over";
  }
 function drawAllLights(dest,gbrightness,mode) {
-	if (mode>0) {ctx.globalCompositeOperation = "lighter";}
+	if (mode>0) {ctx.globalCompositeOperation = "screen";}
 	for (var i=0; i<lightArray.length; i++) {
 		if (lightArray[i]!==null && lightArray[i].col) {
 			var x = lightArray[i].getX();
 			var y = lightArray[i].getY();
 			var s = lightArray[i].size;
-			
+
 			if (x+s>=viewX && x-s<=viewX+viewWidth && y+s>=viewY && y-s<=viewY+viewHeight) {
 				if (lightArray[i] instanceof SpecialLightContainer && typeof lightArray[i].drawLight === 'function') {
 					lightArray[i].drawLight(dest,x-viewX,y-viewY,gbrightness,mode);
@@ -123,37 +121,11 @@ function renderLight2() {
 		clearCanvas(grctx,"rgba(0,0,0,0)");
 
 		//first composite: subtract opacity from lit areas of view
-		lictx.globalCompositeOperation = "destination-out";
-		drawAllLights(grctx,1,0);
-		//two passes because it looks better (less dim and blurry)
-		lictx.drawImage(gradientbuffer,0,0);
-		//lictx.drawImage(gradientbuffer,0,0);
-		compositeLight(ctx,"source-over");
+		var newmode = false;
+		lictx.globalCompositeOperation = newmode?"lighter":"screen";
+		drawAllLights(lictx,newmode?0.5:1,0);
 
-		if (enableLightTinting) { //dest-out does not modify color, output must be re-colorized
-			//pre-render colored gradients, they will be used twice
-			clearCanvas(grctx, "rgba(0,0,0,0)");
-			drawAllLights(grctx,1,0);
-
-			//second composite: colorize
-			lictx.globalCompositeOperation = "lighter";
-			lictx.drawImage(gradientbuffer,0,0);
-			ctx.globalAlpha = 0.5;
-			compositeLight(ctx,"color");
-
-			clearCanvas(lictx,"black");
-			
-			//final composite: create bloom (also makes color more vibrant) and glare
-			//lictx.globalCompositeOperation = "lighter";
-			//bloom (ish)
-			//lictx.globalAlpha = 0.3;
-			//lictx.drawImage(gradientbuffer,0,0);
-			//glare
-			lictx.globalAlpha = 1;
-			drawAllLights(lictx,0.6,2); //draw only glare, we used pre-rendered color gradients
-			compositeLight(ctx,"lighter");
-			
-		}
+		compositeLight(ctx,newmode?"hard-light":"multiply");
 	}
 }
 

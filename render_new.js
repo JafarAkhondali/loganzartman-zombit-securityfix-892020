@@ -19,8 +19,14 @@ var noiseHeight = 128;
 var noiseIntensity = 50;
 var noiseData;
 
-var INTRO=0,GAME=1;
+var particles = [];
+
+var INTRO=0,GAME=1,MENU=2;
 var dmode = INTRO;
+
+var UI_UP=0, UI_HOVER=1, UI_DOWN=2;
+var uiPlayState=UI_UP, uiHelpState=UI_UP;
+
 var intime = null;
 var showDebug = true, drawParticles = true, drawOverlay = true, tileShadows = true, entityShadows = true, enableLightRendering = true, enableLightTinting = true, enableGlare = true;
 var defaultFrameBlend = 0.95, minFrameBlend = 0.4, frameBlend = defaultFrameBlend;
@@ -30,6 +36,9 @@ function render() {
 	if (!renderLocked) {
 		switch (dmode) {
 			case INTRO:
+			break;
+
+			case MENU:
 			break;
 
 			case GAME:
@@ -65,14 +74,14 @@ function render() {
 				for (var depth=1; depth>=-1; depth--) {
 					for (var i=0; i<entityManager.length(); i++) {
 						var e = entityManager.get(i);
-						if (e instanceof Entity && e.depth === depth) {
+						if (e instanceof Entity) {
 							if (e.x>viewX &&
 								e.x<viewX+viewWidth &&
 								e.y>viewY &&
 								e.y<viewY+viewHeight) {
 								e.render(
-									(e.x-viewX)*outputScale,
-									(e.y-viewY)*outputScale
+									(e.x-viewX),
+									(e.y-viewY)
 								);
 							}
 						}
@@ -94,9 +103,9 @@ function render() {
 						}
 					}
 				}
-				
+
 				//render lighting
-				renderLight();
+				renderLight2();
 
 				//draw inventory GUI
 				drawInventory(player.inv);
@@ -110,15 +119,15 @@ function render() {
 		        //draw blood overlay
 		        var mult = player.life/player.maxlife, scaleAmt = 80;
 		        ctx.globalAlpha = 1-xexp(mult,1);
-		        ctx.drawImage(
-				Resources.image.screenBlood,
-				(-mult*0.5*scaleAmt)*outputScale,
-				(-mult*0.5*scaleAmt)*outputScale,
-				(viewWidth+mult*scaleAmt)*outputScale,
-				(viewHeight+mult*scaleAmt)*outputScale
+				ctx.drawImage(
+					Resources.image.screenBlood,
+					(-mult*0.5*scaleAmt)*outputScale,
+					(-mult*0.5*scaleAmt)*outputScale,
+					(viewWidth+mult*scaleAmt)*outputScale,
+					(viewHeight+mult*scaleAmt)*outputScale
 		        );
 		        ctx.globalAlpha = 1;
-		
+
 				//draw overlay
 				if (drawOverlay) {
 					ctx.drawImage(
@@ -150,7 +159,7 @@ function render() {
 
 		//copy buffer to screen at proper scale
 		sctx.globalAlpha = frameBlend;
-		sctx.drawImage(buffer,0,0);
+		sctx.drawImage(buffer,0,0,screenWidth,screenHeight);
 		sctx.globalAlpha = 1;
 
 		renderLocked = false;
@@ -167,8 +176,8 @@ function drawLevel(depth) {
 
 	for (var x=~~(viewX/tileWidth); x<~~((viewX+viewWidth)/tileWidth)+1; x++) {
 		for (var y=~~(viewY/tileHeight); y<~~((viewY+viewHeight)/tileHeight)+1; y++) {
-			var outX = ~~((x*tileWidth-viewX)*outputScale),
-				outY = ~~((y*tileWidth-viewY)*outputScale);
+			var outX = ~~((x*tileWidth-viewX)),
+				outY = ~~((y*tileWidth-viewY));
 
 			var tile = gameLevel.getTile(x,y);
 			switch (depth) {

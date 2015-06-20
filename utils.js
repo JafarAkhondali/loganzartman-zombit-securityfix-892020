@@ -3,7 +3,7 @@ INPUT_KB = 1;
 INPUT_MOUSE = 2;
 
 VK_LEFT = 37, VK_UP=38, VK_RIGHT=39, VK_DOWN=40, VK_W=87, VK_A=65, VK_S=83, VK_D=68, VK_R=82, VK_T=84, VK_Q=81, VK_X=88;
-VK_0 = 48, VK_1 = 49, VK_2 = 50, VK_3 = 51, VK_4 = 52, VK_5 = 53, VK_6 = 54, VK_7 = 55, VK_8 = 56, VK_9 = 57; 
+VK_0 = 48, VK_1 = 49, VK_2 = 50, VK_3 = 51, VK_4 = 52, VK_5 = 53, VK_6 = 54, VK_7 = 55, VK_8 = 56, VK_9 = 57;
 VK_F10 = 121, VK_F11 = 122, VK_ESCAPE=27, VK_ENTER=13, VK_BACKSPACE=8;
 
 CLIENT = 1;
@@ -48,7 +48,7 @@ grandr = function(min,max) {
 
 //fast (pregenerated) randoms. originally used for shaders.
 frandArray = new Array(20000);
-for (var i=0; i<frandArray.length; i++) {frandArray[i] = Math.random();}
+for (var i=0; i<frandArray.length; i++) {frandArray[i] = grand();}
 frandPtr = 0;
 frand = function() {
   frandPtr=frandPtr==frandArray.length-1?0:frandPtr+1;
@@ -220,7 +220,7 @@ var wheelDirection = function(evt){
  * Public Domain.
  * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
  */
- 
+
 // object.watch
 if (!Object.prototype.watch) {
 	Object.defineProperty(Object.prototype, "watch", {
@@ -239,7 +239,7 @@ if (!Object.prototype.watch) {
 				return newval = handler.call(this, prop, oldval, val);
 			}
 			;
-			
+
 			if (delete this[prop]) { // can't watch constants
 				Object.defineProperty(this, prop, {
 					  get: getter
@@ -251,7 +251,7 @@ if (!Object.prototype.watch) {
 		}
 	});
 }
- 
+
 // object.unwatch
 if (!Object.prototype.unwatch) {
 	Object.defineProperty(Object.prototype, "unwatch", {

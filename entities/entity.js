@@ -82,7 +82,7 @@ Entity = klass(function (x,y) {
 
 		//tell server to send updates
 		this.mpFrameUpdate();
-		
+
 		//deprecated
 		/*this.x+=d(this.xs);
 		this.y+=d(this.ys);*/
@@ -101,19 +101,26 @@ Entity = klass(function (x,y) {
 				],this.owner||io.sockets.broadcast);
 		}
 	},
-	damage: function(amount) {
+	damage: function(amount, damager) {
 		this.life-=amount;
 		if (particlesEnabled) {
 			for (var i=0; i<Math.ceil((amount/(this.maxlife>0?this.maxlife:1))*6); i++) {
 				new BloodSplat(this.x-this.width*0.5+irand(this.width),this.y-this.height*0.5+irand(this.height),0,0);
 			}
 		}
-		if (this.life<=0) {this.die();}
+		if (this.life<=0) {this.die(damager);}
 	},
-	die: function() {
+	die: function(killer) {
 		if (mpMode==CLIENT) {
-			for (var i=0; i<6; i++) {
-				new BloodSplat(this.x-this.width+irand(this.width*2),this.y-this.height+irand(this.height*2),0,0);
+			var dir = Math.atan2(killer.ys, killer.xs);
+			var len = Math.sqrt(killer.xs*killer.xs + killer.ys*killer.ys);
+			for (var i=0; i<14; i++) {
+				var mDir = grandr(-0.5,0.5)+dir;
+				var mDist = Math.random()*Math.random()*len*2;
+				var dx = Math.cos(mDir)*mDist;
+				var dy = Math.sin(mDir)*mDist;
+				var bs = new BloodSplat(this.x+irandr(-this.width*0.25,this.width*0.25),this.y+irandr(-this.height*0.25,this.height*0.25),dx,dy);
+				bs.life = bs.maxlife = irandr(2,7);
 			}
 		}
 
@@ -123,7 +130,7 @@ Entity = klass(function (x,y) {
 
 		this.destroy();
 	},
-	
+
 	doDrops: function() {
 		//drop items upon death
 	},
@@ -131,6 +138,11 @@ Entity = klass(function (x,y) {
 	collide: function(tile) {
 		//override with collision logic
 	},
+
+	getNearby: function(range) {
+		return entityManager.getNearby(this, range);
+	},
+
 	render: function(x,y) {
 		if (entityShadows) {
 			ctx.globalAlpha = 0.4;
@@ -146,7 +158,7 @@ Entity = klass(function (x,y) {
 		for (var i=this.arrIndex; i<entities.length; i++) {
 			entities[i].arrIndex-=1;
 		}*/
-		
+
 		//delete entities[this.arrIndex];
 		if (mpMode==SERVER) {
 			io.sockets.emit("delent",{arrIndex: this.arrIndex});
@@ -158,7 +170,7 @@ Entity = klass(function (x,y) {
 		if (mpMode==SERVER) {
 			try {
 				//io.sockets.emit("entity",CircularJSON.stringify(this, safeJSON));
-				
+
 				var ser = this.serializable();
 				io.sockets.emit("entity",ser);
 				//console.log(ser);
@@ -178,7 +190,7 @@ Entity = klass(function (x,y) {
 		//console.log(arguments.callee.caller.toString() + ": "+depth);
 		if (!output) {output = {};}
 		//else {output = EntityReference.make(this);}
-		
+
 		for (var prop in this) {
 			if (this[prop] != null && this[prop] != undefined) {
 			//console.log("setting "+prop);
@@ -192,7 +204,7 @@ Entity = klass(function (x,y) {
 					output[prop] = this[prop].serializable(output[prop],depth+1);
 					//console.log("ser");//soutput = "SER";
 				}
-				else if (!(typeof this[prop] === 'function')) {			
+				else if (!(typeof this[prop] === 'function')) {
 					if (typeof this[prop] === 'object') {
 						//needs a serializer
 					}
@@ -202,9 +214,9 @@ Entity = klass(function (x,y) {
 				}
 			}
 		}
-		
+
 		delete output.owner; //shhh it's okay
-		
+
 		return output;
 	},
 	unserialize: function(src,dest,depth) {

@@ -49,19 +49,18 @@ window.addEventListener("resize", function(){
 	defaultScreenHeight = screenHeight;
 	viewWidth = screenWidth/outputScale;
 	viewHeight = screenHeight/outputScale;
-    
+
     initLight();
 	reinitCanvases();
 }, false);
 
 function init() {
-	preload();
     //create container to center canvas
 	canvContainer = document.createElement("center");
 	document.getElementById("cc").appendChild(canvContainer);
-        
+
 	reinitCanvases();
-	
+
 	//switch to title rendering mode in 5 sec
 	var introTimeout = setTimeout(function(){dmode=MENU;},5000);
 
@@ -73,11 +72,10 @@ function init() {
 
 	//initialize drawing buffers for lighting
 	initLight();
-	
 	loadAudio(); //load audio
 
 	mpMode = CLIENT; //this is not a sever.  this is for shared code
-	
+
 	//set interval for processing
 	timer = setInterval(step,1000/targetFPS);
 
@@ -89,11 +87,6 @@ function init() {
 }
 
 function restartGame() {
-	player = new Player(~~(180*tileWidth*0.5),~~(180*tileWidth*0.5),"Player");
-	player.inv.push(new Pistol());
-	player.inv.push(new AssaultRifle());
-	player.inv.push(new WoodenBat());
-
 	startGame(); //generate and populate a level
 
 	//set up some light
@@ -175,6 +168,7 @@ function loadScripts() {
 	include("level/level.js");
 	include("main.js");
 	include("entities/EntityManager.js");
+	include("level/Pathfinder.js");
 	include("render.js");
 	include("light.js");
 	include("res.js");
@@ -197,19 +191,25 @@ function reinitCanvases() {
 	canvContainer.appendChild(canvas);
 	sctx = canvas.getContext("2d"); //screen context, shouldn't be draw onto usually
 
-	//create invisible "buffer" canvas
+	//create invisible buffer canvas
 	buffer = document.createElement("canvas");
 	buffer.width = viewWidth;
 	buffer.height = viewHeight;
 	ctx = buffer.getContext("2d"); //buffer context
 
+	//create blood/fx buffer
+	fxbuffer = document.createElement("canvas");
+	fxbuffer.width = viewWidth;
+	fxbuffer.height = viewHeight;
+	fxctx = fxbuffer.getContext("2d"); //buffer context
+
 	//suggest to browsers not to antialias
 	ctx.webkitImageSmoothingEnabled = false;
 	ctx.mozImageSmoothingEnabled = false;
-	ctx.imageSmoothingEnabled = false;	
+	ctx.imageSmoothingEnabled = false;
 	sctx.webkitImageSmoothingEnabled = false;
 	sctx.mozImageSmoothingEnabled = false;
-	sctx.imageSmoothingEnabled = false;	
+	sctx.imageSmoothingEnabled = false;
 
 	//clear buffer to black
 	ctx.fillStyle = "black";
@@ -225,7 +225,7 @@ function reinitCanvases() {
 	oid = ctx.createImageData(viewWidth,viewHeight);
 	dout = oid.data;
 	for (var i=3; i<dout.length; i+=4) {dout[i] = 255;} //set to opaque
-        
+
     addListeners(); //add input listeners
 }
 
@@ -265,9 +265,10 @@ function step() {
 	frameTime+= (thisFrameTime - frameTime) / filterStrength;
 	lastLoop = thisLoop;
 	fps = (1000/frameTime).toFixed(1);
-	
+
 	if (dmode === GAME) {
 		processStep(tdelta);
+		entityManager.step();
 
 		//clip viewport position
 		if (viewX<0) {viewX = 0;}
@@ -296,6 +297,10 @@ function giveNyanGun() {
 	player.inv.push(new NyanGun());
 }
 
+function giveZedGun() {
+	player.inv.push(new ZombieGun());
+}
+
 /**
  * Includes a javascript file dynamically.
  * Must be redefined in server code.
@@ -321,7 +326,7 @@ function include(filename,loadImmediately) {
 	  js.setAttribute('defer', 'defer');
 	  js.onload = function(){
 	  	scriptsLoaded++;
-	  	
+
 	  	var el = document.getElementById("loading-div");
 	  	el.innerHTML = "loading script "+scriptsLoaded+":";
 

@@ -1,8 +1,9 @@
 T_SEARCH=-1;
+var TOO_FAR = 1000;
 Hostile = Entity.extend(function(x,y,vr){
 	this.target = T_SEARCH;
 	this.visionRadius = vr||50;
-	this.spd = 1;
+	this.spd = 2.5;
 	this.facing = 0;
 	this.inv = new Inventory(1,this);
 	this.pointValue = 10;
@@ -14,7 +15,7 @@ Hostile = Entity.extend(function(x,y,vr){
 		var dx = player.x-this.x;
 		var dy = player.y-this.y;
 		if (dx<viewWidth/2||dy<viewHeight/2) {
-			this.destroy();
+			//this.destroy();
 		}
 	}
 })
@@ -23,6 +24,14 @@ Hostile = Entity.extend(function(x,y,vr){
 	},
 	step: function(dlt) {
 		this.supr(dlt);
+
+		var nearby = this.getNearby();
+		for (var i=nearby.length-1; i>=0; i--) {
+			if (nearby[i] instanceof Bullet) {
+				this.target = player;
+				break;
+			}
+		}
 
 		if (this.target>=0) {this.target = getEntityReference(this.target);}
 
@@ -39,8 +48,14 @@ Hostile = Entity.extend(function(x,y,vr){
 		else {
 			var targ = getEntityReference(this.target);
 			var targetDist = pDist(this.x,this.y,targ.x,targ.y);
+			if (targ === null) {
+				this.target = T_SEARCH;
+				return;
+			}
+
 			var targetDir;
-			if (this.pathfinder !== null) {
+
+			if (targetDist > tileWidth*2 && this.pathfinder !== null) {
 				var targetDx = this.pathfinder.getBestDirection(
 					Math.floor(this.x/tileWidth),
 					Math.floor(this.y/tileHeight)
@@ -72,6 +87,11 @@ Hostile = Entity.extend(function(x,y,vr){
 		}
 
 		if (this.target!=T_SEARCH) {this.target = makeEntityReference(this.target);}
+
+
+		if (Math.abs(this.x - player.x) >= TOO_FAR || Math.abs(this.y - player.y) >= TOO_FAR) {
+			this.destroy();
+		}
 	},
 
 	attack: function(entity) {

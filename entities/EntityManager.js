@@ -103,12 +103,12 @@ EntityManager.prototype.getGridLoc = function (entity) {
 EntityManager.prototype.getNearby = function(entity, range) {
 	range = range || 0;
 	var pos = this.getGridLoc(entity);
-	if (range === 0) return this.grid[pos.x][pos.y];
+	if (range === 0) return this.grid[pos.x][pos.y] || [];
 	else {
 		var list = [];
 		for (var xo = -range; xo <= range && pos.x+xo < this.grid.length && pos.x+xo >= 0; xo++) {
 			for (var yo = -range; yo <= range && pos.y+yo < this.grid[0].length && pos.y+yo >= 0; yo++) {
-				list = list.concat(this.grid[pos.x+xo][pos.y+yo]);
+				list.push.apply(list, this.grid[pos.x+xo][pos.y+yo]);
 			}
 		}
 		return list;
@@ -200,6 +200,9 @@ EntityManager.prototype.set = function(index, entity) {
 EntityManager.prototype.length = function() {return this.entities.length;}
 
 EntityManager.prototype.clearAll = function() {
+	for (var i=this.entities.length-1; i>=0; i--)
+		if (typeof this.entities[i].destroy === "function") this.entities[i].destroy();
+	Zombies.count = 0;
 	this.entities = [];
 	this.freespace = [];
 }

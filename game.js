@@ -165,6 +165,7 @@ function loadScripts() {
 	include("encode64.js");
 	include("klass.js");
 	include("interface.js");
+	include("level/LevelCache.js");
 	include("level/level.js");
 	include("main.js");
 	include("entities/EntityManager.js");

@@ -16,8 +16,8 @@ Pathfinder.prototype.clearGrid = function(clear, val) {
 };
 Pathfinder.prototype.recalculate = function() {
     //target position in cell coordinates
-    var targetX = Math.round(this.target.x / tileWidth),
-        targetY = Math.round(this.target.y / tileHeight);
+    var targetX = Math.floor(this.target.x / tileWidth),
+        targetY = Math.floor(this.target.y / tileHeight);
 
     //reset grid and mark walls as visited
     this.maxCost = 0;
@@ -32,9 +32,9 @@ Pathfinder.prototype.recalculate = function() {
 
     var queue = [];
     queue.push([targetX, targetY, [0,0]]);
-    var index = 0;
-    while (index <= queue.length-1) {
-        var loc = queue[index++];
+    var indLow = 0, indHigh = 1;
+    while (indLow <= queue.length-1) {
+        var loc = queue[indLow++];
 
         if (!this.inbounds(loc[0],loc[1])) continue; //bounds check
         if (this.grid[loc[0]][loc[1]] !== null) continue; //don't check cells that have been visited
@@ -50,14 +50,14 @@ Pathfinder.prototype.recalculate = function() {
         this.grid[loc[0]][loc[1]] = loc[2];
 
         //traverse in cardinal and diagonal directions
-        queue.push([loc[0]+1, loc[1], [-1,0]]);
-        queue.push([loc[0]-1, loc[1], [1,0]]);
-        queue.push([loc[0], loc[1]+1, [0,-1]]);
-        queue.push([loc[0], loc[1]-1, [0,1]]);
-        queue.push([loc[0]+1, loc[1]+1, [-1,-1]]);
-        queue.push([loc[0]+1, loc[1]-1, [-1,1]]);
-        queue.push([loc[0]-1, loc[1]+1, [1,-1]]);
-        queue.push([loc[0]-1, loc[1]-1, [1,1]]);
+        queue[indHigh++] = [loc[0]+1, loc[1], [-1,0]];
+        queue[indHigh++] = [loc[0]-1, loc[1], [1,0]];
+        queue[indHigh++] = [loc[0], loc[1]+1, [0,-1]];
+        queue[indHigh++] = [loc[0], loc[1]-1, [0,1]];
+        queue[indHigh++] = [loc[0]+1, loc[1]+1, [-1,-1]];
+        queue[indHigh++] = [loc[0]+1, loc[1]-1, [-1,1]];
+        queue[indHigh++] = [loc[0]-1, loc[1]+1, [1,-1]];
+        queue[indHigh++] = [loc[0]-1, loc[1]-1, [1,1]];
     }
 
 };

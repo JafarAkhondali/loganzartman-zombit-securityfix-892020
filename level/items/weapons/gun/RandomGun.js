@@ -25,19 +25,19 @@ RandomGun = Gun.extend(function(awesomeness){
 			break;
 
 			case 1:
-				this.clipsize = Math.ceil(irandr(xexp(80,awesomeness),xexp(80,awesomeness)));
+				this.clipsize = Math.ceil(irandr(xexp(40,awesomeness),xexp(60,awesomeness)));
 				this.ammo = this.clipsize;
 				this.delay = ~~grandr((1-awesomeness)*20+5,(1-awesomeness)*40+5);
 				this.damage = grandr(20*awesomeness,(80*awesomeness)-((this.clipsize/250)*50*awesomeness));
 				this.spread = grandr(10,60-xexp(20,awesomeness));
 				this.spd = grandr(awesomeness*12+8,awesomeness*20+8);
-				this.friction = 0.05 - grandr(awesomeness*0.03,awesomeness*0.04);
-				this.shot = ~~grandr(awesomeness*10+3,awesomeness*15+3);
+				this.friction = 0.05 - grandr(awesomeness*0.035,awesomeness*0.045);
+				this.shot = ~~grandr(awesomeness*3+3,awesomeness*5+3);
 			break;
 		}
 
-		this.col1 = rcol(115,205,115,205,115,205);
-		this.col2 = rcol(0,155,0,155,0,155);
+		this.col1 = rhue(0.0,1.0,0.6,1.0,0.5,0.5);
+		this.col2 = rhue(0.0,1.0,0.6,1.0,0.2,0.3);
 		this.snd = gunSounds.ar.random();
 		try{this.icon = assaultIcon;}catch(e){}
 		this.type = ASSAULTRIFLE;

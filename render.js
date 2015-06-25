@@ -173,6 +173,7 @@ function render() {
                 ctx.fillText("FPS: "+(~~fps),4,16);
                 ctx.fillText("Delta: "+(tdelta.toFixed(1)),4,26);
                 ctx.fillText("Facing: "+(player.facing.toFixed(1)),4,36);
+                ctx.fillText("Zombies: "+(Zombie.count),4,46);
             }
 
             //draw chat overlay
@@ -331,26 +332,36 @@ function drawgameLevel(mode) {
     var h = gameLevel.getHeight();
 
     //loop through portion of gameLevel within view
-    for (var x=~~(viewX/tileWidth); x<~~((viewX+viewWidth)/tileWidth)+1; x++) {
-        for (var y=~~(viewY/tileHeight); y<~~((viewY+viewHeight)/tileHeight)+1; y++) {
+    var chunkSize = gameLevel.cache.size;
+    var incr = mode === 0 ? chunkSize : 1;
+    var initialX = ~~(viewX/tileWidth),
+        initialY = ~~(viewY/tileHeight),
+        finalX = ~~((viewX+viewWidth)/tileWidth)+1,
+        finalY = ~~((viewY+viewHeight)/tileHeight)+1;
+    if (mode === 0) { //correct drawing bounds for chunks
+        initialX -= initialX%chunkSize;
+        initialY -= initialY%chunkSize;
+        finalX += chunkSize - finalX%chunkSize;
+        finalY += chunkSize - finalY%chunkSize;
+    }
+    for (var x=initialX; x<finalX; x+=incr) {
+        for (var y=initialY; y<finalY; y+=incr) {
             var sx = ~~(x*tileWidth-viewX); //pixel x
             var sy = ~~(y*tileHeight-viewY); //pixel y
 
             var tile = gameLevel.getTile(x,y); //get the tile at this position
             if (!mode || mode===0) { //normal rendering
-
-                if (tile.depth===0) {
-                    drawtile(tile,sx,sy);
-                    if (enablePathDebug) {
-                        var dx = playerPathfinder.getDirection(x,y);
-                        if (dx !== null) {
-                            var cx = sx+tileWidth*0.5,
-                            cy = sy+tileHeight*0.5;
-                            ctx.fillStyle = "red";
-                            ctx.fillRect(cx-1, cy-1, 2, 2);
-                            ctx.fillStyle = "lime";
-                            ctx.fillRect(cx+2*dx[0]-1,cy+2*dx[1]-1,2,2);
-                        }
+                ctx.drawImage(gameLevel.cache.getChunk(x,y), sx, sy);
+                //drawtile(tile,sx,sy);
+                if (enablePathDebug) {
+                    var dx = playerPathfinder.getDirection(x,y);
+                    if (dx !== null) {
+                        var cx = sx+tileWidth*0.5,
+                        cy = sy+tileHeight*0.5;
+                        ctx.fillStyle = "red";
+                        ctx.fillRect(cx-1, cy-1, 2, 2);
+                        ctx.fillStyle = "lime";
+                        ctx.fillRect(cx+2*dx[0]-1,cy+2*dx[1]-1,2,2);
                     }
                 }
             }

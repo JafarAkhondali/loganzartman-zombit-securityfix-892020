@@ -36,6 +36,16 @@ irandr = function(min,max) {
 	return max<=min?min:irand(max-min)+min;
 }
 
+//integer randoms
+rand = function(max) {
+	if (max) {return (Math.random()*max);}
+	else {return (Math.random());}
+}
+
+randr = function(min,max) {
+	return max<=min?min:rand(max-min)+min;
+}
+
 //normal (guassian) randoms
 grand = function(max) {
 	if (max) {return (((Math.random()+Math.random()+Math.random())/3)*max);}
@@ -63,6 +73,39 @@ ifrand = function(max) {
 rcol = function(rl,rh,gl,gh,bl,bh) {
 	return irandr(rl,rh)+","+irandr(gl,gh)+","+irandr(bl,bh);
 }
+
+rhue = function(hl,hh,sl,sh,ll,lh) {
+	var h = randr(hl,hh),
+		s = randr(sl,sh),
+		l = randr(ll,lh);
+	var rgb = hslToRgb(h,s,l);
+	return rgb[0]+","+rgb[1]+","+rgb[2];
+}
+
+hslToRgb = function(h, s, l) {
+	var r, g, b;
+
+	if(s == 0){
+		r = g = b = l; // achromatic
+	}else{
+		function hue2rgb(p, q, t){
+			if(t < 0) t += 1;
+			if(t > 1) t -= 1;
+			if(t < 1/6) return p + (q - p) * 6 * t;
+			if(t < 1/2) return q;
+			if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+			return p;
+		}
+
+		var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+		var p = 2 * l - q;
+		r = hue2rgb(p, q, h + 1/3);
+		g = hue2rgb(p, q, h);
+		b = hue2rgb(p, q, h - 1/3);
+	}
+
+	return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+},
 
 //return x on an exponential scale of max
 xexp = function(max,x) {

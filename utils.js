@@ -56,8 +56,52 @@ grandr = function(min,max) {
 	return max<=min?min:grand(max-min)+min;
 }
 
+function SmoothRandom(len) {
+    this.len = len;
+    this.data = [];
+    this._idx = 0;
+    this.generate();
+}
+SmoothRandom.SMOOTH_SIZE = 4;
+SmoothRandom.SMOOTH_ITERATIONS = 3;
+SmoothRandom.prototype._get = function(idx) {
+    if (idx<0) return this.data[this.len+idx%this.len-1];
+    return this.data[idx%this.len];
+}
+SmoothRandom.prototype.generate = function() {
+    var i, j, n, smooth;
+    //randomize
+    for (i=this.len-1; i>=0; i--)
+        this.data[i] = Math.random();
+
+    //smooth
+    for (var z=0; z<SmoothRandom.SMOOTH_ITERATIONS; z++) {
+        n = SmoothRandom.SMOOTH_SIZE*2+1;
+        smooth = [];
+        for (i=this.len-1; i>=0; i--) {
+            smooth[i] = 0;
+            for (j=-SmoothRandom.SMOOTH_SIZE; j<=SmoothRandom.SMOOTH_SIZE; j++) {
+                smooth[i] += this._get(i+j);
+            }
+            smooth[i] /= n;
+        }
+        this.data = smooth;
+    }
+
+    //normalize
+    var high = Math.max.apply(this, this.data);
+    var low = Math.min.apply(this, this.data);
+    var scale = high-low;
+    for (i=this.len-1; i>=0; i--)
+        this.data[i] = (this.data[i]-0.5)/scale + 0.5;
+}
+SmoothRandom.prototype.next = function() {
+    if (++this._idx >= this.len) this._idx = 0;
+    return this.data[this._idx];
+}
+
 //fast (pregenerated) randoms. originally used for shaders.
-frandArray = new Array(20000);
+frandArray = new Array(2000);
 for (var i=0; i<frandArray.length; i++) {frandArray[i] = grand();}
 frandPtr = 0;
 frand = function() {

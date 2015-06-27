@@ -28,7 +28,7 @@ startGame = function() {
 		~~(gameLevel.getWidth()/2)+10,
 		~~(gameLevel.getHeight()/2)+10,
 	FLOOR,0.2);
-	gameLevel.cache = new LevelCache(gameLevel, 4);
+	gameLevel.cache = new LevelCache(gameLevel, 16);
 
 	//populate the level with light fixtures
 	if (mpMode==CLIENT) {addLightsToLevel(gameLevel,196,"rgb(175,161,152)",512,0.4,0.3,1);}

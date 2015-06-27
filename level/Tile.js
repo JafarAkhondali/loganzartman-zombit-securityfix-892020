@@ -1,4 +1,13 @@
 EMPTY=0, FLOOR=1, WALL=2, PLANT=3, GRASS=4, WOODFLOOR=5;
+NUM_TILES = 6;
+BORDER_MATRIX = [
+	[0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 1, 0],
+	[0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0],
+	[0, 1, 0, 0, 1, 0]
+];
 SOLIDS = [false,false,true,true,false,false];
 DEPTHS = [0,0,2,2,0,0]; //depths: 0-bottom, 1-shadow layer, 2-top layer
 TILE_SOUNDS = [null,1,null,null,4,5];

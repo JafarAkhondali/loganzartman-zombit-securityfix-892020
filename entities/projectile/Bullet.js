@@ -68,7 +68,7 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 
 		var grad0= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
 		grad0.addColorStop(0, "rgba(255,255,255,1)");
-		grad0.addColorStop(1, "rgba(255,255,255,0.7)");
+		grad0.addColorStop(1, "rgba("+this.col2+",0.7)");
 
 		var grad1= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
 		grad1.addColorStop(0, "rgba("+this.col1+",1)");

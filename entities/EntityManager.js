@@ -78,8 +78,8 @@ EntityManager.GRID_CELL_SIZE = 16;
 EntityManager.prototype.buildGrid = function (level) {
 	this.grid = [];
 	level = level || this.level;
-	var sizeWidth = Math.ceil(level.getWidth() / EntityManager.GRID_CELL_SIZE),
-		sizeHeight = Math.ceil(level.getHeight() / EntityManager.GRID_CELL_SIZE);
+	var sizeWidth = Math.ceil(level.getWidth() / EntityManager.GRID_CELL_SIZE)+1,
+		sizeHeight = Math.ceil(level.getHeight() / EntityManager.GRID_CELL_SIZE)+1;
 	for (var x=0; x<sizeWidth; x++) {
 		this.grid[x] = [];
 		for (var y=0; y<sizeHeight; y++) {
@@ -95,8 +95,8 @@ EntityManager.prototype.getGridLoc = function (entity) {
 	var tx = Math.floor(entity.x / tileWidth),
 		ty = Math.floor(entity.y / tileHeight);
 	return {
-		x: Math.round(tx / EntityManager.GRID_CELL_SIZE),
-		y: Math.round(ty / EntityManager.GRID_CELL_SIZE)
+		x: Math.floor(tx / EntityManager.GRID_CELL_SIZE),
+		y: Math.floor(ty / EntityManager.GRID_CELL_SIZE)
 	};
 };
 
@@ -202,7 +202,7 @@ EntityManager.prototype.length = function() {return this.entities.length;}
 EntityManager.prototype.clearAll = function() {
 	for (var i=this.entities.length-1; i>=0; i--)
 		if (typeof this.entities[i].destroy === "function") this.entities[i].destroy();
-	Zombies.count = 0;
+	Zombie.count = 0;
 	this.entities = [];
 	this.freespace = [];
 }
@@ -241,6 +241,7 @@ onScriptsLoaded.push(function(){
 //include entities
 include("entities/Entity.js");
 include("entities/Player.js");
+include("entities/LaserRenderer.js");
 include("entities/DroppedItem.js");
 include("entities/hostile/Hostile.js");
 include("entities/hostile/Zombie.js");

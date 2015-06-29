@@ -24,6 +24,7 @@ var dmode = INTRO;
 var intime = null;
 var showDebug = false, drawParticles = true, drawOverlay = true, tileShadows = true, entityShadows = true, enableLightRendering = true, enableLightTinting = true, enableGlare = true;
 var defaultFrameBlend = 0.95, minFrameBlend = 0.4, frameBlend = defaultFrameBlend;
+var FADE_IN_TIME = 120;
 
 var enablePathDebug = false;
 
@@ -48,7 +49,7 @@ function render() {
             ctx.fillStyle = "black";
             ctx.fillRect(0,0,viewWidth,viewHeight);
 
-            ctx.font = '12px "uni"';
+            ctx.font = '12px "volter"';
 
             //render the tiles
             drawgameLevel(0);
@@ -118,9 +119,9 @@ function render() {
             ctx.fillRect(viewWidth-128-(18*(player.inv.size)),22,18*(player.inv.size),8);
             ctx.fillStyle = "rgba(20,230,53,1)";
             ctx.fillRect(viewWidth-128-(18*(player.inv.size)),22,18*(player.inv.size)*(player.life/100),8);
-            ctx.font = '8px "uni"';
+            ctx.font = '8px "volter"';
             ctx.fillStyle = "white";
-            ctx.fillText(player.life.toFixed(0),(viewWidth-128-(18*(player.inv.size)*0.5)-5),28);
+            ctx.fillText(player.life.toFixed(0),~~(viewWidth-128-(18*(player.inv.size)*0.5)-5),28);
 
             //draw selected item GUI
             ctx.fillStyle = "rgba(234,240,90,0.3)";
@@ -130,13 +131,13 @@ function render() {
 
             ctx.fillStyle = "rgba(255,255,255,1)";
             var ii = player.inv.getSelected();
-            ctx.font = '9px "uni"';
-            ctx.fillText(ii.name,viewWidth-118,13);
+            ctx.font = '9px "volter"';
+            ctx.fillText(ii.name,~~(viewWidth-118),13);
 
-            ctx.font = '12px "uni"';
+            ctx.font = '12px "volter"';
             if (ii instanceof Gun) {
                 ctx.fillStyle=ii.ammo!==0 && ii.ammo!="R"?"white":"red";
-                ctx.fillText("A: "+ii.ammo,viewWidth-118,25);
+                ctx.fillText("A: "+ii.ammo,~~(viewWidth-118)+0.5,25);
             }
 
             //draw score
@@ -145,7 +146,7 @@ function render() {
             ctx.fillRect(viewWidth/2-40,viewHeight-24,80,20);
             ctx.strokeRect(viewWidth/2-40,viewHeight-24,80,20);
 
-            ctx.font = '13px "uni"';
+            ctx.font = '13px "volter"';
             ctx.textAlign = 'center';
             ctx.fillStyle = "white";
             ctx.fillText(gameScore,viewWidth/2,viewHeight-10);
@@ -181,7 +182,7 @@ function render() {
                 ctx.fillStyle = "rgba(0,0,0,0.7)";
                 ctx.fillRect(8,viewHeight-24,viewWidth-16,16);
 
-                ctx.font = '14px "uni"';
+                ctx.font = '9px "volter"';
                 ctx.fillStyle = "white";
                 ctx.fillText(mpTypedChat,10,viewHeight-12);
             }
@@ -190,7 +191,7 @@ function render() {
             if (mpChatOpen || new Date().getTime()-mpLastMessageTime<mpMessageFadeTime) {
                 var msgOpacity = mpChatOpen?1:1-(new Date().getTime()-mpLastMessageTime)/mpMessageFadeTime;
                 ctx.fillStyle = "rgba(255,255,255,"+msgOpacity.toFixed(2)+")";
-                ctx.font = '8px "uni"';
+                ctx.font = '8px "volter"';
                 for (var i=0; i<mpMessages.length; i++) {
                     ctx.fillText(mpMessages[i],8,viewHeight-28-10*i);
                 }
@@ -204,7 +205,7 @@ function render() {
                 ctx.fillRect(0,viewHeight/2-24,viewWidth,48);
                 var txt = mpConnected?"Loading level...":"Connecting...";
 
-                ctx.font = '24px "uni"';
+                ctx.font = '24px "volter"';
                 ctx.textAlign = 'center';
                 ctx.fillStyle = "white";
                 ctx.fillText(txt,viewWidth/2,viewHeight/2);
@@ -214,12 +215,12 @@ function render() {
             if (gamePaused) {
                 ctx.fillStyle = "rgba(0,0,0,0.5)";
                 ctx.fillRect(0,0,viewWidth,viewHeight);
-                ctx.font = '40px "uni"';
+                ctx.font = '40px "volter"';
                 ctx.textAlign = 'center';
                 ctx.fillStyle = "red";
 
                 ctx.fillText("PAUSED",viewWidth/2,96);
-                ctx.font = '20px "uni"';
+                ctx.font = '20px "volter"';
                 ctx.fillStyle = "white";
                 ctx.fillText("ESC TO CONTINUE",viewWidth/2,128);
                 ctx.fillText("X TO EXIT",viewWidth/2,148);
@@ -233,6 +234,13 @@ function render() {
                     ctx.drawImage(noiseCanvas,x*noiseWidth,y*noiseHeight);
                 }
             }
+
+            if (gameTime < FADE_IN_TIME) {
+                ctx.globalAlpha = 1-gameTime/FADE_IN_TIME;
+                ctx.fillStyle = "rgb(10,9,9)";
+                ctx.fillRect(0,0,viewWidth,viewHeight);
+                ctx.globalAlpha = 1;
+            }
         }
         else if (dmode==INTRO) {
             if (intime==null) {intime=new Date().getTime();}
@@ -242,41 +250,41 @@ function render() {
             ctx.fillStyle = "rgb(40,36,38)";
             ctx.fillRect(0,0,viewWidth,viewHeight);
 
-            ctx.font = '12px "uni"';
+            ctx.font = '12px "volter"';
             ctx.textAlign = 'center';
             ctx.fillStyle = "white";
 
             var vpos = viewHeight/2-100;
 
-            ctx.font = '40px "uni"';
+            ctx.font = '40px "volter"';
             ctx.fillText("Zombit",viewWidth/2,30+vpos);
 
             if (delta>750) {
                 ctx.fillStyle = "lightgray";
-                ctx.font = '13px "uni"';
+                ctx.font = '13px "volter"';
                 ctx.fillText("Programming & Design by",viewWidth/2,70+vpos);
                 ctx.fillStyle = "white";
-                ctx.font = '22px "uni"';
+                ctx.font = '22px "volter"';
                 ctx.fillText("Nondefault",viewWidth/2,90+vpos);
             }
 
             if (delta>1500) {
                 ctx.fillStyle = "lightgray";
-                ctx.font = '13px "uni"';
+                ctx.font = '13px "volter"';
                 ctx.fillText("Graphics & Additional Programming by",viewWidth/2,110+vpos);
                 ctx.fillStyle = "white";
-                ctx.font = '22px "uni"';
+                ctx.font = '22px "volter"';
                 ctx.fillText("Sachittome",viewWidth/2,130+vpos);
             }
 
             if (delta>2250) {
                 ctx.fillStyle = "lightgray";
-                ctx.font = '9px "uni"';
+                ctx.font = '9px "volter"';
                 ctx.fillText("Music by",viewWidth/2,150+vpos);
                 ctx.fillStyle = "white";
-                ctx.font = '15px "uni"';
+                ctx.font = '15px "volter"';
                 ctx.fillText("Sycamore Drive",viewWidth/2,165+vpos);
-                ctx.font = '12px "uni"';
+                ctx.font = '12px "volter"';
                 ctx.fillText("http://sycamoredrive.co.uk/",viewWidth/2,180+vpos);
             }
 
@@ -285,7 +293,7 @@ function render() {
         else if (dmode==MENU) {
             ctx.fillStyle = "rgb(40,36,38)";
             ctx.fillRect(0,0,viewWidth,viewHeight);
-            ctx.font = '24px "uni"';
+            ctx.font = '24px "volter"';
             ctx.textAlign = 'center';
             ctx.fillStyle = "white";
 
@@ -308,7 +316,7 @@ function render() {
             ctx.fillText("HELP",viewWidth/2,170);
 
             ctx.fillStyle = "white";
-            ctx.font = '8px "uni"';
+            ctx.font = '9px "volter"';
             ctx.textAlign = "right";
             ctx.fillText("nondefault.net",viewWidth-8, viewHeight-8);
 
@@ -338,6 +346,10 @@ function drawgameLevel(mode) {
         initialY = ~~(viewY/tileHeight),
         finalX = ~~((viewX+viewWidth)/tileWidth)+1,
         finalY = ~~((viewY+viewHeight)/tileHeight)+1;
+    if (initialX < 0) initialX = 0;
+    if (initialY < 0) initialY = 0;
+    if (finalX >= gameLevel.getWidth()) finalX = gameLevel.getWidth();
+    if (finalY >= gameLevel.getHeight()) finalY = gameLevel.getHeight();
     if (mode === 0) { //correct drawing bounds for chunks
         initialX -= initialX%chunkSize;
         initialY -= initialY%chunkSize;
@@ -413,6 +425,16 @@ function drawtile(tile,x,y) {
             ctx.drawImage(tileImage(tid), x, y);
         }
     }
+}
+
+function drawLoadingScreen() {
+    dmode = -1;
+    ctx.fillStyle = "rgb(10,9,9)";
+    ctx.fillRect(0,0,viewWidth,viewHeight);
+    ctx.font = '24px "volter"';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = "white";
+    ctx.fillText("preparing...",viewWidth/2,viewHeight/2);
 }
 
 //color indexes

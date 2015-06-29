@@ -1,4 +1,4 @@
-Entity = klass(function (x,y) {
+Entity = klass(function (x,y,noreg) {
 	this.x = x||50;
 	this.y = y||50;
 	this.xs = 0;
@@ -22,7 +22,7 @@ Entity = klass(function (x,y) {
 	this.height = tileHeight;
 
 	//entity management code
-	if (!mpActive || mpMode==SERVER) {
+	if (!mpActive || mpMode==SERVER && !noreg) {
 		var ind = entityManager.register(this);
 		this.arrIndex = ind;
 	}
@@ -46,9 +46,9 @@ Entity = klass(function (x,y) {
 
 		//move for xspeed
 		var xm = this.xs>0?1:-1;
-		for (var xx=0; xx<Math.floor(sx); xx++) {
+		for (var xx=0; xx<~~sx; xx++) {
 			var ctile = tileAt(this.x+xm+(xm*this.width*0.5),this.y);
-			if (ctile!=null && !isSolid(ctile)) {
+			if (ctile!==null && !isSolid(ctile)) {
 				this.x+=xm;
 			}
 			else {
@@ -57,14 +57,14 @@ Entity = klass(function (x,y) {
 				break;
 			}
 		}
-		var curtile = tileAt(this.x+(this.xs%1)+(xm*this.width*0.5),this.y);
-		if (curtile!=null && !isSolid(curtile)) {this.x+=(this.xs%1);}
+		var curtile = tileAt(this.x+(this.xs*dlt)%1+(xm*this.width*0.5),this.y);
+		if (curtile!==null && !isSolid(curtile)) {this.x+=(this.xs*dlt)%1;}
 
 		//move for yspeed
 		var ym = this.ys>0?1:-1;
-		for (var yy=0; yy<Math.floor(sy); yy++) {
+		for (var yy=0; yy<~~sy; yy++) {
 			var ctile = tileAt(this.x,this.y+ym+(ym*this.height*0.5));
-			if (ctile!=null && !isSolid(ctile)) {
+			if (ctile!==null && !isSolid(ctile)) {
 				this.y+=ym;
 			}
 			else {
@@ -73,15 +73,15 @@ Entity = klass(function (x,y) {
 				break;
 			}
 		}
-		curtile = tileAt(this.x,this.y+(this.ys%1)+(ym*this.height*0.5));
-		if (curtile!=null && !isSolid(curtile)) {this.y+=(this.ys%1);}
+		curtile = tileAt(this.x,this.y+((this.ys*dlt)%1)+(ym*this.height*0.5));
+		if (curtile!==null && !isSolid(curtile)) {this.y+=(this.ys*dlt)%1;}
 
 		//apply friction
 		this.xs*=1-(this.friction*dlt);
 		this.ys*=1-(this.friction*dlt);
 
 		//tell server to send updates
-		this.mpFrameUpdate();
+		if (mpMode === SERVER) this.mpFrameUpdate();
 
 		//deprecated
 		/*this.x+=d(this.xs);
@@ -89,16 +89,16 @@ Entity = klass(function (x,y) {
 
 		if (this.life<=0) {this.die();}
 
-		if (mpMode == SERVER) {
-		networkManager.addProperties(this,
-				[
-					"x",
-					"y",
-					"xs",
-					"ys",
-					"life",
-					"facing",
-				],this.owner||io.sockets.broadcast);
+		if (mpMode === SERVER) {
+			networkManager.addProperties(this,
+					[
+						"x",
+						"y",
+						"xs",
+						"ys",
+						"life",
+						"facing",
+					],this.owner||io.sockets.broadcast);
 		}
 	},
 	damage: function(amount, damager) {

@@ -87,37 +87,46 @@ function init() {
 }
 
 function restartGame() {
-	startGame(); //generate and populate a level
+	LevelFactory.fromFile("level/test.json", function(level){
+		if (level) {
+			gameLevel = level;
+			startGame(true);
 
-	//set up some light
-	var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",200,1);
-	pLight = new SpecialLightContainer(pLight);
-	pLight.drawLight = function(dest,x,y,brightness,mode) {
-		dest.save();
-		dest.globalAlpha = brightness*mode==0?0.5:0;
-		dest.translate(x,y);
-		dest.rotate(player.facing-Math.PI);
-		dest.translate(-(x+imgFlashlightBeam.width),-(y+imgFlashlightBeam.height/2));
-		dest.drawImage(imgFlashlightBeam,x,y);
-		dest.restore();
-	}
-	registerLight(pLight);
+			//set up some light
+			var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",200,1);
+			pLight = new SpecialLightContainer(pLight);
+			pLight.drawLight = function(dest,x,y,brightness,mode) {
+				dest.save();
+				dest.globalAlpha = brightness*mode==0?0.5:0;
+				dest.translate(x,y);
+				dest.rotate(player.facing-Math.PI);
+				dest.translate(-(x+imgFlashlightBeam.width),-(y+imgFlashlightBeam.height/2));
+				dest.drawImage(imgFlashlightBeam,x,y);
+				dest.restore();
+			}
+			registerLight(pLight);
 
-	var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",400,1);
-	rLight.update = function() {
-		var x = mouseX+viewX, y = mouseY+viewY;
-		var d = pDist(player.x,player.y,x,y);
-		//console.log(d);
-		this.brightness = Math.max(0,Math.min(1,d/50)*(1-d/400));
-		this.size = ((d+100)/300)*400;
-	}
-	rLight.getX = function(){this.update(); return mouseX+viewX;}
-	rLight.getY = function(){return mouseY+viewY;}
-	registerLight(rLight);
+			var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",400,1);
+			rLight.update = function() {
+				var x = mouseX+viewX, y = mouseY+viewY;
+				var d = pDist(player.x,player.y,x,y);
+				//console.log(d);
+				this.brightness = Math.max(0,Math.min(1,d/50)*(1-d/400));
+				this.size = ((d+100)/300)*400;
+			}
+			rLight.getX = function(){this.update(); return mouseX+viewX;}
+			rLight.getY = function(){return mouseY+viewY;}
+			registerLight(rLight);
 
-	dmode = GAME;
-	gamePaused = false;
-	if (typeof gui === "undefined") {createGUI();}
+			dmode = GAME;
+			gamePaused = false;
+			if (typeof gui === "undefined") {createGUI();}
+			gameTime = 0;
+		}
+		else {
+			throw new Error("LEVEL FAILED TO LOAD");
+		}
+	});
 }
 
 function endGame() {
@@ -131,6 +140,8 @@ function cleanupGame() {
 	gameScore = 0;
 	dmode = MENU;
 	gamePaused = true;
+
+	keys = [];
 
 	clearInterval(spawnInterval);
 	lightArray = [];
@@ -188,7 +199,7 @@ function reinitCanvases() {
 	canvas = document.createElement("canvas");
 	canvas.width = screenWidth;
 	canvas.height = screenHeight;
-	canvas.style.cursor = "url('res/cursor.cur'), crosshair";
+	canvas.style.cursor = "crosshair";
 	canvContainer.appendChild(canvas);
 	sctx = canvas.getContext("2d"); //screen context, shouldn't be draw onto usually
 

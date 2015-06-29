@@ -9,7 +9,7 @@ function addListeners() {
 	//window.onresize = resizeCheck;
 }
 
-var keys = new Array(2048);
+var keys = [];
 function kd(e) { //keydown
 	if (modalsOpen<=0) {
 		if (!e) {e=event;}
@@ -113,7 +113,10 @@ function md(e) {
 	if (dmode === MENU) {
 		if (uiPlayState === UI_HOVER && mouseY>120 && mouseY<140 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40) {
 			uiPlayState = UI_UP;
-			restartGame();
+			requestAnimFrame(function(){
+				drawLoadingScreen();
+				setTimeout(restartGame,50);
+			});
 		}
 		if (uiHelpState === UI_HOVER && mouseY>150 && mouseY<170 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40) {
 			uiHelpState = UI_UP;

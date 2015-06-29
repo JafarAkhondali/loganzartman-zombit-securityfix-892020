@@ -116,16 +116,16 @@ function drawAllLights(dest,gbrightness,mode) {
 
 function renderLight2() {
 	if (enableLightRendering) {
-		lictx.globalCompositeOperation = "source-over";
-		clearCanvas(lictx,"black");
-		clearCanvas(grctx,"rgba(0,0,0,0)");
-
 		//first composite: subtract opacity from lit areas of view
 		var newmode = false;
 		lictx.globalCompositeOperation = newmode?"lighter":"screen";
 		drawAllLights(lictx,newmode?0.5:1,0);
 
 		compositeLight(ctx,newmode?"hard-light":"multiply");
+		
+		lictx.globalCompositeOperation = "source-over";
+		clearCanvas(lictx,"black");
+		clearCanvas(grctx,"rgba(0,0,0,0)");
 	}
 }
 

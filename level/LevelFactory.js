@@ -18,7 +18,7 @@ var LevelFactory = {
 	    var minY = 0;
 	    var maxX = minX+w-1;
 	    var maxY = minY+h-1;
-	    
+
 	    //make some rooms
 	    for (var i=0; i<n; i++)
 	    {
@@ -26,14 +26,14 @@ var LevelFactory = {
 	        var y1 = irand(maxY-minY);
 	        var x2 = x1+irand(maxX-minX-x1);
 	        var y2 = x2+irand(maxY-minY-y1);
-	        
+
 	        if (x2>maxX-minX) {x2=maxX-minX;}
 	        if (y2>maxY-minY) {y2=maxY-minY;}
-	        
+
 	        level = LevelFactory.fillTileRect(level,x1,y1,x2,y2,[FLOOR,GRASS,WOODFLOOR].random());
 	        level = LevelFactory.drawTileRect(level, x1, y1, x2, y2, WALL);
 	    }
-	    
+
 	    //knock out chunks
 	    for (var i=0; i<10; i++)
 	    {
@@ -41,13 +41,13 @@ var LevelFactory = {
 	        var y1 = irand(maxY-minY-(h/10));
 	        var x2 = x1+irand(w/5);
 	        var y2 = x2+irand(h/5);
-	        
+
 	        if (x2>maxX-minX) {x2=maxX-minX;}
 	        if (y2>maxY-minY) {y2=maxY-minY;}
-	        
+
 	        level = LevelFactory.fillTileRect(level, x1, y1, x2, y2, FLOOR);
 	    }
-	    
+
 	    return level;
 	},
 
@@ -102,7 +102,7 @@ var LevelFactory = {
 	            level.setTile(new Tile(type,x,y),x,y);
 	        }
 	    }
-	    
+
 	    return level;
 	},
 
@@ -113,13 +113,46 @@ var LevelFactory = {
 	        level.setTile(new Tile(type,x,y1),x,y1);
 	        level.setTile(new Tile(type,x,y2),x,y2);
 	    }
-	    
+
 	    for (var y=y1; y<=y2; y++)
 	    {
 	        level.setTile(new Tile(type,x1,y),x1,y);
 	        level.setTile(new Tile(type,x2,y),x2,y);
 	    }
-	    
+
 	    return level;
+	},
+
+	fromFile: function(url, callback) {
+	    var req = new XMLHttpRequest();
+	    req.onreadystatechange = function() {
+	        if (req.readyState == 4 && req.status == 200) {
+	            var level = JSON.parse(req.responseText);
+	            callback(LevelFactory.parseLevel(level));
+	        }
+	    };
+	    req.open("GET", url, true);
+	    try {
+	        if (url === "") callback(false);
+	        req.send();
+	    }
+	    catch (error) {
+	        callback(false);
+	    }
+	},
+
+	parseLevel: function(parsedJson) {
+		var w = parsedJson.width,
+			h = parsedJson.height,
+			data = parsedJson.data;
+		var level = [];
+		for (var x=0; x<w; x++) {
+			level[x] = [];
+			for (var y=0; y<h; y++) {
+				var idx = (y*w)+x;
+				level[x][y] = new Tile(data[idx],x,y);
+			}
+		}
+		return new Level(level);
 	}
-}
+};

@@ -31,6 +31,18 @@ Level.prototype.getChunk = function(x,y,w,h) {
 	}
 	return new Chunk(x,y,chunk);
 }
+Level.prototype.getTilesOfTypes = function(types) {
+	var stack = [];
+	for (var x=0; x<this.getWidth(); x++) {
+		for (var y=0; y<this.getHeight(); y++) {
+			var tile = this.getTile(x,y);
+			if (tile instanceof Tile) {
+				if (types.indexOf(tile.id) >= 0) stack.push(tile);
+			}
+		}
+	}
+	return stack;
+}
 
 chunkSize = 5;
 Chunk = klass(function (x,y,tiles){

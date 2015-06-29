@@ -24,7 +24,13 @@ String.prototype.toProperCase = function () {
 
 Array.prototype.random = function() {
   return this[~~(Math.random()*this.length)];
-}
+};
+
+Array.prototype.shuffle = function() {
+	var o = this;
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+	return o;
+};
 
 //integer randoms
 irand = function(max) {
@@ -245,7 +251,7 @@ pDir = function(x1,y1,x2,y2) {
  var xd = x2-x1;
  var yd = y2-y1;
 
- return fast_atan2(yd,xd);
+ return Math.atan2(yd,xd);
 }
 
 pDist = function(x1,y1,x2,y2) {

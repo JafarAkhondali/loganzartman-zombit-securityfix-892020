@@ -247,10 +247,10 @@ function drawInventory(inv) {
 
 	ctx.fillStyle = "rgba(255,255,255,1)";
 	var ii = inv.getSelected();
-	ctx.font = '9px "uni"';
+	ctx.font = '9px "volter"';
 	ctx.fillText(ii.name,viewWidth-118,13);
 
-	ctx.font = '12px "uni"';
+	ctx.font = '12px "volter"';
 	if (ii instanceof Gun) {
 		ctx.fillStyle=ii.ammo!=0 && ii.ammo!="R"?"white":"red";
 		ctx.fillText("A: "+ii.ammo,viewWidth-118,25);
@@ -262,7 +262,7 @@ function drawHealthbar() {
 	ctx.fillRect(viewWidth-128-(18*(player.inv.size)),22,18*(player.inv.size),8);
 	ctx.fillStyle = "rgba(20,230,53,1)";
 	ctx.fillRect(viewWidth-128-(18*(player.inv.size)),22,18*(player.inv.size)*(player.life/100),8);
-	ctx.font = '8px "uni"';
+	ctx.font = '8px "volter"';
 	ctx.fillStyle = "white";
 	ctx.fillText(player.life.toFixed(0),(viewWidth-128-(18*(player.inv.size)*0.5)-5),28);
 }
@@ -280,7 +280,7 @@ function drawMultiplayer() {
 		ctx.fillStyle = "rgba(0,0,0,0.7)";
 		ctx.fillRect(8,viewHeight-24,viewWidth-16,16);
 
-		ctx.font = '14px "uni"';
+		ctx.font = '9px "volter"';
 		ctx.fillStyle = "white";
 		ctx.fillText(mpTypedChat,10,viewHeight-12);
 	}
@@ -288,7 +288,7 @@ function drawMultiplayer() {
 	if (mpChatOpen || new Date().getTime()-mpLastMessageTime<mpMessageFadeTime) {
 		var msgOpacity = mpChatOpen?1:1-(new Date().getTime()-mpLastMessageTime)/mpMessageFadeTime;
 		ctx.fillStyle = "rgba(255,255,255,"+msgOpacity.toFixed(2)+")";
-		ctx.font = '8px "uni"';
+		ctx.font = '8px "volter"';
 		for (var i=0; i<mpMessages.length; i++) {
 			ctx.fillText(mpMessages[i],8,viewHeight-28-10*i);
 		}
@@ -301,7 +301,7 @@ function drawMultiplayer() {
 		ctx.fillRect(0,viewHeight/2-24,viewWidth,48);
 		var txt = mpConnected?"Loading level...":"Connecting...";
 
-		ctx.font = '24px "uni"';
+		ctx.font = '24px "volter"';
 		ctx.textAlign = 'center';
 		ctx.fillStyle = "white";
 		ctx.fillText(txt,viewWidth/2,viewHeight/2);

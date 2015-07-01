@@ -256,28 +256,31 @@ function render() {
 
             var vpos = viewHeight/2-100;
 
-            ctx.font = '40px "volter"';
-            ctx.fillText("Zombit",viewWidth/2,30+vpos);
+            ctx.globalAlpha = Math.min(1, delta/1000);
+            ctx.drawImage(imgTitle,viewWidth/2-imgTitle.width/4,20,imgTitle.width/2,imgTitle.height/2);
 
-            if (delta>750) {
+            if (delta>600) {
+                ctx.globalAlpha = Math.min(1, (delta-600)/1000) - (delta>=2500 ? Math.min(1,(delta-2500)/1000) : 0);
                 ctx.fillStyle = "lightgray";
-                ctx.font = '13px "volter"';
+                ctx.font = '9px "volter"';
                 ctx.fillText("Programming & Design by",viewWidth/2,70+vpos);
                 ctx.fillStyle = "white";
-                ctx.font = '22px "volter"';
-                ctx.fillText("Nondefault",viewWidth/2,90+vpos);
+                ctx.font = '27px "volter"';
+                ctx.fillText("Nondefault",viewWidth/2,98+vpos);
             }
 
-            if (delta>1500) {
+            ctx.globalAlpha = 1;
+
+            /*if (delta>1500) {
                 ctx.fillStyle = "lightgray";
                 ctx.font = '13px "volter"';
                 ctx.fillText("Graphics & Additional Programming by",viewWidth/2,110+vpos);
                 ctx.fillStyle = "white";
                 ctx.font = '22px "volter"';
                 ctx.fillText("Sachittome",viewWidth/2,130+vpos);
-            }
+            }*/
 
-            if (delta>2250) {
+            /*if (delta>2250) {
                 ctx.fillStyle = "lightgray";
                 ctx.font = '9px "volter"';
                 ctx.fillText("Music by",viewWidth/2,150+vpos);
@@ -286,7 +289,7 @@ function render() {
                 ctx.fillText("Sycamore Drive",viewWidth/2,165+vpos);
                 ctx.font = '12px "volter"';
                 ctx.fillText("http://sycamoredrive.co.uk/",viewWidth/2,180+vpos);
-            }
+            }*/
 
             ctx.textAlign = 'left';
         }
@@ -315,8 +318,11 @@ function render() {
             ctx.fillStyle = uiHelpState===UI_HOVER?"yellow":"white";
             ctx.fillText("HELP",viewWidth/2,170);
 
-            ctx.fillStyle = "white";
+            ctx.fillStyle = "red";
             ctx.font = '9px "volter"';
+            ctx.textAlign = "left";
+            ctx.fillText("beta v"+VERSION+" "+SUBVER,8, viewHeight-8);
+            ctx.fillStyle = "white";
             ctx.textAlign = "right";
             ctx.fillText("nondefault.net",viewWidth-8, viewHeight-8);
 

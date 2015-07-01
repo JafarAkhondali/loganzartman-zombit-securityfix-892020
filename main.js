@@ -34,7 +34,7 @@ startGame = function(skipGenerate) {
 	gameLevel.cache = new LevelCache(gameLevel, 16);
 
 	//populate the level with light fixtures
-	if (mpMode==CLIENT) {addLightsToLevel(gameLevel,196,"rgb(175,161,152)",512,0.4,0.3,1);}
+	if (mpMode==CLIENT) {addLightsToLevel(gameLevel,196,"rgb(175,151,122)",512,0.4,0.3,1);}
 
 	entityManager = new EntityManager(gameLevel);
 
@@ -51,7 +51,7 @@ startGame = function(skipGenerate) {
 
 	//tell zombies to spawn continuously
 	spawnInterval = setInterval(function(){
-		if (Zombie.count<100) {
+		if (Zombie.count<100 && gameTime >= 60*20) {
 		for (var i=0; i<1; i++) {
 			var dir = Math.random()*Math.PI*2,
 				dist = viewWidth*0.5 + Math.random()*100;
@@ -65,7 +65,7 @@ startGame = function(skipGenerate) {
 				zed.pathfinder = playerPathfinder;
 			}
 		}}
-	},100);
+	},120);
 
 	//spawn some loot
 	var loots = [new AssaultRifle(), new AssaultRifle(), new Gauss(), new Typhoon(), new GlowstickGun(), new GlowstickGun(), new RandomGun(0.7), new RandomGun(0.7), new RandomGun(0.7), new RandomGun(0.9)];

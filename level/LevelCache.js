@@ -36,6 +36,13 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
     }
 
     //post-process
+    //create top buffer, which will allow us to draw without retrieving imagedata again
+    var topBuffer = document.createElement("canvas");
+    topBuffer.width = canvas.width;
+    topBuffer.height = canvas.height;
+    var bctx = topBuffer.getContext("2d");
+
+    //set up tile sampler, to sample pixels from tile textures
     var tileSampler = document.createElement("canvas");
     tileSampler.width = NUM_TILES*tileWidth;
     tileSampler.height = tileHeight;
@@ -53,6 +60,7 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
         return [tsdata[idx+0], tsdata[idx+1], tsdata[idx+2]];
     };
 
+    //set up image data access functions
     var imgdata = ctx.getImageData(0,0,canvas.width,canvas.height),
         data = imgdata.data;
     var putpixel = function(x,y,r,g,b,a) {
@@ -69,6 +77,7 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
         return [data[idx], data[idx+1], data[idx+2]];
     };
 
+    //creates randomized borders on tiles (less artwork for me!)
     var _rand = this._rand;
     var borderize = function(tx, ty, sideX, sideY, neighbor) {
         var darken = 20;
@@ -99,6 +108,39 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
         }
     };
 
+    //draw lines on asphalt tiles
+    var drawLines = function(tx, ty, nw, ne, nn, ns) {
+        tx *= tileWidth;
+        ty *= tileHeight;
+        var x = tileWidth*0.5,
+            y = tileHeight*0.5,
+            w = 0,
+            h = 0;
+        if (ne !== null && ne.id === ASPHALT_LINE) {
+            w += tileWidth*0.5;
+        }
+        if (nw !== null && nw.id === ASPHALT_LINE) {
+            x = 0;
+            w += tileWidth*0.5;
+        }
+        if (ns !== null && ns.id === ASPHALT_LINE) {
+            h += tileHeight*0.5;
+        }
+        if (nn !== null && nn.id === ASPHALT_LINE) {
+            y = 0;
+            h += tileWidth*0.5;
+        }
+        bctx.strokeStyle = "yellow";
+        bctx.lineWidth = 3;
+        bctx.beginPath();
+        bctx.moveTo(tx+x, ty+tileHeight*0.5);
+        bctx.lineTo(tx+x+w, ty+tileHeight*0.5);
+        bctx.moveTo(tx+tileWidth*0.5, ty+y);
+        bctx.lineTo(tx+tileWidth*0.5, ty+y+h);
+        bctx.stroke();
+    };
+
+    //perform border rendering
     var border = function(center, tile) {
         return tile !== null && BORDER_MATRIX[center.id][tile.id];
     }
@@ -113,6 +155,7 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
                 neighborSouth = this.level.getTile(tileBaseX, tileBaseY + 1);
 
             if (tile !== null && tile.depth === 0) {
+                if (tile.id === ASPHALT_LINE) drawLines(xo, yo, neighborWest, neighborEast, neighborNorth, neighborSouth);
                 if (border(tile, neighborWest)) borderize(xo, yo, -1, 0, neighborWest);
                 if (border(tile, neighborNorth)) borderize(xo, yo, 0, -1, neighborNorth);
                 if (border(tile, neighborEast)) borderize(xo, yo, 1, 0, neighborEast);
@@ -121,6 +164,7 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
         }
     }
     ctx.putImageData(imgdata, 0, 0);
+    ctx.drawImage(topBuffer, 0, 0);
 };
 LevelCache.prototype.getChunk = function (tx, ty) {
     var x = tx / this.size,

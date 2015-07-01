@@ -28,6 +28,9 @@ var filterStrength = 20;
 var frameTime = 0, lastLoop = new Date, thisLoop;
 var fps = targetFPS;
 
+var VERSION = 124;
+var SUBVER = ":^)"
+
 particlesEnabled = true; //duh
 
 uArgs = null; //user arguments
@@ -62,7 +65,7 @@ function init() {
 	reinitCanvases();
 
 	//switch to title rendering mode in 5 sec
-	var introTimeout = setTimeout(function(){dmode=MENU;},5000);
+	var introTimeout = setTimeout(function(){dmode=MENU;},3700);
 
 	//parse URL flags
 	var loc = document.location.href;
@@ -118,6 +121,9 @@ function restartGame() {
 			rLight.getY = function(){return mouseY+viewY;}
 			registerLight(rLight);
 
+			var centerLight = new StaticLight(player.x, player.y, "rgba(170,160,240,0.8)", 600, 1);
+			registerLight(centerLight);
+
 			dmode = GAME;
 			gamePaused = false;
 			if (typeof gui === "undefined") {createGUI();}
@@ -153,6 +159,9 @@ function showGameHelp() {
 		'<span style="color:blue; font-size: 100px;">HELP</span><br>'+
 		'<span style="font-size: 20px;">Currently, Zombit is a roguelike shooter where the goal is to score as many points as possible.  '+
 		'As of right now, there is no endgame.  Just kill zombies, find loot, and collect weapons.<br><br>'+
+		'When the game starts, you have 20 seconds until zombies begin to spawn.  Use this time to collect weapons that have been dropped conveniently '+
+		'on floors.  Zombies sometimes become inexplicably confused, but they can surround you, so be careful and don\'t get caught reloading!'+
+		'<br><br>'+
 		'<span style="font-size: 40px;">Controls:</span>'+
 		'<span style="font-size: 18px;"><br>'+
 		'<b>Movement:</b> WASD<br>'+
@@ -178,6 +187,7 @@ function loadScripts() {
 	include("interface.js");
 	include("level/LevelCache.js");
 	include("level/level.js");
+	include("level/Tile.js");
 	include("main.js");
 	include("entities/EntityManager.js");
 	include("level/Pathfinder.js");

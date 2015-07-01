@@ -58,7 +58,6 @@ Chunk = klass(function (x,y,tiles){
 	}
 });
 
-include("level/Tile.js");
 include("level/LevelFactory.js");
 include("level/Inventory.js");
 

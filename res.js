@@ -42,8 +42,8 @@ imgBloodSplat3.src = "res/entity/bloodsplat4.png";
 var imgShadow = new Image();
 imgShadow.src = "res/entity/shadow.png";
 
-var images = new Array(6);
-for (var i=0; i<images.length; i++) {
+var images = [];
+for (var i=0; i<NUM_TILES; i++) {
 	images[i] = new Image();
 	images[i].src = "res/tile/"+i+".png";
 }

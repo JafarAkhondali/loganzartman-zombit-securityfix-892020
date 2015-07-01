@@ -5,7 +5,7 @@ Zombie = Hostile.extend(function(x,y,vr){
 
 	Zombie.count++;
 
-	this.spd=grandr(1.0,2.2);
+	this.spd=grandr(0.5,1.6);
 	this.visionRadius = 80
 	this.life = irandr(25,ZOMBIEMAXLIFE);
 	this.maxlife = this.life;

@@ -111,7 +111,7 @@ Player = Entity.extend(function(x,y,name,owner){
 	* Change the player's image to face the
 	* direction its moving.
 	*/
-	control: function() {
+	control: function(dlt) {
 		//accept keyboard input
 		if (this.owner.keys[VK_A]) {this.image=imgPlayer_A;this.xs-=d(this.spdInc*dlt);}
 		if (this.owner.keys[VK_D]) {this.image=imgPlayer_D;this.xs+=d(this.spdInc*dlt);}

@@ -65,8 +65,8 @@ Gun = Weapon.extend(function(clipsize,ammo,delay,damage,spread,spd,user) {
 		//vector converted to xspeed/yspeed
 		var user = getEntityReference(this.owner);
 		var dir = user.facing+radians(grand()*this.spread-this.spread*0.5);
-		var xs = lDirX(this.spd,dir);
-		var ys = lDirY(this.spd,dir);
+		var xs = lDirX(this.spd,dir)+user.xs;
+		var ys = lDirY(this.spd,dir)+user.ys;
 
 		//create bullet and set speeds
 		var blt = new Bullet(user.x,user.y,this.damage,user);

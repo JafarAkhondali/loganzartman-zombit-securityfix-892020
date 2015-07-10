@@ -32,35 +32,63 @@ Array.prototype.shuffle = function() {
 	return o;
 };
 
+Array.prototype.pad = function(size, val) {
+	var out = [];
+	for (var i=0; i<this.length; i++)
+		if (i>=this.length) out[i] = val;
+		else out[i] = this[i];
+	return out;
+};
+
+var Util = {};
+
+Util.loadJSON = function(url, callback) {
+	var req = new XMLHttpRequest();
+	req.onreadystatechange = function() {
+		if (req.status == 200) {
+			var json = JSON.parse(req.responseText);
+			callback(json);
+		}
+	};
+	req.open("GET", url+"?"+Date.now(), true);
+	try {
+		if (url === "") callback(false);
+		req.send();
+	}
+	catch (error) {
+		callback(false);
+	}
+}
+
 //integer randoms
-irand = function(max) {
+Util.irand = function(max) {
 	if (max) {return Math.round(Math.random()*max);}
 	else {return Math.round(Math.random());}
-}
+};
 
-irandr = function(min,max) {
-	return max<=min?min:irand(max-min)+min;
-}
+Util.irandr = function(min,max) {
+	return max<=min?min:Util.irand(max-min)+min;
+};
 
 //integer randoms
-rand = function(max) {
+Util.rand = function(max) {
 	if (max) {return (Math.random()*max);}
 	else {return (Math.random());}
-}
+};
 
-randr = function(min,max) {
-	return max<=min?min:rand(max-min)+min;
-}
+Util.randr = function(min,max) {
+	return max<=min?min:Util.rand(max-min)+min;
+};
 
 //normal (guassian) randoms
-grand = function(max) {
+Util.grand = function(max) {
 	if (max) {return (((Math.random()+Math.random()+Math.random())/3)*max);}
 	else {return ((Math.random()+Math.random()+Math.random())/3);}
-}
+};
 
-grandr = function(min,max) {
-	return max<=min?min:grand(max-min)+min;
-}
+Util.grandr = function(min,max) {
+	return max<=min?min:Util.grand(max-min)+min;
+};
 
 function SmoothRandom(len) {
     this.len = len;
@@ -100,52 +128,52 @@ SmoothRandom.prototype.generate = function() {
     var scale = high-low;
     for (i=this.len-1; i>=0; i--)
         this.data[i] = (this.data[i]-0.5)/scale + 0.5;
-}
+};
 SmoothRandom.prototype.next = function() {
     if (++this._idx >= this.len) this._idx = 0;
     return this.data[this._idx];
-}
+};
 
 //fast (pregenerated) randoms. originally used for shaders.
-frandArray = new Array(2000);
-for (var i=0; i<frandArray.length; i++) {frandArray[i] = grand();}
-frandPtr = 0;
-frand = function() {
-  frandPtr=frandPtr==frandArray.length-1?0:frandPtr+1;
-  return frandArray[frandPtr];
-}
-ifrand = function(max) {
-  if (max) {return ~~(frand()*max);}
-  else {return ~~(frand());}
-}
+Util.frandArray = new Array(2000);
+for (var i=0; i<Util.frandArray.length; i++) {Util.frandArray[i] = Util.grand();}
+Util.frandPtr = 0;
+Util.frand = function() {
+  Util.frandPtr=Util.frandPtr==Util.frandArray.length-1?0:Util.frandPtr+1;
+  return Util.frandArray[Util.frandPtr];
+};
+Util.ifrand = function(max) {
+  if (max) {return ~~(Util.frand()*max);}
+  else {return ~~(Util.frand());}
+};
 
 //generate random rgb triplet (in string form to be used in css, canvas)
-rcol = function(rl,rh,gl,gh,bl,bh) {
-	return irandr(rl,rh)+","+irandr(gl,gh)+","+irandr(bl,bh);
-}
+Util.rcol = function(rl,rh,gl,gh,bl,bh) {
+	return Util.irandr(rl,rh)+","+Util.irandr(gl,gh)+","+Util.irandr(bl,bh);
+};
 
-rhue = function(hl,hh,sl,sh,ll,lh) {
-	var h = randr(hl,hh),
-		s = randr(sl,sh),
-		l = randr(ll,lh);
-	var rgb = hslToRgb(h,s,l);
+Util.rhue = function(hl,hh,sl,sh,ll,lh) {
+	var h = Util.randr(hl,hh),
+		s = Util.randr(sl,sh),
+		l = Util.randr(ll,lh);
+	var rgb = Util.hslToRgb(h,s,l);
 	return rgb[0]+","+rgb[1]+","+rgb[2];
-}
+};
 
-hslToRgb = function(h, s, l) {
+Util.hslToRgb = function(h, s, l) {
 	var r, g, b;
 
-	if(s == 0){
+	if(s === 0){
 		r = g = b = l; // achromatic
 	}else{
-		function hue2rgb(p, q, t){
+		var hue2rgb = function(p, q, t){
 			if(t < 0) t += 1;
 			if(t > 1) t -= 1;
 			if(t < 1/6) return p + (q - p) * 6 * t;
 			if(t < 1/2) return q;
 			if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
 			return p;
-		}
+		};
 
 		var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
 		var p = 2 * l - q;
@@ -155,49 +183,15 @@ hslToRgb = function(h, s, l) {
 	}
 
 	return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-},
+};
 
 //return x on an exponential scale of max
-xexp = function(max,x) {
+Util.xexp = function(max,x) {
 	return ((Math.exp(2.77258872 * x) - 1) / 15)*max;
-}
-
-//todo: implement fast cached sin
-fsin = function(x) {
-  return Math.sin(x);
-}
-
-//pad an array (unused?)
-array_pad  = function(input, pad_size, pad_value) {
-  // http://kevin.vanzonneveld.net
-  // +   original by: Waldo Malqui Silva
-
-  var pad = [],
-    newArray = [],
-    newLength,
-    diff = 0,
-    i = 0;
-
-  if (Object.prototype.toString.call(input) === '[object Array]' && !isNaN(pad_size)) {
-    newLength = ((pad_size < 0) ? (pad_size * -1) : pad_size);
-    diff = newLength - input.length;
-
-    if (diff > 0) {
-      for (i = 0; i < diff; i++) {
-        newArray[i] = pad_value;
-      }
-      pad = ((pad_size < 0) ? newArray.concat(input) : input.concat(newArray));
-    } else {
-      pad = input;
-    }
-  }
-
-  return pad;
-}
+};
 
 //call functionToDo, passing each x,y pair in a line from x1,y1 to x2,y2
-doLine = function(x1,y1,x2,y2,functionToDo,deres)
-{
+Util.applyLine = function(x1,y1,x2,y2,functionToDo,deres) {
 	deres = deres||1;
     var dX,dY,iSteps;
     var xInc,yInc,iCount,x,y;
@@ -205,92 +199,47 @@ doLine = function(x1,y1,x2,y2,functionToDo,deres)
     dX = x1 - x2;
     dY = y1 - y2;
 
-    if (Math.abs(dX) > Math.abs(dY))
-    {
+    if (Math.abs(dX) > Math.abs(dY)) {
         iSteps = Math.abs(dX);
     }
-    else
-    {
+    else {
         iSteps = Math.abs(dY);
     }
 
     xInc = dX/iSteps;
     yInc = dY/iSteps;
-
     x = x1;
     y = y1;
 
-    for (iCount=1; iCount<=iSteps; iCount+=deres)
-    {
+    for (iCount=1; iCount<=iSteps; iCount+=deres) {
         functionToDo(Math.floor(x),Math.floor(y));
         x -= xInc;
         y -= yInc;
     }
-}
+};
 
-//math!
-/** Unused? **/
-safeJSON = function(key,val) {
- //console.log(key+":"+val);
- if (key=="mpUpdate") {
-   return undefined;
- }
- else return val;
-}
-
-tileAt = function(ex, ey) {
- var bx = Math.floor(ex/tileWidth);
- var by = Math.floor(ey/tileHeight);
- if (bx>0 && by>0 && bx<gameLevel.getWidth() && by<gameLevel.getHeight()) {
-   return gameLevel.getTile(bx,by);
- }
- else {return null;}
-}
-
-pDir = function(x1,y1,x2,y2) {
+Util.pointDir = function(x1,y1,x2,y2) {
  var xd = x2-x1;
  var yd = y2-y1;
 
  return Math.atan2(yd,xd);
 }
 
-pDist = function(x1,y1,x2,y2) {
+Util.pointDist = function(x1,y1,x2,y2) {
  var xd = x2-x1;
  var yd = y2-y1;
  return Math.sqrt(xd*xd+yd*yd);
 }
 
-lDirX = function(len,dir) {
- var val = Math.cos(dir)*len
- return Math.abs(val)<0?0:val;
-}
-
-lDirY = function(len,dir) {
- var val = Math.sin(dir)*len
- return Math.abs(val)<0?0:val;
-}
-
-pVector = function(x1,y1,x2,y2,speed) {
- var dx = x2 - x1;
- var dy = y2 - y1;
- var norm = Math.sqrt(dx * dx + dy * dy);
- if (norm)
- {
-     dx *= (speed / norm);
-     dy *= (speed / norm);
- }
- return [dx,dy];
-}
-
-radians = function(deg) {
+Util.radians = function(deg) {
  return deg*0.01745;
-}
+};
 
-degrees = function(rad) {
+Util.degrees = function(rad) {
  return rad*57.29577;
-}
+};
 
-var wheelDistance = function(evt){
+Util.wheelDistance = function(evt){
   if (!evt) evt = event;
   var w=evt.wheelDelta, d=evt.detail;
   if (d){
@@ -299,7 +248,7 @@ var wheelDistance = function(evt){
   } else return w/120;             // IE/Safari/Chrome TODO: /3 for Chrome OS X
 };
 
-var wheelDirection = function(evt){
+Util.wheelDirection = function(evt){
   if (!evt) evt = event;
   return (evt.detail<0) ? 1 : (evt.wheelDelta>0) ? 1 : -1;
 };
@@ -313,8 +262,9 @@ var wheelDirection = function(evt){
  * Public Domain.
  * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
  */
-
-// object.watch
+// this is used in now-unused network code (see network.js).
+// I originally wanted this game to have multiplayer, but it's simply not built
+// well enough to make that feasible.
 if (!Object.prototype.watch) {
 	Object.defineProperty(Object.prototype, "watch", {
 		  enumerable: false
@@ -344,110 +294,3 @@ if (!Object.prototype.watch) {
 		}
 	});
 }
-
-// object.unwatch
-if (!Object.prototype.unwatch) {
-	Object.defineProperty(Object.prototype, "unwatch", {
-		  enumerable: false
-		, configurable: true
-		, writable: false
-		, value: function (prop) {
-			var val = this[prop];
-			delete this[prop]; // remove accessors
-			this[prop] = val;
-		}
-	});
-}
-
-//unused?
-extend = function() {
-    var options, name, src, copy, copyIsArray, clone, target = arguments[0] || {},
-        i = 1,
-        length = arguments.length,
-        deep = false,
-        toString = Object.prototype.toString,
-        hasOwn = Object.prototype.hasOwnProperty,
-        push = Array.prototype.push,
-        slice = Array.prototype.slice,
-        trim = String.prototype.trim,
-        indexOf = Array.prototype.indexOf,
-        class2type = {
-          "[object Boolean]": "boolean",
-          "[object Number]": "number",
-          "[object String]": "string",
-          "[object Function]": "function",
-          "[object Array]": "array",
-          "[object Date]": "date",
-          "[object RegExp]": "regexp",
-          "[object Object]": "object"
-        },
-        jQuery = {
-          isFunction: function (obj) {
-            return jQuery.type(obj) === "function"
-          },
-          isArray: Array.isArray ||
-          function (obj) {
-            return jQuery.type(obj) === "array"
-          },
-          isWindow: function (obj) {
-            return obj != null && obj == obj.window
-          },
-          isNumeric: function (obj) {
-            return !isNaN(parseFloat(obj)) && isFinite(obj)
-          },
-          type: function (obj) {
-            return obj == null ? String(obj) : class2type[toString.call(obj)] || "object"
-          },
-          isPlainObject: function (obj) {
-            if (!obj || jQuery.type(obj) !== "object" || obj.nodeType) {
-              return false
-            }
-            try {
-              if (obj.constructor && !hasOwn.call(obj, "constructor") && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
-                return false
-              }
-            } catch (e) {
-              return false
-            }
-            var key;
-            for (key in obj) {}
-            return key === undefined || hasOwn.call(obj, key)
-          }
-        };
-      if (typeof target === "boolean") {
-        deep = target;
-        target = arguments[1] || {};
-        i = 2;
-      }
-      if (typeof target !== "object" && !jQuery.isFunction(target)) {
-        target = {}
-      }
-      if (length === i) {
-        target = this;
-        --i;
-      }
-      for (i; i < length; i++) {
-        if ((options = arguments[i]) != null) {
-          for (name in options) {
-            src = target[name];
-            copy = options[name];
-            if (target === copy) {
-              continue
-            }
-            if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
-              if (copyIsArray) {
-                copyIsArray = false;
-                clone = src && jQuery.isArray(src) ? src : []
-              } else {
-                clone = src && jQuery.isPlainObject(src) ? src : {};
-              }
-              // WARNING: RECURSION
-              target[name] = extend(deep, clone, copy);
-            } else if (copy !== undefined) {
-              target[name] = copy;
-            }
-          }
-        }
-      }
-      return target;
-    }

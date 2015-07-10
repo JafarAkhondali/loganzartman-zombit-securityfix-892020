@@ -64,7 +64,7 @@ Player = Entity.extend(function(x,y,name,owner){
 			//console.log(pcx+","+pcy)
 
 			//direction from corrected position to mouse
-			var dir = pDir(pcx,pcy,mouseX,mouseY);
+			var dir = Util.pointDir(pcx,pcy,mouseX,mouseY);
 			player.facing = dir;
 		}
 
@@ -72,7 +72,7 @@ Player = Entity.extend(function(x,y,name,owner){
 			this.footstepTimer = 0;
 			var tile = gameLevel.getTile(~~(this.x/tileWidth),~~(this.y/tileWidth));
 			if (tile.sound!=null) {
-				tile.sound.audio.volume = (grandr(0,1));
+				tile.sound.audio.volume = (Util.grandr(0,1));
 				tile.sound.play();
 			}
 		}
@@ -134,8 +134,8 @@ Player = Entity.extend(function(x,y,name,owner){
 			if (this.owner.keys[VK_Q]) {
 				this.owner.keys[VK_Q] = false;
 				var dr = new DroppedItem(this.x,this.y,this.inv.pop(this.inv.selected)[0]);
-				dr.xs = lDirX(5,this.facing);
-				dr.ys = lDirY(5,this.facing);
+				dr.xs = Math.cos(this.facing)*5;
+				dr.ys = Math.sin(this.facing)*5;
 			}
 		}
 

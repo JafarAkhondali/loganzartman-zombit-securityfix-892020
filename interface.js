@@ -161,8 +161,8 @@ function mp(e) {
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, facing: player.facing});}
 }
 function mw(e) {
-	scrolltotal+=wheelDistance(e);
-	//console.log(wheelDistance(e));
+	scrolltotal+=Util.wheelDistance(e);
+	//console.log(Util.wheelDistance(e));
 }
 
 function fullscreen(on) {

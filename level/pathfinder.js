@@ -1,3 +1,9 @@
+/**
+ * A simple, fast pathfinder implementation used by zombies. Only one pathfinder
+ * is required per level; an array is maintained with a cell for each tile in
+ * the level. Each cell contains the direction in which a hostile should travel
+ * to avoid obstacles and reach the target.
+ */
 var Pathfinder = function(level, target) {
     this.level = level;
     this.target = target;
@@ -5,6 +11,12 @@ var Pathfinder = function(level, target) {
 
     this.clearGrid(true, 0);
 };
+
+/**
+ * clear the pathfinding grid to a value
+ * @param clear whether to reconstruct arrays
+ * @param val value to clear to
+ */
 Pathfinder.prototype.clearGrid = function(clear, val) {
     if (clear) this.grid = [];
     for (var x = this.level.getWidth(); x>=0; x--) {
@@ -14,6 +26,10 @@ Pathfinder.prototype.clearGrid = function(clear, val) {
         }
     }
 };
+/**
+ * Recalculate the pathfinding grid.
+ * Called once per step.
+ */
 Pathfinder.prototype.recalculate = function() {
     //target position in cell coordinates
     var targetX = Math.floor(this.target.x / tileWidth),
@@ -22,6 +38,8 @@ Pathfinder.prototype.recalculate = function() {
     //reset grid and mark walls as visited
     this.maxCost = 0;
 
+    //clear the pathfinding grid to zero, except for walls which are marked as
+    //null (non-traversable)
     for (var x = this.level.getWidth(); x>=0; x--) {
         for (var y = this.level.getHeight(); y>=0; y--) {
             var tile = this.level.getTile(x,y);
@@ -30,9 +48,13 @@ Pathfinder.prototype.recalculate = function() {
         }
     }
 
+    //this is a queue (array) -based implementation of a recursive traversal of
+    //all level tiles. By recording the direction of traversal in each cell, we
+    //obtain a poor quality (but valid) path to the player
     var queue = [];
-    queue.push([targetX, targetY, [0,0]]);
-    var indLow = 0, indHigh = 1;
+    queue.push([targetX, targetY, [0,0]]); //[tileX, tileY, [directionX, directionY]]
+    var indLow = 0, indHigh = 1; //array.shift() is slow
+
     while (indLow <= queue.length-1) {
         var loc = queue[indLow++];
 
@@ -61,16 +83,38 @@ Pathfinder.prototype.recalculate = function() {
     }
 
 };
+
+/**
+ * Determines whether a location (tile coordinates) is within both the level and
+ * the onscreen area. Used as a bound for traversal.
+ * @return boolean indicating whether cell is inbounds
+ */
 Pathfinder.prototype.inbounds = function(x,y) {
     if (x<0 || y<0 || x>=this.grid.length || y>=this.grid[0].length) return false;
     if (x<viewX/tileWidth || y<viewY/tileHeight || x>=(viewX+viewWidth)/tileWidth || y>=(viewY+viewHeight)/tileHeight) return false;
     return true;
 };
+
+/**
+ * Obtain the direction stored in a cell, or null if the cell does not exist or
+ * was not reached in traversal.
+ * @param x x coordinate of tile
+ * @param y y coordinate of tile
+ * @return array representing x and y components of direction stored in x,y
+ */
 Pathfinder.prototype.getDirection = function(x,y) {
     if (!this.inbounds(x,y)) return null;
     if (this.grid[x][y] === 0) return null;
     return this.grid[x][y];
 };
+
+/**
+ * Look at surrounding tiles and walls to determine an improved movement
+ * direction.
+ * @param x x coordinate of tile
+ * @param y y coordinate of tile
+ * @return array representing x and y components of direction stored in x,y
+ */
 Pathfinder.prototype.getBestDirection = function(x,y) {
     var w = this.getDirection(x-1,y),
         e = this.getDirection(x+1,y),

@@ -68,23 +68,23 @@ Inventory = klass(function(size,owner) {
 	},
 
 	getArray: function() {
-		return array_pad(this.inv,this.size,null);
+		return this.inv.pad(this.size, null);
 	},
-	
+
 	serializable: function(output,depth) {
 		if (depth>MAX_SER_DEPTH) {return;}
 		//console.log(depth);
 		if (!output) {output = {};}
-		
+
 		output.size = this.size;
 		output.owner = makeEntityReference(this.owner);
 		output.selected = this.selected;
 		output.inv = [];
-		
+
 		for (var i=0; i<this.inv.length; i++) {
 			output.inv[i] = this.inv[i].serializable({},depth+1);
 		}
-		
+
 		//console.log(output);
 		return output;
 	},
@@ -98,7 +98,7 @@ Inventory = klass(function(size,owner) {
 				if (src[prop].type && src[prop].type>10000) {
 					//if (!(dest[prop] instanceof Item)) {
 						console.log("SOMETHING IS HAPPENING");
-						
+
 					//}
 				}
 				this.unserialize(src[prop],dest[prop]);

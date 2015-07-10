@@ -45,10 +45,10 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 		}
 		else if (thing instanceof Tile) {
 			for (var i=0; i<8; i++) {
-				new Spark(this.x,this.y,grandr(-8,8),grandr(-8,8),this.col1);
+				new Spark(this.x,this.y,Util.grandr(-8,8),Util.grandr(-8,8),this.col1);
 			}
 
-			sndBulletImpact.play(pDist(this.x,this.y,player.x,player.y));
+			sndBulletImpact.play(Util.pointDist(this.x,this.y,player.x,player.y));
 		}
 		this.destroy();
 	},

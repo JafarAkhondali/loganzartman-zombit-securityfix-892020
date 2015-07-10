@@ -45,8 +45,8 @@ NyanGun = Gun.extend(function(){
 		this.colIndex+=10;
 		if (this.colIndex>=359) {this.colIndex = 0;}
 
-		var col1 = NyanGun.hslToRgb(this.colIndex/360, 0.6, 0.6);
-		var col2 = NyanGun.hslToRgb(this.colIndex/360, 0.4, 0.4);
+		var col1 = Util.hslToRgb(this.colIndex/360, 0.6, 0.6);
+		var col2 = Util.hslToRgb(this.colIndex/360, 0.4, 0.4);
 
 		this.col1 = col1[0]+","+col1[1]+","+col1[2];
 		this.col2 = col2[0]+","+col2[1]+","+col2[2];

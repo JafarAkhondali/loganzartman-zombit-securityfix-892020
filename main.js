@@ -39,6 +39,9 @@ startGame = function(skipGenerate) {
 	entityManager = new EntityManager(gameLevel);
 
 	if (mpMode === CLIENT) {
+		//car
+		var zzz = new Car(990,2260);
+
 		player = new Player(~~(gameLevel.getWidth()*tileWidth*0.5),~~(gameLevel.getHeight()*tileWidth*0.5),"Player");
 		player.inv.push(new Pistol());
 		player.inv.push(new AssaultRifle());

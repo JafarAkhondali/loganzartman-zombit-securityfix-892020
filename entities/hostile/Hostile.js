@@ -25,6 +25,7 @@ Hostile = Entity.extend(function(x,y,vr){
 	step: function(dlt) {
 		this.supr(dlt);
 
+		//get nearby entities and see if any bullets have alerted the hostile
 		var nearby = this.getNearby();
 		for (var i=nearby.length-1; i>=0; i--) {
 			if (nearby[i] instanceof Bullet) {
@@ -33,38 +34,52 @@ Hostile = Entity.extend(function(x,y,vr){
 			}
 		}
 
+		//something I was doing for serialization
 		if (this.target>=0) {this.target = getEntityReference(this.target);}
 
-		if (this.target==T_SEARCH) { //need to find a target (the player for now)
+		//if the hostile is searching for a target, see if it can target the nearby player
+		if (this.target===T_SEARCH) { //need to find a target (the player for now)
 			var nearby = this.getNearby(2);
 			if (nearby.indexOf(player) >= 0) {
 				//todo: raycast for line of sight
-				var dist = pDist(this.x, this.y, player.x, player.y);
+				var dist = Util.pointDist(this.x, this.y, player.x, player.y);
 				if (dist < this.visionRadius) {
 					this.target = player;
 				}
 			}
 		}
+		//the hostile has a target, follow it
 		else {
 			var targ = getEntityReference(this.target);
-			var targetDist = pDist(this.x,this.y,targ.x,targ.y);
+
+			//sanity check
 			if (targ === null) {
 				this.target = T_SEARCH;
 				return;
 			}
 
-			var targetDir;
+			var targetDist = Util.pointDist(this.x,this.y,targ.x,targ.y);
+			var targetDir = 0;
 
+			//if the target is some distance away, get direction from the pathfinder
 			if (targetDist > tileWidth*2 && this.pathfinder !== null) {
 				var targetDx = this.pathfinder.getBestDirection(
 					Math.floor(this.x/tileWidth),
 					Math.floor(this.y/tileHeight)
 				);
-				targetDir = Math.atan2(targetDx[1], targetDx[0]);
+				if (targetDx[0] === 0 && targetDx[1] === 0) {
+					this.target = T_SEARCH;
+					return;
+				}
+				else {
+					targetDir = Math.atan2(targetDx[1], targetDx[0]);
+				}
 			}
+			//if the target is close by, move straight towards it
 			else {
-				targetDir = pDir(this.x,this.y,targ.x,targ.y);
+				targetDir = Util.pointDir(this.x,this.y,targ.x,targ.y);
 			}
+
 			this.facing = targetDir;
 
 			if (targetDist>this.visionRadius*2) { //see if too far to follow
@@ -73,10 +88,11 @@ Hostile = Entity.extend(function(x,y,vr){
 			else { //target is close enough to follow
 				//calculate direction to target and move toward it at constant speed
 				var pd = targetDir;
-				this.xs = lDirX(this.spd,pd);
-				this.ys = lDirY(this.spd,pd);
+				this.xs = Math.cos(pd)*this.spd;
+				this.ys = Math.sin(pd)*this.spd;
 			}
 
+			//use the hostile's weapon if possible
 			var invSelected = this.inv.getSelected();
 			if (invSelected instanceof Weapon) {
 				if (targetDist<invSelected.range) {
@@ -89,6 +105,7 @@ Hostile = Entity.extend(function(x,y,vr){
 		if (this.target!=T_SEARCH) {this.target = makeEntityReference(this.target);}
 
 
+		//clean up zombies that are far from the player so more can be spawned
 		if (Math.abs(this.x - player.x) >= TOO_FAR || Math.abs(this.y - player.y) >= TOO_FAR) {
 			this.destroy();
 		}
@@ -102,6 +119,6 @@ Hostile = Entity.extend(function(x,y,vr){
 	die: function(killer) {
 		this.supr(killer);
 		if (mpMode != SERVER) {gameScore+=this.pointValue;}
-		sndSplat.random().play(pDist(this.x,this.y,player.x,player.y));
+		sndSplat.random().play(Util.pointDist(this.x,this.y,player.x,player.y));
 	}
 });

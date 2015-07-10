@@ -154,10 +154,10 @@ function render() {
 
             //health effects
             //calculate blurriness
-            frameBlend = Math.min(defaultFrameBlend,xexp((player.life/player.maxlife),defaultFrameBlend)+minFrameBlend);
+            frameBlend = Math.min(defaultFrameBlend,Util.xexp((player.life/player.maxlife),defaultFrameBlend)+minFrameBlend);
             //draw blood overlay
             var mult = player.life/player.maxlife, scaleAmt = 80;
-            ctx.globalAlpha = 1-xexp(mult,1);
+            ctx.globalAlpha = 1-Util.xexp(mult,1);
             ctx.drawImage(imgScreenBlood,-mult*0.5*scaleAmt,-mult*0.5*scaleAmt,viewWidth+mult*scaleAmt,viewHeight+mult*scaleAmt);
             ctx.globalAlpha = 1;
 
@@ -371,17 +371,6 @@ function drawgameLevel(mode) {
             if (!mode || mode===0) { //normal rendering
                 ctx.drawImage(gameLevel.cache.getChunk(x,y), sx, sy);
                 //drawtile(tile,sx,sy);
-                if (enablePathDebug) {
-                    var dx = playerPathfinder.getDirection(x,y);
-                    if (dx !== null) {
-                        var cx = sx+tileWidth*0.5,
-                        cy = sy+tileHeight*0.5;
-                        ctx.fillStyle = "red";
-                        ctx.fillRect(cx-1, cy-1, 2, 2);
-                        ctx.fillStyle = "lime";
-                        ctx.fillRect(cx+2*dx[0]-1,cy+2*dx[1]-1,2,2);
-                    }
-                }
             }
             else if (mode==1) { //border rendering
                 if (tile.solid) {
@@ -404,6 +393,17 @@ function drawgameLevel(mode) {
             else if (mode==2) {
                 if (tile.depth==2) {
                     drawtile(tile,sx,sy);
+                }
+                if (enablePathDebug) {
+                    var dx = playerPathfinder.getDirection(x,y);
+                    if (dx !== null) {
+                        var cx = sx+tileWidth*0.5,
+                        cy = sy+tileHeight*0.5;
+                        ctx.fillStyle = "red";
+                        ctx.fillRect(cx-1, cy-1, 2, 2);
+                        ctx.fillStyle = "lime";
+                        ctx.fillRect(cx+2*dx[0]-1,cy+2*dx[1]-1,2,2);
+                    }
                 }
             }
             else if (mode==3) { //shadow rendering
@@ -476,7 +476,7 @@ function createNoise(intensity) {
     var data = noiseData.data;
     for (var i=0; i<noiseWidth*noiseHeight*4; i+=4) {
         data[i+2] = data[i+1] = data[i] = 0;
-        data[i+3] = ifrand(intensity);
+        data[i+3] = Util.ifrand(intensity);
     }
     noiseCtx.putImageData(noiseData,0,0);
 }

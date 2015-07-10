@@ -21,10 +21,10 @@ Melee = Weapon.extend(function (range,width,delay,damage,user){
 		    	var ent = entityManager.get(ec);
 				if (ent instanceof Entity) {
 					var user = getEntityReference(this.owner);
-					var dst = pDist(user.x,user.y,ent.x,ent.y);
-					var dr = Math.abs(pDir(user.x,user.y,ent.x,ent.y)-user.facing);
+					var dst = Util.pointDist(user.x,user.y,ent.x,ent.y);
+					var dr = Math.abs(Util.pointDir(user.x,user.y,ent.x,ent.y)-user.facing);
 					//console.log("dist: "+dst+", dir: "+dr);
-					if (dst<=this.range && ent!=user && dr<=radians(this.width)) {
+					if (dst<=this.range && ent!=user && dr<=Util.radians(this.width)) {
 						this.hit(ent);
 						//console.log("hit! "+ent);
 					}

@@ -14,15 +14,15 @@ GlowstickGun = Gun.extend(function() {
 	bullet: function() {
 		//vector converted to xspeed/yspeed
 		var user = getEntityReference(this.owner);
-		var dir = user.facing+radians(grand()*this.spread-this.spread*0.5);
-		var xs = lDirX(this.spd,dir);
-		var ys = lDirY(this.spd,dir);
+		var dir = user.facing+Util.radians(Util.grand()*this.spread-this.spread*0.5);
+		var xs = Math.cos(dir)*this.spd;
+		var ys = Math.sin(dir)*this.spd;
 
 		//create bullet and set speeds
 		var blt = new Glowstick(user.x,user.y,user);
 		blt.xs = xs;
 		blt.ys = ys;
-		blt.friction = this.friction*(0.8+grand(0.4));
+		blt.friction = this.friction*(0.8+Util.grand(0.4));
 		blt.col1 = this.col1;
 		blt.col2 = this.col2;
 		return blt;

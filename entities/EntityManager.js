@@ -1,8 +1,8 @@
 MAX_SER_DEPTH = 5;
 
 collisionLine2 = function(circleX,circleY,radius,lineX1,lineY1,lineX2,lineY2) {
-	var d1 = pDist(lineX1,lineY1,circleX,circleY);
-	var d2 = pDist(lineX2,lineY2,circleX,circleY);
+	var d1 = Util.pointDist(lineX1,lineY1,circleX,circleY);
+	var d2 = Util.pointDist(lineX2,lineY2,circleX,circleY);
 	if (d1<=radius || d2<=radius) {
 		return true;
 	}
@@ -35,7 +35,7 @@ collisionLine2 = function(circleX,circleY,radius,lineX1,lineY1,lineX2,lineY2) {
 	}
 
 	if (onSegment) {
-		if (pDist(circleX,circleY,xx,yy)<radius) {
+		if (Util.pointDist(circleX,circleY,xx,yy)<radius) {
 			return true;
 		}
 		else {
@@ -68,7 +68,7 @@ EntityManager = function(level) {
 	this.types = []; //types of entities
 	this.grid = null;
 	this.buildGrid();
-}
+};
 
 EntityManager.GRID_CELL_SIZE = 16;
 /**
@@ -113,7 +113,7 @@ EntityManager.prototype.getNearby = function(entity, range) {
 		}
 		return list;
 	}
-}
+};
 
 /**
  * Adds an entity to the localization grid (performed once per step)
@@ -153,7 +153,7 @@ EntityManager.prototype.register = function(entity) {
 		this.localize(entity);
 		return ind;
 	}
-}
+};
 
 /**
  * Remove an entity from the registry and free its id for future entities (mostly important in multiplayer)
@@ -166,7 +166,7 @@ EntityManager.prototype.unregister = function(entity) {
 		if (this.freespace.indexOf(ind)<0) {this.freespace.push(ind);}
 		this.entities[ind] = undefined;
 	}
-}
+};
 
 /**
  * Retrieve an entity from the registry.
@@ -186,7 +186,7 @@ EntityManager.prototype.get = function(thing) {
 	else {
 		return null;
 	}
-}
+};
 
 /**
  * Set an entity in the registry
@@ -195,9 +195,22 @@ EntityManager.prototype.get = function(thing) {
  */
 EntityManager.prototype.set = function(index, entity) {
 	this.entities[index] = entity; //logan this is probably a bad idea do some input verification or something
-}
+};
 
-EntityManager.prototype.length = function() {return this.entities.length;}
+/**
+ * Swap the internal location of two entities
+ */
+EntityManager.prototype.swap = function (slot1, slot2) {
+	throw new Error("EntityManager.swap does not work correctly!");
+	//todo fix updating ID references
+	var temp = this.entities[slot1];
+	this.entities[slot1] = this.entities[slot2];
+	this.entities[slot2] = temp;
+	this.entities[slot1].arrIndex = slot1;
+	this.entities[slot2].arrIndex = slot2;
+};
+
+EntityManager.prototype.length = function() {return this.entities.length;};
 
 EntityManager.prototype.clearAll = function() {
 	for (var i=this.entities.length-1; i>=0; i--)
@@ -205,14 +218,14 @@ EntityManager.prototype.clearAll = function() {
 	Zombie.count = 0;
 	this.entities = [];
 	this.freespace = [];
-}
+};
 
 getEntityReference = function(erObj) { //works for literals and ER instances
 	if (erObj && erObj.arrIndex!=null) {
 		return entityManager.get(erObj.arrIndex);
 	}
 	else {return null;}
-}
+};
 makeEntityReference = function(x) { //works for indexes, entities, and serialized ERs
 	if (typeof x === 'number' || typeof x === 'string') {
 		return {arrIndex: Number(x)};
@@ -223,7 +236,7 @@ makeEntityReference = function(x) { //works for indexes, entities, and serialize
 	else {
 		return null;
 	}
-}
+};
 
 idMap = {};
 onScriptsLoaded.push(function(){
@@ -242,6 +255,7 @@ onScriptsLoaded.push(function(){
 include("entities/Entity.js");
 include("entities/Player.js");
 include("entities/LaserRenderer.js");
+include("entities/Car.js");
 include("entities/DroppedItem.js");
 include("entities/hostile/Hostile.js");
 include("entities/hostile/Zombie.js");

@@ -5,12 +5,16 @@ Zombie = Hostile.extend(function(x,y,vr){
 
 	Zombie.count++;
 
-	this.spd=grandr(0.5,1.6);
+	this.spd=Util.grandr(0.5,1.6);
 	this.visionRadius = 80
-	this.life = irandr(25,ZOMBIEMAXLIFE);
+	this.life = Util.irandr(25,ZOMBIEMAXLIFE);
 	this.maxlife = this.life;
 	this.pointValue = Math.round(0.5*this.life);
 	this.inv.push(new ZombieAttack());
+
+	this.dropchance = 0.02;
+	this.width = 16;
+	this.height = 16;
 
 	if (typeof playerPathfinder !== "undefined")
 		this.pathfinder = playerPathfinder;
@@ -36,7 +40,7 @@ Zombie = Hostile.extend(function(x,y,vr){
 	},
 
 	doDrops: function() {
-		var gun = new RandomGun((this.maxlife/ZOMBIEMAXLIFE)*0.7);
+		var gun = new RandomGun((this.maxlife/ZOMBIEMAXLIFE)*0.8);
 		new DroppedItem(this.x,this.y,gun);
 
 	},

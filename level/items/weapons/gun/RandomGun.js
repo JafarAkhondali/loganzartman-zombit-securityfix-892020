@@ -7,15 +7,15 @@ RandomGun = Gun.extend(function(awesomeness){
 		//crappy random gun generation that pretty much only makes assault rifles
 		switch (Math.floor(Math.random()*2)) {
 			case 0:
-				this.clipsize = Math.ceil(irandr(xexp(150,awesomeness),xexp(150,awesomeness)));
+				this.clipsize = Math.ceil(Util.irandr(Util.xexp(150,awesomeness),Util.xexp(150,awesomeness)));
 				this.ammo = this.clipsize;
-				this.delay = ~~grandr((1-awesomeness)*10+2,(1-awesomeness)*20+2);
-				this.damage = grandr(20*awesomeness,(80*awesomeness)-((this.clipsize/250)*50*awesomeness));
-				this.spread = grandr(1,30-xexp(15,awesomeness));
-				this.spd = grandr(awesomeness*12+8,awesomeness*20+8);
+				this.delay = ~~Util.grandr((1-awesomeness)*10+2,(1-awesomeness)*20+2);
+				this.damage = Util.grandr(20*awesomeness,(80*awesomeness)-((this.clipsize/250)*50*awesomeness));
+				this.spread = Util.grandr(1,30-Util.xexp(15,awesomeness));
+				this.spd = Util.grandr(awesomeness*12+8,awesomeness*20+8);
 
 				if (Math.random()<0.15) {
-					var sn = Math.round(irandr(2,4));
+					var sn = Math.round(Util.irandr(2,4));
 					this.shot = sn;
 					this.delay *= Math.floor(sn/2);
 				}
@@ -25,19 +25,19 @@ RandomGun = Gun.extend(function(awesomeness){
 			break;
 
 			case 1:
-				this.clipsize = Math.ceil(irandr(xexp(40,awesomeness),xexp(60,awesomeness)));
+				this.clipsize = Math.ceil(Util.irandr(Util.xexp(40,awesomeness),Util.xexp(60,awesomeness)));
 				this.ammo = this.clipsize;
-				this.delay = ~~grandr((1-awesomeness)*20+5,(1-awesomeness)*40+5);
-				this.damage = grandr(20*awesomeness,(80*awesomeness)-((this.clipsize/250)*50*awesomeness));
-				this.spread = grandr(10,60-xexp(20,awesomeness));
-				this.spd = grandr(awesomeness*12+8,awesomeness*20+8);
-				this.friction = 0.05 - grandr(awesomeness*0.035,awesomeness*0.045);
-				this.shot = ~~grandr(awesomeness*3+3,awesomeness*5+3);
+				this.delay = ~~Util.grandr((1-awesomeness)*20+5,(1-awesomeness)*40+5);
+				this.damage = Util.grandr(20*awesomeness,(80*awesomeness)-((this.clipsize/250)*50*awesomeness));
+				this.spread = Util.grandr(10,60-Util.xexp(20,awesomeness));
+				this.spd = Util.grandr(awesomeness*12+8,awesomeness*20+8);
+				this.friction = 0.05 - Util.grandr(awesomeness*0.035,awesomeness*0.045);
+				this.shot = ~~Util.grandr(awesomeness*3+3,awesomeness*5+3);
 			break;
 		}
 
-		this.col1 = rhue(0.0,1.0,0.6,1.0,0.5,0.5);
-		this.col2 = rhue(0.0,1.0,0.6,1.0,0.2,0.3);
+		this.col1 = Util.rhue(0.0,1.0,0.6,1.0,0.5,0.5);
+		this.col2 = Util.rhue(0.0,1.0,0.6,1.0,0.2,0.3);
 		this.snd = gunSounds.ar.random();
 		try{this.icon = assaultIcon;}catch(e){}
 		this.type = ASSAULTRIFLE;
@@ -45,7 +45,7 @@ RandomGun = Gun.extend(function(awesomeness){
 	},
 
 	makeName: function() {
-		function w(a,i,r) {var rp = ((typeof i === 'undefined')?irandr(0,a.length):i+irandr(-r,r)); return a[rp<0?0:rp>a.length-1?a.length-1:rp];}
+		function w(a,i,r) {var rp = ((typeof i === 'undefined')?Util.irandr(0,a.length):i+Util.irandr(-r,r)); return a[rp<0?0:rp>a.length-1?a.length-1:rp];}
 		var adjectives = ["terrible","scrap","salvaged","value","average","decent","quality","refined","perfected","god-tier"];
 		var words = ["photo","proto","fire","light","death","aero","gravi","power","flux","wind","wave","bolt","knife","blade","quasi","quantum","earth","dark","hell","sun","gyro","techno","electro","multi","super","dragon","plasma","ice","magma"];
 		var suffixes = ["shaker","slasher","blaster","whip","thrower","prong","spiker","booster","chopper","driller","belcher","seeker","ejector","repeater","wand","beam","ray","phaser","saber","launcher","slinger","razer","cutter","burner","storm","fury"];

@@ -4,7 +4,7 @@ Spark = Particle.extend(function(x,y,xs,ys,col) {
 	this.y = y;
 	this.xs = xs;
 	this.ys = ys;
-	this.maxlife = grandr(2,5);
+	this.maxlife = Util.grandr(2,5);
 	this.life = this.maxlife;
 
 	this.friction = 0.4;

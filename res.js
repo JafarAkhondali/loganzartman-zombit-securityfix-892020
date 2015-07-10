@@ -41,23 +41,25 @@ var imgBloodSplat3 = new Image();
 imgBloodSplat3.src = "res/entity/bloodsplat4.png";
 var imgShadow = new Image();
 imgShadow.src = "res/entity/shadow.png";
+var imgCar = new Image();
+imgCar.src = "res/entity/car.png";
 
 var images = [];
 for (var i=0; i<NUM_TILES; i++) {
 	images[i] = new Image();
-	images[i].src = "res/tile/"+i+".png";
+	images[i].src = "tiles/"+i+".png";
 }
 
 var imgBorderLeft = new Image();
-imgBorderLeft.src = "res/tile/border-left.png";
+imgBorderLeft.src = "tiles/border-left.png";
 var imgBorderTop = new Image();
-imgBorderTop.src = "res/tile/border-top.png";
+imgBorderTop.src = "tiles/border-top.png";
 var imgBorderRight = new Image();
-imgBorderRight.src = "res/tile/border-right.png";
+imgBorderRight.src = "tiles/border-right.png";
 var imgBorderBottom = new Image();
-imgBorderBottom.src = "res/tile/border-bottom.png";
+imgBorderBottom.src = "tiles/border-bottom.png";
 var imgBlockShadow = new Image();
-imgBlockShadow.src = "res/tile/shadow.png";
+imgBlockShadow.src = "tiles/shadow.png";
 
 var imgTitle = new Image();
 imgTitle.src = "res/title.png";

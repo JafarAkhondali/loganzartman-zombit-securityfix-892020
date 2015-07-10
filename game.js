@@ -28,8 +28,8 @@ var filterStrength = 20;
 var frameTime = 0, lastLoop = new Date, thisLoop;
 var fps = targetFPS;
 
-var VERSION = 124;
-var SUBVER = ":^)"
+var VERSION = 125;
+var SUBVER = "ʘ‿ʘ";
 
 particlesEnabled = true; //duh
 
@@ -112,7 +112,7 @@ function restartGame() {
 			var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",400,1);
 			rLight.update = function() {
 				var x = mouseX+viewX, y = mouseY+viewY;
-				var d = pDist(player.x,player.y,x,y);
+				var d = Util.pointDist(player.x,player.y,x,y);
 				//console.log(d);
 				this.brightness = Math.max(0,Math.min(1,d/50)*(1-d/400));
 				this.size = ((d+100)/300)*400;
@@ -151,7 +151,7 @@ function cleanupGame() {
 
 	clearInterval(spawnInterval);
 	lightArray = [];
-	entityManager.clearAll();
+	if (typeof entityManager !== "undefined") entityManager.clearAll();
 }
 
 function showGameHelp() {
@@ -181,9 +181,9 @@ function showScorescreen() {
 }
 
 function loadScripts() {
-	include("fasttrig.js");
 	include("encode64.js");
 	include("klass.js");
+	include("utils.js");
 	include("interface.js");
 	include("level/LevelCache.js");
 	include("level/level.js");
@@ -195,7 +195,6 @@ function loadScripts() {
 	include("light.js");
 	include("res.js");
 	include("audio.js");
-	include("utils.js");
 	include("client.js");
 	include("network.js");
 	include("dat.gui.min.js");

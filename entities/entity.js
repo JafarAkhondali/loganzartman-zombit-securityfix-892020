@@ -20,6 +20,8 @@ Entity = klass(function (x,y,noreg) {
 	catch (e) {}
 	this.width = tileWidth;
 	this.height = tileHeight;
+	this.collidesOther = true;
+	this.otherCollides = false;
 
 	//entity management code
 	if (!mpActive || mpMode==SERVER && !noreg) {
@@ -48,7 +50,7 @@ Entity = klass(function (x,y,noreg) {
 		var xm = this.xs>0?1:-1;
 		for (var xx=0; xx<~~sx; xx++) {
 			var ctile = tileAt(this.x+xm+(xm*this.width*0.5),this.y);
-			if (ctile!==null && !isSolid(ctile)) {
+			if (ctile!==null && !ctile.solid) {
 				this.x+=xm;
 			}
 			else {
@@ -58,13 +60,13 @@ Entity = klass(function (x,y,noreg) {
 			}
 		}
 		var curtile = tileAt(this.x+(this.xs*dlt)%1+(xm*this.width*0.5),this.y);
-		if (curtile!==null && !isSolid(curtile)) {this.x+=(this.xs*dlt)%1;}
+		if (curtile!==null && !curtile.solid) {this.x+=(this.xs*dlt)%1;}
 
 		//move for yspeed
 		var ym = this.ys>0?1:-1;
 		for (var yy=0; yy<~~sy; yy++) {
 			var ctile = tileAt(this.x,this.y+ym+(ym*this.height*0.5));
-			if (ctile!==null && !isSolid(ctile)) {
+			if (ctile!==null && !ctile.solid) {
 				this.y+=ym;
 			}
 			else {
@@ -74,7 +76,25 @@ Entity = klass(function (x,y,noreg) {
 			}
 		}
 		curtile = tileAt(this.x,this.y+((this.ys*dlt)%1)+(ym*this.height*0.5));
-		if (curtile!==null && !isSolid(curtile)) {this.y+=(this.ys*dlt)%1;}
+		if (curtile!==null && !curtile.solid) {this.y+=(this.ys*dlt)%1;}
+
+		//resolve rectangular entity-entity collisions
+		if (this.collidesOther) {
+			var nearby = this.getNearby(1);
+			for (var i=nearby.length-1; i>=0; i--) {
+				if (nearby[i].otherCollides && this.isIntersecting(nearby[i])) {
+					var dx = this.x - nearby[i].x,
+						dy = this.y - nearby[i].y;
+					var len = Math.sqrt(dx*dx + dy*dy);
+					dx /= len;
+					dy /= len;
+					while (this.isIntersecting(nearby[i])) {
+						this.x += dx;
+						this.y += dy;
+					}
+				}
+			}
+		}
 
 		//apply friction
 		this.xs*=1-(this.friction*dlt);
@@ -101,11 +121,28 @@ Entity = klass(function (x,y,noreg) {
 					],this.owner||io.sockets.broadcast);
 		}
 	},
+
+	getBounds: function() {
+		return {
+			x1: this.x - this.width*0.5,
+			y1: this.y - this.height*0.5,
+			x2: this.x + this.width*0.5,
+			y2: this.y + this.height*0.5
+		};
+	},
+
+	isIntersecting: function(other) {
+		var a = this.getBounds(),
+			b = other.getBounds();
+		return a.x1 < b.x2 && a.x2 > b.x1 &&
+			   a.y1 < b.y2 && a.y2 > b.y1;
+	},
+
 	damage: function(amount, damager) {
 		this.life-=amount;
 		if (particlesEnabled) {
 			for (var i=0; i<Math.ceil((amount/(this.maxlife>0?this.maxlife:1))*6); i++) {
-				new BloodSplat(this.x-this.width*0.5+irand(this.width),this.y-this.height*0.5+irand(this.height),0,0);
+				new BloodSplat(this.x-this.width*0.5+Util.irand(this.width),this.y-this.height*0.5+Util.irand(this.height),0,0);
 			}
 		}
 		if (this.life<=0) {this.die(damager);}
@@ -115,12 +152,12 @@ Entity = klass(function (x,y,noreg) {
 			var dir = Math.atan2(killer.ys, killer.xs);
 			var len = Math.sqrt(killer.xs*killer.xs + killer.ys*killer.ys);
 			for (var i=0; i<14; i++) {
-				var mDir = grandr(-0.5,0.5)+dir;
+				var mDir = Util.grandr(-0.5,0.5)+dir;
 				var mDist = Math.random()*Math.random()*len*2;
 				var dx = Math.cos(mDir)*mDist;
 				var dy = Math.sin(mDir)*mDist;
-				var bs = new BloodSplat(this.x+irandr(-this.width*0.25,this.width*0.25),this.y+irandr(-this.height*0.25,this.height*0.25),dx,dy);
-				bs.life = bs.maxlife = irandr(2,7);
+				var bs = new BloodSplat(this.x+Util.irandr(-this.width*0.25,this.width*0.25),this.y+Util.irandr(-this.height*0.25,this.height*0.25),dx,dy);
+				bs.life = bs.maxlife = Util.irandr(2,7);
 			}
 		}
 
@@ -150,7 +187,9 @@ Entity = klass(function (x,y,noreg) {
 
 			ctx.globalAlpha = 1;
 		}
-		ctx.drawImage(this.image,x-this.width/2,y-this.height/2,this.width,this.height);
+		var w = this.image.width,
+			h = this.image.height;
+		ctx.drawImage(this.image,x-w/2,y-h/2);
 	},
 	destroy: function() {
 		/*entities.splice(this.arrIndex,1);

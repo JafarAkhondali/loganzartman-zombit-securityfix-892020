@@ -22,10 +22,10 @@ var LevelFactory = {
 	    //make some rooms
 	    for (var i=0; i<n; i++)
 	    {
-	        var x1 = irand(maxX-minX);
-	        var y1 = irand(maxY-minY);
-	        var x2 = x1+irand(maxX-minX-x1);
-	        var y2 = x2+irand(maxY-minY-y1);
+	        var x1 = Util.irand(maxX-minX);
+	        var y1 = Util.irand(maxY-minY);
+	        var x2 = x1+Util.irand(maxX-minX-x1);
+	        var y2 = x2+Util.irand(maxY-minY-y1);
 
 	        if (x2>maxX-minX) {x2=maxX-minX;}
 	        if (y2>maxY-minY) {y2=maxY-minY;}
@@ -37,10 +37,10 @@ var LevelFactory = {
 	    //knock out chunks
 	    for (var i=0; i<10; i++)
 	    {
-	        var x1 = irand(maxX-minX-(w/10));
-	        var y1 = irand(maxY-minY-(h/10));
-	        var x2 = x1+irand(w/5);
-	        var y2 = x2+irand(h/5);
+	        var x1 = Util.irand(maxX-minX-(w/10));
+	        var y1 = Util.irand(maxY-minY-(h/10));
+	        var x2 = x1+Util.irand(w/5);
+	        var y2 = x2+Util.irand(h/5);
 
 	        if (x2>maxX-minX) {x2=maxX-minX;}
 	        if (y2>maxY-minY) {y2=maxY-minY;}
@@ -124,21 +124,19 @@ var LevelFactory = {
 	},
 
 	fromFile: function(url, callback) {
-	    var req = new XMLHttpRequest();
-	    req.onreadystatechange = function() {
-	        if (req.readyState == 4 && req.status == 200) {
-	            var level = JSON.parse(req.responseText);
-	            callback(LevelFactory.parseLevel(level));
-	        }
-	    };
-	    req.open("GET", url, true);
-	    try {
-	        if (url === "") callback(false);
-	        req.send();
-	    }
-	    catch (error) {
-	        callback(false);
-	    }
+	    Util.loadJSON(url, function(data){
+			if (data) {
+				var level = LevelFactory.parseLevel(data);
+				callback(level);
+			}
+			else {
+				showAlert("<span style=\"color: red\">Failed to load level!</span>"+
+						  "<br>Level URL: "+url+"<br><br>Note to developers: make "+
+						  "sure you're not running using file:// in Chrome.",function(){
+					cleanupGame();
+				},500,200);
+			}
+		});
 	},
 
 	parseLevel: function(parsedJson) {

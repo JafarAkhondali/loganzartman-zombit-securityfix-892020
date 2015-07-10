@@ -115,10 +115,10 @@ function render() {
 
 				//draw injury effects
 		        //calculate blurriness
-		        frameBlend = Math.min(defaultFrameBlend,xexp((player.life/player.maxlife),defaultFrameBlend)+minFrameBlend);
+		        frameBlend = Math.min(defaultFrameBlend,Util.xexp((player.life/player.maxlife),defaultFrameBlend)+minFrameBlend);
 		        //draw blood overlay
 		        var mult = player.life/player.maxlife, scaleAmt = 80;
-		        ctx.globalAlpha = 1-xexp(mult,1);
+		        ctx.globalAlpha = 1-Util.xexp(mult,1);
 				ctx.drawImage(
 					Resources.image.screenBlood,
 					(-mult*0.5*scaleAmt)*outputScale,

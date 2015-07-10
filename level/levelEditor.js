@@ -183,6 +183,9 @@ var editor = {
         editor.ctx.fillStyle = "yellow";
         editor.ctx.fillRect(editor.level.width*editor.tileSize*0.5-editor.viewX,-editor.viewY,1,editor.level.height*editor.tileSize);
         editor.ctx.fillRect(-editor.viewX,editor.level.height*editor.tileSize*0.5-editor.viewY,editor.level.width*editor.tileSize,1);
+
+        editor.ctx.fillStyle = "white";
+        editor.ctx.fillText((Mouse.x/editor.scale+editor.viewX).toFixed(0)+" , "+(Mouse.y/editor.scale+editor.viewY).toFixed(0), 8, 16);
     }
 };
 

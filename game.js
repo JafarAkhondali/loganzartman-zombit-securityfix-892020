@@ -22,6 +22,7 @@ var gameTime = 0;
 
 //settings
 var enableShaders = false; //this works, but it's probably too slow
+var spawnEnabled = true;
 
 //fps monitoring
 var filterStrength = 20;
@@ -48,6 +49,12 @@ window.requestAnimFrame = (function(){
 window.addEventListener("resize", function(){
     screenWidth = window.innerWidth;
 	screenHeight = window.innerHeight;
+
+	if (devicePixelRatio && devicePixelRatio > 1) {
+		screenWidth *= devicePixelRatio;
+		screenHeight *= devicePixelRatio;
+	}
+
 	defaultScreenWidth = screenWidth;
 	defaultScreenHeight = screenHeight;
 	viewWidth = screenWidth/outputScale;
@@ -208,6 +215,16 @@ function reinitCanvases() {
 	canvas = document.createElement("canvas");
 	canvas.width = screenWidth;
 	canvas.height = screenHeight;
+
+	//fix for high density screens
+	if (devicePixelRatio && devicePixelRatio > 1) {
+		var transx = screenWidth*0.5,
+			transy = screenHeight*0.5;
+		var sc = (1/devicePixelRatio).toFixed(2);
+		canvas.style["webkit-transform"] = canvas.style["transform"] = "scale("+sc+","+sc+") " +
+		"translate(-"+transx.toFixed(0)+"px,-"+transy.toFixed(0)+"px)";
+	}
+
 	canvas.style.cursor = "crosshair";
 	canvContainer.appendChild(canvas);
 	sctx = canvas.getContext("2d"); //screen context, shouldn't be draw onto usually

@@ -1,6 +1,6 @@
 //output settings
-var screenWidth = window.innerWidth;
-var screenHeight = window.innerHeight;
+var screenWidth = window.innerWidth * (devicePixelRatio ? devicePixelRatio : 1);
+var screenHeight = window.innerHeight * (devicePixelRatio ? devicePixelRatio : 1);
 var defaultScreenWidth = screenWidth;
 var defaultScreenHeight = screenHeight;
 
@@ -16,7 +16,7 @@ var noiseCanvas;
 var noiseCtx;
 var noiseWidth = 128;
 var noiseHeight = 128;
-var noiseIntensity = 0;
+var noiseIntensity = 0.1;
 var noiseData;
 
 var INTRO=0,GAME=1,MENU=2;
@@ -257,16 +257,19 @@ function render() {
             var vpos = viewHeight/2-100;
 
             ctx.globalAlpha = Math.min(1, delta/1000);
-            ctx.drawImage(imgTitle,viewWidth/2-imgTitle.width/4,20,imgTitle.width/2,imgTitle.height/2);
+
+            var posx = viewWidth/2,
+                posy = 20;
+            ctx.drawImage(imgTitle,posx-imgTitle.width/4,posy,imgTitle.width/2,imgTitle.height/2);
 
             if (delta>600) {
                 ctx.globalAlpha = Math.min(1, (delta-600)/1000) - (delta>=2500 ? Math.min(1,(delta-2500)/1000) : 0);
                 ctx.fillStyle = "lightgray";
                 ctx.font = '9px "volter"';
-                ctx.fillText("Programming & Design by",viewWidth/2,70+vpos);
+                ctx.fillText("Programming & Design by",posx, posy + imgTitle.height/2);
                 ctx.fillStyle = "white";
                 ctx.font = '27px "volter"';
-                ctx.fillText("Nondefault",viewWidth/2,98+vpos);
+                ctx.fillText("Nondefault",posx, posy + imgTitle.height/2 + 26);
             }
 
             ctx.globalAlpha = 1;

@@ -23,6 +23,8 @@ Entity = klass(function (x,y,noreg) {
 	this.collidesOther = true;
 	this.otherCollides = false;
 
+	this.disposable = false;
+
 	//entity management code
 	if (!mpActive || mpMode==SERVER && !noreg) {
 		var ind = entityManager.register(this);

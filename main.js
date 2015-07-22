@@ -54,7 +54,7 @@ startGame = function(skipGenerate) {
 
 	//tell zombies to spawn continuously
 	spawnInterval = setInterval(function(){
-		if (Zombie.count<100 && gameTime >= 60*20) {
+		if (Zombie.count<100 && gameTime >= 60*20 && spawnEnabled) {
 		for (var i=0; i<1; i++) {
 			var dir = Math.random()*Math.PI*2,
 				dist = viewWidth*0.5 + Math.random()*100;
@@ -78,7 +78,8 @@ startGame = function(skipGenerate) {
 		var spot = spots.pop();
 		var tx = spot.x,
 			ty = spot.y;
-		new DroppedItem(tx*tileWidth+tileWidth/2, ty*tileHeight+tileHeight/2,item);
+		item.disposable = true;
+		var it = new DroppedItem(tx*tileWidth+tileWidth/2, ty*tileHeight+tileHeight/2,item);
 	}
 }
 

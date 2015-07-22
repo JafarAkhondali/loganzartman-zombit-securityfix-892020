@@ -1,10 +1,10 @@
 function addListeners() {
 	document.addEventListener("keydown",kd,false);
 	document.addEventListener("keyup",ku,false);
-	canvas.addEventListener("mousemove",mm,false);
-	canvas.addEventListener("mouseup",mu,false);
-	canvas.addEventListener("mousedown",md,false);
-	canvas.addEventListener("mousewheel",mw,false);
+	document.addEventListener("mousemove",mm,false);
+	document.addEventListener("mouseup",mu,false);
+	document.addEventListener("mousedown",md,false);
+	document.addEventListener("mousewheel",mw,false);
 
 	//window.onresize = resizeCheck;
 }
@@ -136,16 +136,13 @@ function mu(e) {
 }
 function mp(e) {
 	var el = e.target;
-	var posx = posy = 0;
 
-	while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-		posx += el.offsetLeft - el.scrollLeft;
-		posy += el.offsetTop - el.scrollTop;
-		el = el.offsetParent;
+	posx = e.pageX;
+	posy = e.pageY;
+	if (devicePixelRatio) {
+		posx *= devicePixelRatio;
+		posy *= devicePixelRatio;
 	}
-
-	posx = e.clientX - posx;
-	posy = e.clientY - posy;
 
 	var mcx = posx*(viewWidth/screenWidth);
 	var mcy = posy*(viewHeight/screenHeight);
@@ -256,6 +253,7 @@ function createGUI() {
 	display.add(window, "screenWidth").min(0);
 	display.add(window, "screenHeight").min(0);
 
+	display.add(window, "chooseFPS");
 	display.add(window, "showDebug");
 	display.add(window, "enableShaders");
 	display.add(window, "drawParticles");
@@ -279,6 +277,7 @@ function createGUI() {
 	playr.add(player, "spdInc").step(0.01);
 	playr.add(player, "maxSpd").step(0.01);
 	playr.add(player, "friction").step(0.01);
+	playr.add(window, "spawnEnabled");
 	playr.add(window, "godMode");
 	playr.add(window, "randomGun");
 	playr.add(window, "giveNyanGun");
@@ -293,4 +292,18 @@ function createGUI() {
 
 	var audm = gui.addFolder("Audio");
 	audm.add(window, "volumeMaster").min(0).max(1).step(0.05);
+}
+
+function chooseFPS() {
+	showPrompt("Choose target framerate (FPS):", function(text){
+		try {
+			var fps = parseInt(text);
+			targetFramerate = fps;
+			if (timer) {
+				clearInterval(timer);
+				timer = setInterval(step, 1000/targetFramerate);
+			}
+		}
+		catch (e) {}
+	}, 500, 300);
 }

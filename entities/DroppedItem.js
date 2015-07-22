@@ -7,6 +7,9 @@ DroppedItem = Entity.extend(function(x,y,item){
 	this.timestamp = Date.now();
 	this.friction = 0.1;
 
+	this.disposable = true;//this.item.disposable;
+	entityManager.makeDisposable(this);
+
 	//console.log("Dropped a(n) "+item.name);
 })
 .methods({

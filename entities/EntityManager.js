@@ -65,6 +65,8 @@ EntityManager = function(level) {
 	this.level = level;
 	this.entities = []; //stores entities
 	this.freespace = []; //records indexes that are available
+	this.disposable = [];
+	this.maxDisposables = 2;
 	this.types = []; //types of entities
 	this.grid = null;
 	this.buildGrid();
@@ -150,8 +152,34 @@ EntityManager.prototype.register = function(entity) {
 			ind = this.entities.length;
 			this.entities[ind] = entity;
 		}
+
 		this.localize(entity);
 		return ind;
+	}
+};
+
+/**
+ * Makes an entity diposable so that it can be disposed.
+ * @param entity entity to make disposable
+ */
+EntityManager.prototype.makeDisposable = function(entity) {
+	this.disposable.push(entity);
+	this.cleanDisposable();
+};
+
+/**
+ * Cleans up extra dropped items
+ */
+EntityManager.prototype.cleanDisposable = function () {
+	console.log(this.disposable.length);
+	if (this.disposable.length > this.maxDisposables) {
+		var nToDispose = this.disposable.length - this.maxDisposables;
+		for (var i=0; i<nToDispose; i++) {
+			var item = this.disposable.shift();
+			if (item instanceof Entity && item.disposable) {
+				item.destroy();
+			}
+		}
 	}
 };
 

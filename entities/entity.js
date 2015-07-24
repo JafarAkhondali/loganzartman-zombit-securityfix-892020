@@ -140,6 +140,13 @@ Entity = klass(function (x,y,noreg) {
 			   a.y1 < b.y2 && a.y2 > b.y1;
 	},
 
+	onScreen: function() {
+		return this.x >= viewX &&
+					 this.y >= viewY &&
+					 this.x <= viewX+viewWidth &&
+					 this.y <= viewY+viewHeight;
+	},
+
 	damage: function(amount, damager) {
 		this.life-=amount;
 		if (particlesEnabled) {

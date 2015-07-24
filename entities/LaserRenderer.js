@@ -18,6 +18,7 @@ LaserRenderer.PathTracer = function(x,y,xs,ys) {
         this.ys=0;
         this.collided=true;
     };
+    this.onScreen = Entity.prototype.onScreen;
 };
 LaserRenderer.PathTracer.prototype.step = function(dlt) {
     Entity.prototype.step.call(this, dlt);
@@ -55,7 +56,7 @@ LaserRenderer.prototype.tracePath = function(entity) {
     while (!tracer.collided) {
         var x1 = tracer.x-viewX,
             y1 = tracer.y-viewY;
-            this.ctx.lineTo(x1, y1);
+        this.ctx.lineTo(x1, y1);
         tracer.step(1);
     }
 

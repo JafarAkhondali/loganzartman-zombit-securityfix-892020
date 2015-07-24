@@ -28,6 +28,8 @@ var FADE_IN_TIME = 120;
 
 var enablePathDebug = false;
 
+var solidRenderedBlocks = [];
+
 //ui states
 var UI_UP=0, UI_HOVER=1, UI_DOWN=2;
 var uiPlayState=UI_UP, uiHelpState=UI_UP;
@@ -345,6 +347,7 @@ function render() {
 }
 
 function drawgameLevel(mode) {
+    solidRenderedBlocks = [];
     var w = gameLevel.getWidth();
     var h = gameLevel.getHeight();
 
@@ -395,6 +398,7 @@ function drawgameLevel(mode) {
             }
             else if (mode==2) {
                 if (tile.depth==2) {
+                    solidRenderedBlocks.push(tile);
                     drawtile(tile,sx,sy);
                 }
                 if (enablePathDebug) {

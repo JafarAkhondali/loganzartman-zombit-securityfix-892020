@@ -29,8 +29,8 @@ var filterStrength = 20;
 var frameTime = 0, lastLoop = new Date, thisLoop;
 var fps = targetFPS;
 
-var VERSION = 125;
-var SUBVER = "ʘ‿ʘ";
+var VERSION = 128;
+var SUBVER = "gpu toaster";
 
 particlesEnabled = true; //duh
 
@@ -199,6 +199,7 @@ function loadScripts() {
 	include("entities/EntityManager.js");
 	include("level/Pathfinder.js");
 	include("render.js");
+	include("caster.js");
 	include("light.js");
 	include("res.js");
 	include("audio.js");
@@ -225,7 +226,7 @@ function reinitCanvases() {
 		"translate(-"+transx.toFixed(0)+"px,-"+transy.toFixed(0)+"px)";
 	}
 
-	canvas.style.cursor = "crosshair";
+	canvas.style.cursor = "none";
 	canvContainer.appendChild(canvas);
 	sctx = canvas.getContext("2d"); //screen context, shouldn't be draw onto usually
 

@@ -334,6 +334,10 @@ function render() {
             ctx.textAlign = 'left';
         }
 
+        ctx.globalCompositeOperation = "difference";
+        ctx.drawImage(imgCursorInv, mouseX-8, mouseY-8);
+        ctx.globalCompositeOperation = "source-over";
+
         //copy buffer to screen at proper scale
         sctx.globalAlpha = frameBlend;
         sctx.drawImage(buffer,0,0,screenWidth,screenHeight);

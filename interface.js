@@ -248,29 +248,30 @@ function createGUI() {
 	gui.remember(player);
 
 	var display = gui.addFolder("Display");
-	display.add(window, "viewWidth").min(0);
-	display.add(window, "viewHeight").min(0);
-	display.add(window, "screenWidth").min(0);
-	display.add(window, "screenHeight").min(0);
+	var viewport = display.addFolder("Viewport");
+	viewport.add(window, "viewWidth").min(0);
+	viewport.add(window, "viewHeight").min(0);
+	viewport.add(window, "screenWidth").min(0);
+	viewport.add(window, "screenHeight").min(0);
+	viewport.add(window, "chooseFPS");
 
-	display.add(window, "chooseFPS");
-	display.add(window, "showDebug");
-	display.add(window, "enableShaders");
-	display.add(window, "drawParticles");
-	display.add(window, "drawOverlay");
-	display.add(window, "tileShadows");
-	display.add(window, "entityShadows");
+	var renderset = display.addFolder("Render Settings");
+	renderset.add(window, "drawParticles");
+	renderset.add(window, "drawOverlay");
+	renderset.add(window, "tileShadows");
+	renderset.add(window, "entityShadows");
+	renderset.add(window, "enableLightRendering");
+	renderset.add(window, "enableShadowCasting");
+	renderset.add(window, "enableSoftShadows");
+	renderset.add(window, "frameBlend").min(0).max(1).listen();
+	renderset.add(window, "minFrameBlend").min(0).max(1);
+	renderset.add(window, "defaultFrameBlend").min(0).max(1);
+	renderset.add(window, "globalBrightness").min(0).max(2).step(0.1);
 
-	display.add(window, "enablePathDebug");
-	display.add(window, "enableLightRendering");
-	display.add(window, "enableLightTinting");
-	display.add(window, "enableGlare");
-
-	display.add(window, "frameBlend").min(0).max(1).listen();
-	display.add(window, "minFrameBlend").min(0).max(1);
-	display.add(window, "defaultFrameBlend").min(0).max(1);
-
-	display.add(window, "globalBrightness").min(0).max(2).step(0.1);
+	var debuginfo = display.addFolder("Debug Displays");
+	debuginfo.add(window, "showDebug");
+	debuginfo.add(window, "enableShadowDebug");
+	debuginfo.add(window, "enablePathDebug");
 
 	var playr = gui.addFolder("Player");
 	playr.add(player, "life").min(1).max(player.maxlife).step(1).listen();
@@ -278,10 +279,12 @@ function createGUI() {
 	playr.add(player, "maxSpd").step(0.01);
 	playr.add(player, "friction").step(0.01);
 	playr.add(window, "spawnEnabled");
-	playr.add(window, "godMode");
-	playr.add(window, "randomGun");
-	playr.add(window, "giveNyanGun");
-	playr.add(window, "giveZedGun");
+
+	var cheats = playr.addFolder("Cheats");
+	cheats.add(window, "godMode");
+	cheats.add(window, "randomGun");
+	cheats.add(window, "giveNyanGun");
+	cheats.add(window, "giveZedGun");
 
 	var mpm = gui.addFolder("Multiplayer (Broken, do not use)");
 	mpm.add(window, "mpServer");

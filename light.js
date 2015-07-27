@@ -2,18 +2,19 @@ var lightArray = [];
 var lightbuffer, lictx;
 var gradientbuffer, grctx;
 var globalBrightness = 1;
-var enableShadowCasting = true;
 
 function initLight() {
 	lightbuffer = document.createElement("canvas");
 	lightbuffer.width = viewWidth;
 	lightbuffer.height = viewHeight;
 	lictx = lightbuffer.getContext("2d");
+	// lictx.scale(lightBufferScale, lightBufferScale);
 
 	gradientbuffer = document.createElement("canvas");
 	gradientbuffer.width = viewWidth;
 	gradientbuffer.height = viewHeight;
 	grctx = gradientbuffer.getContext("2d");
+	// grctx.scale(lightBufferScale, lightBufferScale);
 }
 
 function registerLight(light) {
@@ -73,18 +74,11 @@ function generateLightImage(color, size, brightness) {
 	return can;
 }
 
-var GLARESCALE = 2;
 function drawLight(dest,x,y,col,size,brightness,mode,img) { //mode0: gradients only, mode1: both, mode2: glare only
     brightness*=globalBrightness;
 	if (mode<2) {
 		dest.globalAlpha = brightness>1?1:brightness;
-		dest.drawImage(img,Math.floor(x-size/2),Math.floor(y-size/2),size,size);
-	}
-	if (enableGlare && mode>0 && brightness>0.6) { //glare (brightness can go up to 2)
-		var sm = 1-(Math.sin(Date.now()*0.05)*0.05);
-		ctx.globalAlpha = brightness>2?1*sm:(brightness-0.5)*0.5*sm;
-		//console.log("glaring "+ctx.globalAlpha);
-		ctx.drawImage(imgGlare,x-(imgGlare.width*0.5*((size*GLARESCALE)/imgGlare.width)*sm),y-(imgGlare.height*0.5*((size*GLARESCALE)/imgGlare.height)*sm),size*GLARESCALE*sm,size*GLARESCALE*sm);
+		dest.drawImage(img,~~(x-size*0.5),~~(y-size*0.5),size,size);
 	}
 	dest.globalAlpha = 1;
 }
@@ -121,20 +115,24 @@ function renderLight2() {
 		var newmode = false;
 		lictx.globalCompositeOperation = newmode?"lighter":"screen";
 		drawAllLights(lictx,newmode?0.5:1,0);
-
-		if (enableShadowCasting) {
-			renderCastShadows();
-			var scale = 2;
-			grctx.drawImage(gradientbuffer, 0, 0, (1/scale)*gradientbuffer.width, (1/scale)*gradientbuffer.height);
-			grctx.drawImage(gradientbuffer, 0, 0, scale*gradientbuffer.width, scale*gradientbuffer.height);
-			lictx.globalCompositeOperation = "multiply";
-			lictx.drawImage(gradientbuffer,0,0);
+	}
+	if (enableShadowCasting) {
+		renderCastShadows();
+		if (enableSoftShadows) {
+			grctx.globalCompositeOperation = "copy";
+			grctx.drawImage(gradientbuffer,0,0,gradientbuffer.width*0.5,gradientbuffer.height*0.5);
 		}
 
+		lictx.globalCompositeOperation = "multiply";
+
+		if (enableSoftShadows) lictx.drawImage(gradientbuffer,0,0,gradientbuffer.width*2,gradientbuffer.height*2);
+		else lictx.drawImage(gradientbuffer, 0, 0);
+	}
+	if (enableLightRendering || enableShadowCasting) {
 		compositeLight(ctx,newmode?"hard-light":"multiply");
 
 		lictx.globalCompositeOperation = "source-over";
-		clearCanvas(lictx,"black");
+		clearCanvas(lictx,enableLightRendering?"black":"white");
 
 		var grd = grctx.createRadialGradient(player.x-viewX,player.y-viewY,20,player.x-viewX,player.y-viewY,75);
 		grd.addColorStop(0,"rgb(100,100,100)");

@@ -29,8 +29,8 @@ var filterStrength = 20;
 var frameTime = 0, lastLoop = new Date, thisLoop;
 var fps = targetFPS;
 
-var VERSION = 128;
-var SUBVER = "gpu toaster";
+var VERSION = 129;
+var SUBVER = "gpu roaster";
 
 particlesEnabled = true; //duh
 

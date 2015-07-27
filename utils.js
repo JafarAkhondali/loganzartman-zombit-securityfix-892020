@@ -58,7 +58,43 @@ Util.loadJSON = function(url, callback) {
 	catch (error) {
 		callback(false);
 	}
-}
+};
+
+Util.inView = function(x,y) {
+	return x>=viewX && y>=viewY && x<=viewX+viewWidth && y<=viewY+viewHeight;
+};
+
+/**
+ * Determine if a box is at least partially visible
+ * @param box {x1, y1, x2, y2}
+ */
+Util.rectInView = function(box) {
+	return box.x2>viewX && viewX+viewWidth>box.x1 && box.y2>viewY && viewY+viewHeight>box.y1;
+};
+
+/**
+ * Returns vertices of intersection between rectangle and view
+ * @param box {x1, y1, x2, y2}
+ * @return false or array of points
+ */
+Util.rectViewEdgePoints = function(box) {
+	var vx1 = viewX,
+		vy1 = viewY,
+		vx2 = viewX+viewWidth,
+		vy2 = viewY+viewHeight;
+	var ix1 = Math.max(box.x1, vx1),
+		iy1 = Math.max(box.y1, vy1),
+		ix2 = Math.min(box.x2, vx2),
+		iy2 = Math.min(box.y2, vy2);
+	if (ix1 > ix2 || iy1 > iy2) return false;
+	if (ix1 === box.x1 && ix2 === box.x2 && iy1 === box.y1 && iy2 === box.y2) return false;
+	return [
+		{x: ix1, y: iy1},
+		{x: ix2, y: iy1},
+		{x: ix1, y: iy2},
+		{x: ix2, y: iy2}
+	];
+};
 
 //integer randoms
 Util.irand = function(max) {

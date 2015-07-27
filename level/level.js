@@ -1,5 +1,6 @@
 Level = function(levelData) {
 	this.data = levelData;
+	cacheShadowPoints(this);
 }
 Level.prototype.getWidth = function(){return this.data.length;}
 Level.prototype.getHeight = function(){return this.data[0].length;}

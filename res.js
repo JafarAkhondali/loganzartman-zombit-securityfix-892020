@@ -73,6 +73,8 @@ var imgGlare = new Image();
 imgGlare.src = "res/glare5.png";
 var imgFlashlightBeam = new Image();
 imgFlashlightBeam.src = "res/flashlight.png";
+var imgFlare = new Image();
+imgFlare.src = "res/flare.png";
 
 var imgLightRadialMask;
 var imgLightRadial = new Image();
@@ -101,7 +103,7 @@ imgLightRadial.src = "res/lightRadial.png";
 var imgSplatter = [];
 for (var i=0; i<5; i++) {
 	imgSplatter[i] = new Image();
-	imgSplatter[i].src = "res/splatter"+i+".png";
+	imgSplatter[i].src = "res/splatter_"+i+".png";
 }
 
 //shim for future system

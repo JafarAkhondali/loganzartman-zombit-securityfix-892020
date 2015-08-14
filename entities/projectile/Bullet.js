@@ -28,17 +28,16 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 			thing.damage(this.damage, this);
 
 			if (thing instanceof Hostile) {
-				var dx = -this.xs;
-				var dy = -this.ys;
-				var len = Math.sqrt(dx*dx+dy*dy);
-				dx/=len;
-				dy/=len;
+				var dx = this.xs;
+				var dy = this.ys;
+				var ang = Math.atan2(dy, dx);
 
-				function rnd() {return Math.random()*3-1.5;}
 				for (var i=0; i<~~(this.damage/10)+1; i++) {
-					var xx = dx*rnd();
-					var yy = dy*2*rnd();
-					var spl = new Splatter(thing.x,thing.y-4,xx,yy,yy*0.5,2-(0.5*Math.abs(yy)));
+					var a = ang+Util.grandr(-0.8, 0.8);
+					var spd = Util.grandr(1,10);
+					var xx = Math.cos(a)*spd;
+					var yy = Math.sin(a)*spd;
+					var spl = new Splatter(thing.x,thing.y-4,xx,yy,Util.grandr(0,6));
 					if (yy<0) {spl.depth = 1;}
 				}
 			}

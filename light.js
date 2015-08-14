@@ -28,13 +28,14 @@ function unregisterLight(light) {
 	if (i>=0) {lightArray[i] = null;}
 }
 
-function StaticLight(x,y,col,size,brightness) { //a light that is drawn at a specific position
+function StaticLight(x,y,col,size,brightness,life) { //a light that is drawn at a specific position
 	this.x = x;
 	this.y = y;
 	this.col = col;
 	this.size = size;
 	this.brightness = brightness;
 	this.img = generateLightImage(col,size,brightness);
+	this.life = life ? life : Infinity;
 	this.getX = function() {return this.x;};
 	this.getY = function() {return this.y;};
 }
@@ -104,6 +105,8 @@ function drawAllLights(dest,gbrightness,mode) {
 					drawLight(dest,x-viewX,y-viewY,lightArray[i].col,s,lightArray[i].brightness*gbrightness,mode,lightArray[i].img);
 				}
 			}
+
+			if (lightArray[i].life-- <= 0) unregisterLight(lightArray[i]);
 		}
 	}
 	if (mode>0) {ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;}

@@ -149,11 +149,6 @@ Entity = klass(function (x,y,noreg) {
 
 	damage: function(amount, damager) {
 		this.life-=amount;
-		if (particlesEnabled) {
-			for (var i=0; i<Math.ceil((amount/(this.maxlife>0?this.maxlife:1))*6); i++) {
-				new BloodSplat(this.x-this.width*0.5+Util.irand(this.width),this.y-this.height*0.5+Util.irand(this.height),0,0);
-			}
-		}
 		if (this.life<=0) {this.die(damager);}
 	},
 	die: function(killer) {

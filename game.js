@@ -1,6 +1,10 @@
 window.addEventListener('load', function(){
+	var getGlobals = function(){return Object.getOwnPropertyNames(window)};
+	var preInit = getGlobals();
 	onScriptsLoaded.push(function(){
 		init();
+		var postInit = getGlobals();
+		console.log("Leaked vars to global scope:", postInit.filter(function(item){return preInit.indexOf(item)<0}));
 	});
 	loadScripts();
 }, false);
@@ -14,7 +18,6 @@ var gamePaused = true;
 var tileWidth = 16; //pixel width of a tile
 var tileHeight = 16;
 
-//var entities = []; //stores all entities DEPRECATED
 var items = []; //stores all items (does this need to exist?)
 
 var gameScore = 0; //score...
@@ -29,8 +32,8 @@ var filterStrength = 20;
 var frameTime = 0, lastLoop = new Date, thisLoop;
 var fps = targetFPS;
 
-var VERSION = 129;
-var SUBVER = "gpu roaster";
+var VERSION = 130;
+var SUBVER = "goty edition";
 
 particlesEnabled = true; //duh
 
@@ -96,6 +99,7 @@ function init() {
 	requestAnimFrame(render);
 }
 
+var mfLight;
 function restartGame() {
 	LevelFactory.fromFile("level/test.json", function(level){
 		if (level) {
@@ -103,6 +107,7 @@ function restartGame() {
 			startGame(true);
 
 			//set up some light
+
 			var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",200,1);
 			pLight = new SpecialLightContainer(pLight);
 			pLight.drawLight = function(dest,x,y,brightness,mode) {

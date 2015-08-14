@@ -1,16 +1,19 @@
-function addListeners() {
-	document.addEventListener("keydown",kd,false);
-	document.addEventListener("keyup",ku,false);
-	document.addEventListener("mousemove",mm,false);
-	document.addEventListener("mouseup",mu,false);
-	document.addEventListener("mousedown",md,false);
-	document.addEventListener("mousewheel",mw,false);
+//dear readers: this is retrofitted legacy code; I apologize.
 
-	//window.onresize = resizeCheck;
-}
+var Interface = {
+	init: function() {
+		document.addEventListener("keydown",Interface.kd,false);
+		document.addEventListener("keyup",Interface.ku,false);
+		document.addEventListener("mousemove",Interface.mm,false);
+		document.addEventListener("mouseup",Interface.mu,false);
+		document.addEventListener("mousedown",Interface.md,false);
+		document.addEventListener("mousewheel",Interface.mw,false);
+		document.addEventListener("scroll",Interface.mw,false);
+	}
+};
 
 var keys = [];
-function kd(e) { //keydown
+Interface.kd = function(e) { //keydown
 	if (modalsOpen<=0) {
 		if (!e) {e=event;}
 
@@ -83,26 +86,27 @@ function kd(e) { //keydown
 			if (mpReady) {mpSocket.emit("input",{type: INPUT_KB, code: e.keyCode, val: true});}
 		}
 	}
-}
-function ku(e) { //keyup
+};
+
+Interface.ku = function(e) { //keyup
 	if (modalsOpen<=0) {
 	if (!e) {e=event;}
 	keys[e.keyCode] = false;
 
 	if (mpActive) {mpSocket.emit("input",{type: INPUT_KB, code: e.keyCode, val: false});}
 	}
-}
+};
 
-mouseX = 0, mouseY = 0, mouseLeft = false;
-scrolltotal=0;
-function mm(e) {
+var mouseX = 0, mouseY = 0, mouseLeft = false;
+var scrolltotal=0;
+Interface.mm = function(e) {
 	if (!e) {e=event;}
-	mp(e);
-}
-function md(e) {
+	Interface.mp(e);
+};
+Interface.md = function(e) {
 	if (!e) {e=event;}
 	e.preventDefault();
-	mp(e);
+	Interface.mp(e);
 	mouseLeft = true;
 
 	if (mpChatOpen) {
@@ -125,16 +129,16 @@ function md(e) {
 	}
 
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, btn: 1, state: true});}
-}
-function mu(e) {
+};
+Interface.mu = function(e) {
 	if (!e) {e=event;}
 	e.preventDefault();
-	mp(e);
+	Interface.mp(e);
 	mouseLeft = false;
 
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, btn: 1, state: false});}
-}
-function mp(e) {
+};
+Interface.mp = function(e) {
 	var el = e.target;
 
 	posx = e.pageX;
@@ -156,39 +160,13 @@ function mp(e) {
 
 	//if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, x: mouseX, y: mouseY});}
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, facing: player.facing});}
-}
-function mw(e) {
+};
+Interface.mw = function(e) {
 	scrolltotal+=Util.wheelDistance(e);
-	//console.log(Util.wheelDistance(e));
-}
+};
 
-function fullscreen(on) {
-	if (on) { //if fullscreen
-		canvas.style.position = "absolute";
-		canvas.style.left = "0px";
-		canvas.style.top = "0px";
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight;
-		screenWidth = window.innerWidth;
-		screenHeight = window.innerHeight;
-		sctx.webkitImageSmoothingEnabled = false;
-		sctx.mozImageSmoothingEnabled = false;
-		sctx.imageSmoothingEnabled = false;
-	}
-	else {
-		canvas.style.position = "relative";
-		canvas.width = defaultScreenWidth;
-		canvas.height = defaultScreenHeight;
-		screenWidth = defaultScreenWidth;
-		screenHeight = defaultScreenHeight;
-		sctx.webkitImageSmoothingEnabled = false;
-		sctx.mozImageSmoothingEnabled = false;
-		sctx.imageSmoothingEnabled = false;
-	}
-}
-
-var modalsOpen = 0;
-function makeModal(content,okcallback,width,height) {
+Interface.modalsOpen = 0;
+Interface.makeModal = function(content,okcallback,width,height) {
 	var modal = document.createElement("div");
 	modal.className = "modal";
 	modal.innerHTML = content;
@@ -204,21 +182,21 @@ function makeModal(content,okcallback,width,height) {
 
 	modal.appendChild(okBtn);
 	document.body.appendChild(modal);
-	modal.destroy = function(){document.body.removeChild(this); modalsOpen-=1;}
+	modal.destroy = function(){document.body.removeChild(this); modalsOpen-=1;};
 
 	modalsOpen+=1;
 
 	return modal;
-}
+};
 
-function showAlert(text,callback,width,height) {
+Interface.showAlert = function(text,callback,width,height) {
 	var modal = makeModal(text, function(){
 		callback(true);
 		modal.destroy();
 	},width,height);
-}
+};
 
-function showPrompt(text,callback,width,height) {
+Interface.showPrompt = function(text,callback,width,height) {
 	var inpt = document.createElement("input");
 	inpt.className = "modalInput";
 	inpt.type = "text";
@@ -230,13 +208,13 @@ function showPrompt(text,callback,width,height) {
 	modal.appendChild(inpt);
 
 	inpt.focus();
-}
+};
 
 /**
  * Creates the DatGUI
  * @returns {undefined}
  */
-function createGUI() {
+Interface.createGUI = function() {
     //show the gui
 	gui = new dat.GUI({autoPlace: false});
 	gui.close();
@@ -253,7 +231,7 @@ function createGUI() {
 	viewport.add(window, "viewHeight").min(0);
 	viewport.add(window, "screenWidth").min(0);
 	viewport.add(window, "screenHeight").min(0);
-	viewport.add(window, "chooseFPS");
+	viewport.add(Interface, "chooseFPS");
 
 	var renderset = display.addFolder("Render Settings");
 	renderset.add(window, "drawParticles");
@@ -295,9 +273,9 @@ function createGUI() {
 
 	var audm = gui.addFolder("Audio");
 	audm.add(window, "volumeMaster").min(0).max(1).step(0.05);
-}
+};
 
-function chooseFPS() {
+Interface.chooseFPS = function() {
 	showPrompt("Choose target framerate (FPS):", function(text){
 		try {
 			var fps = parseInt(text);
@@ -309,4 +287,4 @@ function chooseFPS() {
 		}
 		catch (e) {}
 	}, 500, 300);
-}
+};

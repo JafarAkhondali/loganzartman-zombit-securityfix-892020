@@ -12,9 +12,12 @@ Zombie = Hostile.extend(function(x,y,vr){
 	this.pointValue = Math.round(0.5*this.life);
 	this.inv.push(new ZombieAttack());
 
-	this.dropchance = 0.02;
+	this.dropchance = 0.035;
 	this.width = 16;
 	this.height = 16;
+
+	this.txs = 0;
+	this.tys = 0;
 
 	if (typeof playerPathfinder !== "undefined")
 		this.pathfinder = playerPathfinder;
@@ -29,13 +32,15 @@ Zombie = Hostile.extend(function(x,y,vr){
 	step: function(dlt) {
 		this.supr(dlt);
 
-		if (this.target==T_SEARCH) {
+		if (this.target !== player) {
 			//randumbly wander if no target
 			if (Math.random()<0.01) {
-				this.xs = -1+Math.random()*2;
-				this.ys = -1+Math.random()*2;
+				this.txs = -1+Math.random()*2;
+				this.tys = -1+Math.random()*2;
 				this.mpUpdate();
 			}
+			this.xs = this.xs//this.xs*0.8+0.2*this.txs;
+			this.ys = this.ys//this.ys*0.8+0.2*this.tys;
 		}
 	},
 

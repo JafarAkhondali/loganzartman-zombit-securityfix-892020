@@ -1,11 +1,11 @@
 Pistol = Gun.extend(function(){
 	this.name = "Pistol";
-	this.clipsize = 20;
-	this.ammo = 20;
-	this.delay = 9;
-	this.damage = 10;
-	this.spread = 7;
-	this.spd=19;
+	this.clipsize = 12;
+	this.ammo = 12;
+	this.delay = 12;
+	this.damage = 40;
+	this.spread = 9;
+	this.spd=30;
 	this.snd = sndGun2;
 	try{this.icon = pistolIcon;}catch(e){}
 	this.type = PISTOL;

@@ -88,8 +88,8 @@ Hostile = Entity.extend(function(x,y,vr){
 			else { //target is close enough to follow
 				//calculate direction to target and move toward it at constant speed
 				var pd = targetDir;
-				this.xs = Math.cos(pd)*this.spd;
-				this.ys = Math.sin(pd)*this.spd;
+				this.txs = this.xs*0.8+0.2*Math.cos(pd)*this.spd;
+				this.tys = this.ys*0.8+0.2*Math.sin(pd)*this.spd;
 			}
 
 			//use the hostile's weapon if possible

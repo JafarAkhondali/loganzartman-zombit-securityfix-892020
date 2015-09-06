@@ -14,7 +14,7 @@ var Interface = {
 
 var keys = [];
 Interface.kd = function(e) { //keydown
-	if (modalsOpen<=0) {
+	if (Interface.modalsOpen<=0) {
 		if (!e) {e=event;}
 
 		if (e.keyCode==VK_ESCAPE) {
@@ -89,7 +89,7 @@ Interface.kd = function(e) { //keydown
 };
 
 Interface.ku = function(e) { //keyup
-	if (modalsOpen<=0) {
+	if (Interface.modalsOpen<=0) {
 	if (!e) {e=event;}
 	keys[e.keyCode] = false;
 
@@ -118,7 +118,7 @@ Interface.md = function(e) {
 		if (uiPlayState === UI_HOVER && mouseY>120 && mouseY<140 && mouseX>viewWidth/2-40 && mouseX<viewWidth/2+40) {
 			uiPlayState = UI_UP;
 			requestAnimFrame(function(){
-				drawLoadingScreen();
+				drawLoadingScreen(0.001);
 				setTimeout(restartGame,50);
 			});
 		}
@@ -182,15 +182,15 @@ Interface.makeModal = function(content,okcallback,width,height) {
 
 	modal.appendChild(okBtn);
 	document.body.appendChild(modal);
-	modal.destroy = function(){document.body.removeChild(this); modalsOpen-=1;};
+	modal.destroy = function(){document.body.removeChild(this); Interface.modalsOpen-=1;};
 
-	modalsOpen+=1;
+	Interface.modalsOpen+=1;
 
 	return modal;
 };
 
 Interface.showAlert = function(text,callback,width,height) {
-	var modal = makeModal(text, function(){
+	var modal = Interface.makeModal(text, function(){
 		callback(true);
 		modal.destroy();
 	},width,height);
@@ -201,7 +201,7 @@ Interface.showPrompt = function(text,callback,width,height) {
 	inpt.className = "modalInput";
 	inpt.type = "text";
 
-	var modal = makeModal(text+"<br>", function() {
+	var modal = Interface.makeModal(text+"<br>", function() {
 		callback(inpt.value);
 		modal.destroy();
 	},width,height);

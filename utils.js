@@ -165,10 +165,29 @@ SmoothRandom.prototype.generate = function() {
     for (i=this.len-1; i>=0; i--)
         this.data[i] = (this.data[i]-0.5)/scale + 0.5;
 };
+SmoothRandom.prototype.offset = function(idx) {
+	if ((this._idx+=idx) >= this.len) this._idx = 0;
+};
 SmoothRandom.prototype.next = function() {
     if (++this._idx >= this.len) this._idx = 0;
-    return this.data[this._idx];
+    return this.data[~~this._idx];
 };
+
+Util.CachedRandom = {
+	len: 2000,
+	data: [],
+	_idx: 0,
+	init: function() {
+		for (var i=0; i<Util.CachedRandom.len; i++) {
+			Util.CachedRandom.data[i] = (Math.random()+Math.random()+Math.random())/3;
+		}
+	},
+	next: function() {
+		if (++this._idx >= this.len) this._idx = 0;
+	    return this.data[~~this._idx];
+	}
+};
+Util.CachedRandom.init();
 
 //fast (pregenerated) randoms. originally used for shaders.
 Util.frandArray = new Array(2000);

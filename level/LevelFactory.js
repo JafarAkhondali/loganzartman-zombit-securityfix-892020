@@ -130,7 +130,7 @@ var LevelFactory = {
 				callback(level);
 			}
 			else {
-				showAlert("<span style=\"color: red\">Failed to load level!</span>"+
+				Interface.showAlert("<span style=\"color: red\">Failed to load level!</span>"+
 						  "<br>Level URL: "+url+"<br><br>Note to developers: make "+
 						  "sure you're not running using file:// in Chrome.",function(){
 					cleanupGame();

@@ -28,26 +28,29 @@ function unregisterLight(light) {
 	if (i>=0) {lightArray[i] = null;}
 }
 
-function StaticLight(x,y,col,size,brightness,life) { //a light that is drawn at a specific position
+function StaticLight(x,y,col,size,brightness,life,img) { //a light that is drawn at a specific position
 	this.x = x;
 	this.y = y;
 	this.col = col;
 	this.size = size;
 	this.brightness = brightness;
-	this.img = generateLightImage(col,size,brightness);
+	this.img = generateLightImage(col,size,brightness,img);
 	this.life = life ? life : Infinity;
 	this.getX = function() {return this.x;};
 	this.getY = function() {return this.y;};
+	this.resetLife = function(t) {this.life = t; this.brightness = 1;};
 }
 
-function EntityLight(entity,col,size,brightness) { //a light that follows an entity
+function EntityLight(entity,col,size,brightness,life,img) { //a light that follows an entity
 	this.entity = entity;
 	this.col = col;
 	this.size = size;
 	this.brightness = brightness;
-	this.img = generateLightImage(col,size,brightness);
+	this.img = generateLightImage(col,size,brightness,img);
+	this.life = life ? life : Infinity;
 	this.getX = function() {return this.entity.x;};
 	this.getY = function() {return this.entity.y;};
+	this.resetLife = function(t) {this.life = t; this.brightness = 1;};
 }
 
 function SpecialLightContainer(light) { //a light that has a custom drawing function
@@ -57,17 +60,18 @@ function SpecialLightContainer(light) { //a light that has a custom drawing func
 	this.size = this.light.size;
 	this.col = this.light.col||null;
 	this.brightness = this.light.brightness||null;
-
+	this.life = this.light.life;
+	this.resetLife = function(t) {this.life = t; this.brightness = 1;};
 	//define this.drawLight(dest,[brightness])
 }
 
-function generateLightImage(color, size, brightness) {
+function generateLightImage(color, size, brightness, img) {
 	var can = document.createElement("canvas");
 	can.width = size;
 	can.height = size;
 	var ct = can.getContext("2d");
 
-	ct.drawImage(imgLightRadial,0,0,size,size);
+	ct.drawImage(img||imgLightRadial,0,0,size,size);
 	ct.globalCompositeOperation = "multiply";
 	ct.fillStyle = color;
 	ct.fillRect(0,0,size,size);
@@ -106,7 +110,7 @@ function drawAllLights(dest,gbrightness,mode) {
 				}
 			}
 
-			if (lightArray[i].life-- <= 0) unregisterLight(lightArray[i]);
+			if (lightArray[i].life-- <= 0) lightArray[i].brightness = 0;
 		}
 	}
 	if (mode>0) {ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;}
@@ -158,7 +162,7 @@ function clearCanvas(context, color) {
 function addLightsToLevel(level,spacing,color,size,randomness,chanceBroken,brightness) {
 	for (var x=spacing, w=level.getWidth()*tileWidth; x<w; x+=spacing) {
 		for (var y=spacing, h=level.getHeight()*tileHeight; y<h; y+=spacing) {
-			if (Math.random()>chanceBroken) {registerLight(new StaticLight(x,y,color,size-(Math.random()*size*randomness),brightness));}
+			if (Math.random()*Math.random()<chanceBroken) {registerLight(new StaticLight(x,y,color,size-(Math.random()*size*randomness),brightness*Math.random()));}
 		}
 	}
 }

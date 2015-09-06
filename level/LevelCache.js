@@ -1,21 +1,32 @@
-LevelCache = function(level, chunksize) {
+LevelCache = function(level, chunksize, progressCallback, finishedCallback) {
     this.level = level;
     this.size = chunksize;
     this.width = Math.ceil(level.getWidth() / this.size);
     this.height = Math.ceil(level.getHeight() / this.size);
     this._rand = new SmoothRandom(2048);
 
-    this.recache();
+    this._x = 0;
+    this._y = 0;
+    this._c = 0;
+    this.arr = [[]];
+    this.recache(progressCallback, finishedCallback);
 };
 LevelCache.EXPERIMENTALS = true;
-LevelCache.prototype.recache = function() {
-    this.arr = [];
-    for (var x=0; x<=this.width; x++) {
-        this.arr[x] = [];
-        for (var y=0; y<=this.height; y++) {
-            this.arr[x][y] = this.makeChunk(x,y);
+LevelCache.prototype.recache = function(progressCallback, finishedCallback) {
+    this._c++;
+    this.arr[this._x][this._y] = this.makeChunk(this._x,this._y);
+    if (++this._y > this.height) {
+        this._y = 0;
+        if (++this._x > this.width) {
+            this._x = 0;
+            this._y = 0;
+            finishedCallback();
+            return;
         }
+        this.arr[this._x] = [];
     }
+    if (typeof progressCallback === "function") progressCallback((this._c)/((this.width+1)*(this.height+1)));
+    setTimeout(this.recache.bind(this, progressCallback, finishedCallback), 1);
 };
 LevelCache.prototype.makeChunk = function(x,y) {
     var img = document.createElement("canvas");
@@ -108,6 +119,23 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
         }
     };
 
+    //adds random noise to "natural" tiles
+    var _nrand = Util.CachedRandom;
+    var _nshift = function(f){return Math.round(_nrand.next()*f)-f*0.5;};
+    var naturalize = function(tx, ty, f) {
+        var x, y, distort, col, z;
+        for (x=0; x<tileWidth; x++) {
+            for (y=0; y<tileHeight; y++) {
+                var shift = _nshift(f);
+                col = getpixel(tx*tileWidth+x,ty*tileHeight+y);
+                col[0] += shift;
+                col[1] += shift;
+                col[2] += shift;
+                putpixel(tx*tileWidth+x, ty*tileHeight+y, col[0], col[1], col[2], 255);
+            }
+        }
+    };
+
     //draw lines on asphalt tiles
     var drawLines = function(tx, ty, nw, ne, nn, ns) {
         tx *= tileWidth;
@@ -156,6 +184,7 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
 
             if (tile !== null && tile.depth === 0) {
                 if (tile.id === ASPHALT_LINE) drawLines(xo, yo, neighborWest, neighborEast, neighborNorth, neighborSouth);
+                if (NATURAL_LIST[tile.id]) naturalize(xo, yo, NATURAL_LIST[tile.id]);
                 if (border(tile, neighborWest)) borderize(xo, yo, -1, 0, neighborWest);
                 if (border(tile, neighborNorth)) borderize(xo, yo, 0, -1, neighborNorth);
                 if (border(tile, neighborEast)) borderize(xo, yo, 1, 0, neighborEast);

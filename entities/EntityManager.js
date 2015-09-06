@@ -66,7 +66,7 @@ EntityManager = function(level) {
 	this.entities = []; //stores entities
 	this.freespace = []; //records indexes that are available
 	this.disposable = [];
-	this.maxDisposables = 2;
+	this.maxDisposables = 10;
 	this.types = []; //types of entities
 	this.grid = null;
 	this.buildGrid();
@@ -171,7 +171,7 @@ EntityManager.prototype.makeDisposable = function(entity) {
  * Cleans up extra dropped items
  */
 EntityManager.prototype.cleanDisposable = function () {
-	console.log(this.disposable.length);
+	// console.log(this.disposable.length);
 	if (this.disposable.length > this.maxDisposables) {
 		var nToDispose = this.disposable.length - this.maxDisposables;
 		for (var i=0; i<nToDispose; i++) {

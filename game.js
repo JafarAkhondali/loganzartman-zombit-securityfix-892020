@@ -96,6 +96,7 @@ function init() {
 	//setTimeout(startPlaylist,4900);
 
 	//start rendering
+	Shake.init();
 	requestAnimFrame(render);
 }
 
@@ -104,42 +105,34 @@ function restartGame() {
 	LevelFactory.fromFile("level/test.json", function(level){
 		if (level) {
 			gameLevel = level;
-			startGame(true);
+			startGame(true, function(){
+				//set up some light
+				var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",200,0.8);
+				pLight = new SpecialLightContainer(pLight);
+				pLight.drawLight = function(dest,x,y,brightness,mode) {
+					dest.save();
+					dest.globalAlpha = brightness*mode===0?0.5:0;
+					dest.translate(x,y);
+					dest.rotate(player.facing-Math.PI);
+					dest.translate(-(x+imgFlashlightBeam.width),-(y+imgFlashlightBeam.height/2));
+					dest.drawImage(imgFlashlightBeam,x,y);
+					dest.restore();
+				};
+				registerLight(pLight);
 
-			//set up some light
+				var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",200,0.15);
+				rLight.getX = function(){return player.x;};
+				rLight.getY = function(){return player.y;};
+				registerLight(rLight);
 
-			var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",200,1);
-			pLight = new SpecialLightContainer(pLight);
-			pLight.drawLight = function(dest,x,y,brightness,mode) {
-				dest.save();
-				dest.globalAlpha = brightness*mode==0?0.5:0;
-				dest.translate(x,y);
-				dest.rotate(player.facing-Math.PI);
-				dest.translate(-(x+imgFlashlightBeam.width),-(y+imgFlashlightBeam.height/2));
-				dest.drawImage(imgFlashlightBeam,x,y);
-				dest.restore();
-			}
-			registerLight(pLight);
+				var centerLight = new StaticLight(player.x, player.y, "rgba(170,160,240,0.8)", 600, 1);
+				registerLight(centerLight);
 
-			var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",400,1);
-			rLight.update = function() {
-				var x = mouseX+viewX, y = mouseY+viewY;
-				var d = Util.pointDist(player.x,player.y,x,y);
-				//console.log(d);
-				this.brightness = Math.max(0,Math.min(1,d/50)*(1-d/400));
-				this.size = ((d+100)/300)*400;
-			}
-			rLight.getX = function(){this.update(); return mouseX+viewX;}
-			rLight.getY = function(){return mouseY+viewY;}
-			registerLight(rLight);
-
-			var centerLight = new StaticLight(player.x, player.y, "rgba(170,160,240,0.8)", 600, 1);
-			registerLight(centerLight);
-
-			dmode = GAME;
-			gamePaused = false;
-			if (typeof gui === "undefined") {createGUI();}
-			gameTime = 0;
+				dmode = GAME;
+				gamePaused = false;
+				if (typeof gui === "undefined") {Interface.createGUI();}
+				gameTime = 0;
+			});
 		}
 		else {
 			throw new Error("LEVEL FAILED TO LOAD");
@@ -167,7 +160,7 @@ function cleanupGame() {
 }
 
 function showGameHelp() {
-	showAlert(
+	Interface.showAlert(
 		'<span style="color:blue; font-size: 100px;">HELP</span><br>'+
 		'<span style="font-size: 20px;">Currently, Zombit is a roguelike shooter where the goal is to score as many points as possible.  '+
 		'As of right now, there is no endgame.  Just kill zombies, find loot, and collect weapons.<br><br>'+
@@ -186,14 +179,13 @@ function showGameHelp() {
 }
 
 function showScorescreen() {
-	showAlert(
+	Interface.showAlert(
 		'<span style="color:red; font-size: 100px;">YOU DIED.</span><br>'+
 		'<span style="font-size: 40px;">You acquired <span style="color: green;">'+gameScore+'</span> points before being slain.</span><br>'
 	,function(){},window.innerWidth*(3/4),window.innerHeight*(3/4));
 }
 
 function loadScripts() {
-	include("encode64.js");
 	include("klass.js");
 	include("utils.js");
 	include("interface.js");
@@ -270,7 +262,7 @@ function reinitCanvases() {
 	dout = oid.data;
 	for (var i=3; i<dout.length; i+=4) {dout[i] = 255;} //set to opaque
 
-    addListeners(); //add input listeners
+    Interface.init(); //add input listeners
 }
 
 var imgOverlay, imgEntityGeneric, imgPlayer;
@@ -332,7 +324,7 @@ function godMode() {
 }
 
 function randomGun() {
-	showPrompt("Enter awesomeness rating (0 to 1):", function(inpt){
+	Interface.showPrompt("Enter awesomeness rating (0 to 1):", function(inpt){
 		player.inv.push(new RandomGun(parseFloat(inpt)));
 	});
 }

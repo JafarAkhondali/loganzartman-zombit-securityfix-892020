@@ -32,6 +32,9 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 				var dy = this.ys;
 				var ang = Math.atan2(dy, dx);
 
+				thing.xs += dx*0.05;
+				thing.ys += dy*0.05;
+
 				for (var i=0; i<~~(this.damage/10)+1; i++) {
 					var a = ang+Util.grandr(-0.8, 0.8);
 					var spd = Util.grandr(1,10);
@@ -53,10 +56,10 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 	},
 	render: function(x,y) {
 		if (this.light==null) {
-			this.light = new EntityLight(this,"rgba("+this.col1+",1)",40,0.7);
+			this.light = new EntityLight(this,"rgba("+this.col1+",1)",40,1.0);
 			registerLight(this.light);
 
-			this.light2 = new EntityLight(this,"rgba("+this.col1+",1)",120,0.2);
+			this.light2 = new EntityLight(this,"rgba("+this.col2+",1)",120,0.6);
 			registerLight(this.light2);
 		}
 
@@ -67,26 +70,26 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 
 		var grad0= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
 		grad0.addColorStop(0, "rgba(255,255,255,1)");
-		grad0.addColorStop(1, "rgba("+this.col2+",0.7)");
+		grad0.addColorStop(1, "rgba(255,255,255,0.6)");
 
 		var grad1= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
 		grad1.addColorStop(0, "rgba("+this.col1+",1)");
-		grad1.addColorStop(0.6, "rgba("+this.col2+",0)");
+		grad1.addColorStop(0.6, "rgba("+this.col2+",0.4)");
 
 		ctx.lineCap = "round";
 
-		ctx.lineWidth = 2;
+		ctx.lineWidth = 2.5;
 		ctx.strokeStyle = grad1;
 		ctx.beginPath();
-		ctx.moveTo(this.xp-viewX,this.yp-viewY);
+		ctx.moveTo(x-this.xs, y-this.ys);
 		ctx.lineTo(x,y);
 		ctx.stroke();
 
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = grad0;
 		ctx.beginPath();
-		ctx.moveTo(this.xp-viewX,this.yp-viewY);
-		ctx.lineTo(x,y);
+		ctx.moveTo(x-this.xs, y-this.ys);
+		ctx.lineTo(x+this.xs/20,y+this.ys/20);
 		ctx.stroke();
 		}
 

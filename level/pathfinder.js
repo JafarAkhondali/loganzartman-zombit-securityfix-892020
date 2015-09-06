@@ -91,7 +91,7 @@ Pathfinder.prototype.recalculate = function() {
  */
 Pathfinder.prototype.inbounds = function(x,y) {
     if (x<0 || y<0 || x>=this.grid.length || y>=this.grid[0].length) return false;
-    if (x<viewX/tileWidth || y<viewY/tileHeight || x>=(viewX+viewWidth)/tileWidth || y>=(viewY+viewHeight)/tileHeight) return false;
+    if (x<viewTargetX/tileWidth || y<viewTargetY/tileHeight || x>=(viewTargetX+viewWidth)/tileWidth || y>=(viewTargetY+viewHeight)/tileHeight) return false;
     return true;
 };
 

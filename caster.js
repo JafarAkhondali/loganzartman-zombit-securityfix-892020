@@ -28,7 +28,15 @@ function rayBoxIntersect(ray, box) {
 	return false;
 }
 
+/**
+ * Generates shadow bounding boxes and assigns them to the level.
+ * Rather than render "shadows" (non-visible area) from each wall tile in a
+ * level, rectangles are fitted to adjacent tiles to create "shadow boxes".
+ * This significantly decreases the number of vertices that must be rendered.
+ * @param level the Level to generate boxes for
+ */
 function cacheShadowPoints(level) {
+	//returns tile at (x,y) with fail-soft bounds checking
 	var gt = function(x,y) {
 		if (x<0 || y<0 || x>=level.getWidth() || y>=level.getHeight()) return {solid: false};
 		return level.getTile(x,y);
@@ -36,19 +44,21 @@ function cacheShadowPoints(level) {
 
 	level.shadowBoxes = [];
 
-	var consumed = [];
+	var consumed = []; //tiles that have already been used
 	for (var x=0; x<level.getWidth(); x++) {
 		for (var y=0; y<level.getHeight(); y++) {
 			var tile = level.getTile(x,y);
 			if (!tile.solid || consumed.indexOf(tile) >= 0) continue;
 			var dx=0, dy=0;
 
+			//try to find a line by inspecting neighboring tiles
 			if (gt(x+1, y).solid) dx = 1;
 			else if (gt(x, y+1).solid) dy = 1;
 			else if (gt(x-1, y).solid) dx = -1;
 			else if (gt(x, y-1).solid) dy = -1;
 			else tile = {solid: false};
 
+			//follow the line
 			var tx = x, ty = y;
 			while (tx>=0 && y>=0 && tx<level.getWidth() && y<level.getHeight() && tile.solid && consumed.indexOf(tile) < 0) {
 				consumed.push(tile);
@@ -57,9 +67,11 @@ function cacheShadowPoints(level) {
 				tile = level.getTile(tx, ty);
 			}
 
+			//move back due to overshoot by line follower
 			if (tx !== x) tx--;
 			if (ty !== y) ty--;
 
+			//add multi-tile box (line)
 			var x1 = x*tileWidth,
 				y1 = y*tileHeight,
 				x2 = tx*tileWidth+tileWidth,
@@ -75,6 +87,10 @@ function cacheShadowPoints(level) {
 	}
 }
 
+/**
+ * Renders vision polygon.
+ * Make sure to use cacheShadowPoints first!
+ */
 function renderCastShadows() {
 	var pang = function(point) {
 		if (point === null) return Infinity;

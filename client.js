@@ -111,11 +111,11 @@ function mpConnect() {
 	mpSocket.on("kick", function(data) {
 		//TODO: Print to chat
 		console.log("Kicked: "+data.reason);
-		showAlert("Kicked: "+data.reason);
+		Interface.showAlert("Kicked: "+data.reason);
 	});
 
 	mpSocket.on("disconnect", function() {
-		showAlert("Disconnected from server.");
+		Interface.showAlert("Disconnected from server.");
 		mpActive = false;
 		mpReady = false;
 		mpConnected = false;

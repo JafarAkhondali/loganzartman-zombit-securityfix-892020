@@ -15,43 +15,26 @@ Gun = Weapon.extend(function(clipsize,ammo,delay,damage,spread,spd,user) {
 	this.snd = sndGun4;
 	this.type = GUN;
 
-	this.col1 = "255,205,0";
-	this.col2 = "220,170,0";
+	this.col1 = "255,235,190";
+	this.col2 = "210,120,20";
 
 	this.flare = document.createElement("canvas");
 	this.flare.width = imgFlare.width;
 	this.flare.height = imgFlare.height;
 	this.flare.cachedCol = null;
 
-	this.mfLight = new EntityLight(player,"",200,1);
-	this.mfLight = new SpecialLightContainer(this.mfLight);
-	this.mfLight.timer = 0;
+	// alert("meme");
+	this.mfLight = new SpecialLightContainer(new EntityLight(player,"rgb("+this.col1+")",200,2,2,imgLightFlash));
+	var flight = this.mfLight;
 	this.mfLight.drawLight = function(dest,x,y,brightness,mode) {
-		if (this.timer <= 0) return;
-		if (dest !== ctx) {
-			this.timer--;
-			ctx.globalCompositeOperation = "lighten";
-			this.mfLight.drawLight(ctx,x,y,brightness,mode);
-			ctx.globalCompositeOperation = "source-over";
-		}
 		dest.save();
-		dest.globalAlpha = 1;
-
-		var sc = Util.randr(1.5,3);
+		dest.globalAlpha = this.brightness;
 		dest.translate(x,y);
 		dest.rotate(player.facing);
-		dest.translate(imgFlare.width/6,-imgFlare.height*sc/2);
-		dest.scale(sc,sc);
-
-		dest.drawImage(imgFlare,0,0);
-		var temp = dest.globalCompositeOperation;
-		dest.globalCompositeOperation = "hue";
-		dest.fillStyle = "rgb("+this.col1+")";
-		dest.fillRect(0,0,imgFlare.width,imgFlare.height);
-		dest.globalCompositeOperation = temp;
-
+		dest.translate(-x-40,-y-imgLightFlash.height*0.5-24);
+		dest.drawImage(flight.light.img,x,y);
 		dest.restore();
-	}
+	};
 	registerLight(this.mfLight);
 })
 .methods({
@@ -71,6 +54,7 @@ Gun = Weapon.extend(function(clipsize,ammo,delay,damage,spread,spd,user) {
 
 			if (this.ammo>0) {
 				this.ammo-=1;
+				this.mfLight.resetLife(2);
 				if (typeof this.snd === 'object') {
 					if (this.snd instanceof Array) {
 						this.snd[~~(this.snd.length*Math.random())].play();
@@ -80,9 +64,12 @@ Gun = Weapon.extend(function(clipsize,ammo,delay,damage,spread,spd,user) {
 					}
 				}
 
+				this.mfLight.timer = 2;
+				var blt = null;
 				for (var i=0; i<this.shot; i++) {
-					this.bullet();
+					blt = this.bullet();
 				}
+				Shake.shake(blt.damage / 100);
 				//console.log("Fired! Ammo: "+this.ammo);
 
 				this.timer=this.delay;

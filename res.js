@@ -78,27 +78,30 @@ imgFlare.src = "res/flare.png";
 
 var imgLightRadialMask;
 var imgLightRadial = new Image();
-imgLightRadial.onload = function() {
-	var w = imgLightRadial.width,
-	    h = imgLightRadial.height;
-
-	imgLightRadialMask = document.createElement("canvas");
-	imgLightRadialMask.width = w;
-	imgLightRadialMask.height = h;
-
-	var ct = imgLightRadialMask.getContext("2d");
-	ct.drawImage(imgLightRadial,0,0);
-	var imgdata = ct.getImageData(0,0,imgLightRadialMask.width,imgLightRadialMask.height);
-	var data = imgdata.data;
-
-	for (var i=0, j=w*h*4; i<j; i+=4) {
-		data[i] = data[i+1] = data[i+2] = 0;
-		data[i+3] = 255-data[i+3];
-	}
-
-	ct.putImageData(imgdata,0,0);
-}
+// imgLightRadial.onload = function() {
+// 	var w = imgLightRadial.width,
+// 	    h = imgLightRadial.height;
+//
+// 	imgLightRadialMask = document.createElement("canvas");
+// 	imgLightRadialMask.width = w;
+// 	imgLightRadialMask.height = h;
+//
+// 	var ct = imgLightRadialMask.getContext("2d");
+// 	ct.drawImage(imgLightRadial,0,0);
+// 	var imgdata = ct.getImageData(0,0,imgLightRadialMask.width,imgLightRadialMask.height);
+// 	var data = imgdata.data;
+//
+// 	for (var i=0, j=w*h*4; i<j; i+=4) {
+// 		data[i] = data[i+1] = data[i+2] = 0;
+// 		data[i+3] = 255-data[i+3];
+// 	}
+//
+// 	ct.putImageData(imgdata,0,0);
+// }
 imgLightRadial.src = "res/lightRadial.png";
+
+var imgLightFlash = new Image();
+imgLightFlash.src = "res/lightFlash.png";
 
 var imgSplatter = [];
 for (var i=0; i<5; i++) {

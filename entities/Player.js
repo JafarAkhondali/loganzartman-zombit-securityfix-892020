@@ -37,15 +37,14 @@ Player = Entity.extend(function(x,y,name,owner){
 		if (mpMode==CLIENT) {
 			var mOffsetX = (mouseX-viewWidth/2)*viewRange;
 			var mOffsetY = (mouseY-viewHeight/2)*viewRange;
-			viewX = (viewX*3+(~~(this.x-viewWidth/2+mOffsetX)))/4;
-			viewY = (viewY*3+(~~(this.y-viewHeight/2+mOffsetY)))/4;
+			viewTargetX = (viewTargetX*3+(~~(this.x-viewWidth/2+mOffsetX)))/4;
+			viewTargetY = (viewTargetY*3+(~~(this.y-viewHeight/2+mOffsetY)))/4;
 
 			//clip view pos
-
-			if (viewX<0) {viewX=0;}
-			if (viewX>gameLevel.getWidth()*tileWidth-viewWidth) {viewX = gameLevel.getWidth()*tileWidth-viewWidth;}
-			if (viewY<0) {viewY=0;}
-			if (viewY>gameLevel.getHeight()*tileHeight-viewHeight) {viewY = gameLevel.getHeight()*tileHeight-viewHeight;}
+			if (viewTargetX<0) {viewTargetX=0;}
+			if (viewTargetX>gameLevel.getWidth()*tileWidth-viewWidth) {viewTargetX = gameLevel.getWidth()*tileWidth-viewWidth;}
+			if (viewTargetY<0) {viewTargetY=0;}
+			if (viewTargetY>gameLevel.getHeight()*tileHeight-viewHeight) {viewTargetY = gameLevel.getHeight()*tileHeight-viewHeight;}
 		}
 
 		//heal player

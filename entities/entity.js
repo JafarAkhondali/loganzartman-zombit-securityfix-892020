@@ -141,10 +141,10 @@ Entity = klass(function (x,y,noreg) {
 	},
 
 	onScreen: function() {
-		return this.x >= viewX &&
-					 this.y >= viewY &&
-					 this.x <= viewX+viewWidth &&
-					 this.y <= viewY+viewHeight;
+		return this.x >= viewTargetX &&
+				 this.y >= viewTargetY &&
+				 this.x <= viewTargetX+viewWidth &&
+				 this.y <= viewTargetY+viewHeight;
 	},
 
 	damage: function(amount, damager) {

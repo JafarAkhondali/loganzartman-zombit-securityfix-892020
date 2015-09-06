@@ -10,6 +10,8 @@ var viewWidth = screenWidth/outputScale;
 var viewHeight = screenHeight/outputScale;
 var viewX = 0;
 var viewY = 0;
+var viewTargetX = 0;
+var viewTargetY = 0;
 var viewRange = 0.5;
 
 var noiseCanvas;
@@ -40,12 +42,43 @@ var od,out;
 //particles
 var particles = [];
 
+var Shake = {
+    rx: null,
+    ry: null,
+    magnitude: 40,
+    out: {
+        x: 0,
+        y: 0
+    },
+    intensity: 0,
+    init: function() {
+        Shake.rx = new SmoothRandom(1000);
+        Shake.ry = new SmoothRandom(1000);
+    },
+    shake: function(intensity) {
+        Shake.intensity = Math.min(1, Shake.intensity+intensity);
+    },
+    step: function() {
+        Shake.intensity *= 0.67;
+        if (Shake.intensity*Shake.magnitude < 1) Shake.intensity = 0;
+        Shake.rx.offset(Shake.intensity*8+1);
+        Shake.ry.offset(Shake.intensity*8+1);
+        Shake.out = {
+            x: (Shake.rx.next()-0.5)*Shake.magnitude*Shake.intensity,
+            y: (Shake.ry.next()-0.5)*Shake.magnitude*Shake.intensity
+        };
+    }
+};
+
 var renderLocked = false;
 function render() {
     if (!renderLocked) { //if the level is not currently being rendered
         renderLocked = true; //lock
 
         if (dmode==GAME) {
+            Shake.step();
+            viewX = viewTargetX + Shake.out.x;
+            viewY = viewTargetY + Shake.out.y;
 
             //clear screen
             ctx.fillStyle = "black";
@@ -62,19 +95,6 @@ function render() {
 
             drawgameLevel(2);
 
-
-            //render particles (they're entities, but they must be drawn below the others)
-            if (drawParticles) {
-                for (var ec = 0; ec<particles.length; ec++) {
-                    var prt = particles[ec];
-                    if (prt instanceof Particle && prt.depth>=0) {
-                        if (prt.x>viewX && prt.x<viewX+viewWidth && prt.y>viewY && prt.y<viewY+viewHeight) {
-                            prt.render(prt.x-viewX,prt.y-viewY);
-                        }
-                    }
-                }
-            }
-
             //render the entities
             for (var ec = 0; ec<entityManager.length(); ec++) {
                 var ent = entityManager.get(ec);
@@ -88,7 +108,7 @@ function render() {
             if (drawParticles) {
                 for (var ec = 0; ec<particles.length; ec++) {
                     var prt = particles[ec];
-                    if (prt instanceof Particle && prt.depth<0) {
+                    if (prt instanceof Particle) {
                         if (prt.x>viewX && prt.x<viewX+viewWidth && prt.y>viewY && prt.y<viewY+viewHeight) {
                             prt.render(prt.x-viewX,prt.y-viewY);
                         }
@@ -444,14 +464,21 @@ function drawtile(tile,x,y) {
     }
 }
 
-function drawLoadingScreen() {
+function drawLoadingScreen(progress) {
     dmode = -1;
     ctx.fillStyle = "rgb(10,9,9)";
     ctx.fillRect(0,0,viewWidth,viewHeight);
     ctx.font = '24px "volter"';
     ctx.textAlign = 'center';
     ctx.fillStyle = "white";
-    ctx.fillText("preparing...",viewWidth/2,viewHeight/2);
+    var msg = "preparing...";
+    ctx.fillText(msg,viewWidth/2,viewHeight/2);
+
+    var w = ctx.measureText(msg).width;
+    ctx.fillStyle = "black";
+    ctx.fillRect(viewWidth/2-w*0.5, viewHeight/2 + 11, w, 1);
+    ctx.fillStyle = "white";
+    ctx.fillRect(viewWidth/2-w*0.5, viewHeight/2 + 11, ~~((progress||1)*w), 1);
 }
 
 //color indexes

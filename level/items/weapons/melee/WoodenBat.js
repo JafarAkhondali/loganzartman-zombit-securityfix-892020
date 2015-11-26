@@ -5,7 +5,7 @@ WoodenBat = Melee.extend(function(){
 	this.damage = 55;
 
 	this.name = "Wooden Bat";
-	try{this.icon = batIcon}catch(e){}
+	if (typeof batIcon !== "undefined") this.icon = batIcon;
 	this.type = WOODENBAT;
 })
 .methods({

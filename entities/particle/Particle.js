@@ -6,8 +6,7 @@ Particle = klass(function(x,y,xs,ys,life) {
 	this.maxlife = life;
 	this.life = life;
 	this.arrIndex = particles.push(this)-1;
-	try {this.image = imgBloodSplat;}
-	catch (e) {}
+	if (typeof imgBloodSplat !== "undefined") this.image = imgBloodSplat;
 
 	this.depth = 1;
 	this.gravity = 0;

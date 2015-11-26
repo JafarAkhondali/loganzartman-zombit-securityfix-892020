@@ -8,25 +8,52 @@ LevelCache = function(level, chunksize, progressCallback, finishedCallback) {
     this._x = 0;
     this._y = 0;
     this._c = 0;
+    this._recache_lock = false;
     this.arr = [[]];
     this.recache(progressCallback, finishedCallback);
 };
 LevelCache.EXPERIMENTALS = true;
-LevelCache.prototype.recache = function(progressCallback, finishedCallback) {
+LevelCache.prototype.recache = function(progressCallback, finishedCallback, x0, y0, x1, y1) {
+    // if (this._recache_lock) return false;
+    this._recache_lock = true;
+
+    if (x0) {this._x = x0; x0 = 0;}
+    if (y0) {this._y = y0; y0 = 0;}
+    if (!x1) {x1 = this.width;}
+    if (!y1) {y1 = this.height;}
+
     this._c++;
     this.arr[this._x][this._y] = this.makeChunk(this._x,this._y);
-    if (++this._y > this.height) {
+    if (++this._y > y1) {
         this._y = 0;
-        if (++this._x > this.width) {
+        if (++this._x > x1) {
             this._x = 0;
             this._y = 0;
-            finishedCallback();
+            this._recache_lock = false;
+            if (typeof finishedCallback === "function") finishedCallback();
             return;
         }
         this.arr[this._x] = [];
     }
     if (typeof progressCallback === "function") progressCallback((this._c)/((this.width+1)*(this.height+1)));
-    setTimeout(this.recache.bind(this, progressCallback, finishedCallback), 1);
+    setTimeout(this.recache.bind(this, progressCallback, finishedCallback, x0, y0, x1, y1), 1);
+};
+LevelCache.prototype.recacheAt = function(x,y) {
+    var cx = Math.floor(x/this.size),
+        cy = Math.floor(y/this.size);
+    this.arr[cx][cy] = this.makeChunk(cx,cy);
+};
+LevelCache.prototype.recacheScreen = function(prog, finished) {
+    return;
+    var x0 = Math.floor(viewX/this.width),
+        y0 = Math.floor(viewY/this.height);
+    var x1 = x0 + Math.ceil(viewWidth/this.width),
+        y1 = y0 + Math.ceil(viewHeight/this.height);
+    for (var x=x0; x<=x1; x++) {
+        for (var y=y0; y<=y1; y++) {
+            this.recacheAt(x,y);
+        }
+    }
 };
 LevelCache.prototype.makeChunk = function(x,y) {
     var img = document.createElement("canvas");
@@ -81,7 +108,7 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
         data[idx+0] = r<0?0:r>255?255:r;
         data[idx+1] = g<0?0:g>255?255:g;
         data[idx+2] = b<0?0:b>255?255:b;
-        data[idx+3] = typeof a === "undefined" ? 255 : a;
+        data[idx+3] = typeof a === "undefined" ? data[idx+3] : a;
     };
     var getpixel = function(x,y) {
         var idx = 4*((y*canvas.width)+x);

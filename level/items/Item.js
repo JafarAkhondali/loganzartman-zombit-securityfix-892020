@@ -2,7 +2,7 @@ Item = klass(function (name){
 	this.name = name||"Unknown Item";
 	this.arrIndex = items.push(this);
 	this.snd = null;
-	try{this.icon = genericIcon;}catch(e){}
+	if (typeof genericIcon !== "undefined") this.icon = genericIcon;
 	this.type = ITEM;
 })
 .statics({

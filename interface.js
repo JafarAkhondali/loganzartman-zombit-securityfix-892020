@@ -47,7 +47,7 @@ Interface.kd = function(e) { //keydown
 				})
 			});
 		}
-		if (e.keyCode==VK_T && !mpChatOpen) {
+		if (e.keyCode==VK_ENTER && !mpChatOpen) {
 			mpChatOpen = true;
 			mpChatInput = document.createElement("input");
 			mpChatInput.type = "text";
@@ -57,6 +57,7 @@ Interface.kd = function(e) { //keydown
 			document.body.appendChild(mpChatInput);
 			mpChatInput.addEventListener("input",function() {
 				mpTypedChat = mpChatInput.value;
+				Editor.updateInput(mpTypedChat);
 			},false);
 			/*mpChatInput.addEventListener("blur",function(){
 				mpChatOpen = false;
@@ -72,12 +73,11 @@ Interface.kd = function(e) { //keydown
 			} catch (e) {}
 		}
 		else if (e.keyCode==VK_ENTER && mpChatOpen) {
-			mpSendChat();
+			Editor.acceptInput(mpTypedChat);
 			try {
 				mpChatOpen = false;
 				document.body.removeChild(mpChatInput);
 			} catch (e) {}
-
 		}
 		if (!mpChatOpen) {
 			keys[e.keyCode] = true;
@@ -100,14 +100,21 @@ Interface.ku = function(e) { //keyup
 var mouseX = 0, mouseY = 0, mouseLeft = false;
 var scrolltotal=0;
 Interface.mm = function(e) {
+	if (Interface.modalsOpen > 0) return true;
 	if (!e) {e=event;}
 	Interface.mp(e);
+	if (mouseLeft) Editor.handleDrag(e);
 };
 Interface.md = function(e) {
+	if (Interface.modalsOpen > 0) return true;
 	if (!e) {e=event;}
-	e.preventDefault();
+	if (e.target === canvas) {
+		// e.preventDefault();
+		canvas.focus();
+	}
 	Interface.mp(e);
-	mouseLeft = true;
+	mouseLeft = e.which === 1;
+	mouseRight = e.which === 3;
 
 	if (mpChatOpen) {
 		mpChatOpen = false;
@@ -128,17 +135,25 @@ Interface.md = function(e) {
 		}
 	}
 
+	Editor.handleClick(e);
+
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, btn: 1, state: true});}
 };
 Interface.mu = function(e) {
+	if (Interface.modalsOpen > 0) return true;
 	if (!e) {e=event;}
 	e.preventDefault();
 	Interface.mp(e);
-	mouseLeft = false;
+
+	Editor.handleUp(e);
+
+	if (e.which === 1) mouseLeft = false;
+	if (e.which === 3) mouseRight = false;
 
 	if (mpReady) {mpSocket.emit("input",{type: INPUT_MOUSE, btn: 1, state: false});}
 };
 Interface.mp = function(e) {
+	if (Interface.modalsOpen > 0) return true;
 	var el = e.target;
 
 	posx = e.pageX;
@@ -170,10 +185,10 @@ Interface.makeModal = function(content,okcallback,width,height) {
 	var modal = document.createElement("div");
 	modal.className = "modal";
 	modal.innerHTML = content;
-	modal.style.width = ~~(width||500)+"px";
-	modal.style.height = ~~(height||200)+"px";
-	modal.style.marginLeft = ~~(-width/2||-250)+"px";
-	modal.style.marginTop = ~~(-height/2||-100)+"px";
+	// modal.style.width = ~~(width||500)+"px";
+	// modal.style.height = ~~(height||200)+"px";
+	// modal.style.marginLeft = ~~(-width/2||-250)+"px";
+	// modal.style.marginTop = ~~(-height/2||-100)+"px";
 
 	var okBtn = document.createElement("div");
 	okBtn.className = "modalButton";
@@ -221,6 +236,9 @@ Interface.createGUI = function() {
 
 	var customContainer = document.getElementById('datgui-container');
 	customContainer.appendChild(gui.domElement);
+	customContainer.addEventListener("mousedown", function(event){
+		event.stopPropagation();
+	}, false);
 
 	gui.remember(window);
 	gui.remember(player);
@@ -264,15 +282,18 @@ Interface.createGUI = function() {
 	cheats.add(window, "giveNyanGun");
 	cheats.add(window, "giveZedGun");
 
-	var mpm = gui.addFolder("Multiplayer (Broken, do not use)");
-	mpm.add(window, "mpServer");
-	mpm.add(window, "mpPort");
-	mpm.add(window, "mpNick");
-	mpm.add(window, "mpStart");
-	mpm.add(window, "mpConnect");
+	// var mpm = gui.addFolder("Multiplayer (Broken, do not use)");
+	// mpm.add(window, "mpServer");
+	// mpm.add(window, "mpPort");
+	// mpm.add(window, "mpNick");
+	// mpm.add(window, "mpStart");
+	// mpm.add(window, "mpConnect");
 
 	var audm = gui.addFolder("Audio");
 	audm.add(window, "volumeMaster").min(0).max(1).step(0.05);
+
+	var edit = gui.addFolder("Editor");
+	Editor.createControls(edit);
 };
 
 Interface.chooseFPS = function() {

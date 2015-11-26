@@ -7,7 +7,7 @@ GlowstickGun = Gun.extend(function() {
 	this.spd = 12;
 	this.friction = 0.07;
 	this.snd = sndGun3;
-	try{this.icon = glowstickIcon;}catch(e){}
+	if (typeof glowstickIcon !== "undefined") this.icon = glowstickIcon;
 	this.type = GLOWSTICKGUN;
 })
 .methods({

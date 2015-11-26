@@ -44,7 +44,7 @@ var Util = {};
 
 Util.loadJSON = function(url, callback) {
 	var req = new XMLHttpRequest();
-	req.onreadystatechange = function() {
+	req.onload = function() {
 		if (req.status == 200) {
 			var json = JSON.parse(req.responseText);
 			callback(json);

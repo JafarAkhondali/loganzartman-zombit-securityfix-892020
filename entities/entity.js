@@ -16,8 +16,7 @@ Entity = klass(function (x,y,noreg) {
 
 	this.facing = null;
 
-	try {this.image = imgEntityGeneric;}
-	catch (e) {}
+	if (typeof imgEntityGeneric !== "undefined") this.image = imgEntityGeneric;
 	this.width = tileWidth;
 	this.height = tileHeight;
 	this.collidesOther = true;

@@ -29,11 +29,11 @@ var spawnEnabled = true;
 
 //fps monitoring
 var filterStrength = 20;
-var frameTime = 0, lastLoop = new Date, thisLoop;
+var frameTime = 0, lastLoop = new Date(), thisLoop;
 var fps = targetFPS;
 
-var VERSION = 130;
-var SUBVER = "goty edition";
+var VERSION = 132;
+var SUBVER = "pizza llama";
 
 particlesEnabled = true; //duh
 
@@ -74,13 +74,21 @@ function init() {
 
 	reinitCanvases();
 
-	//switch to title rendering mode in 5 sec
-	var introTimeout = setTimeout(function(){dmode=MENU;},3700);
+	LevelFactory.fromFile("level/menu.json", function(level){
+		if (level) {
+			menuLevel = level;
+			menuLevel.cache = new LevelCache(menuLevel, 9, function(p){
+
+			}, function() {
+
+			});
+		}
+	});
 
 	//parse URL flags
 	var loc = document.location.href;
 	uArgs = loc.lastIndexOf("#")>loc.lastIndexOf("/")?loc.substring(loc.lastIndexOf("#")+1).split("&"):"";
-	if (uArgs.indexOf("nointro")>=0) {dmode = MENU; clearTimeout(introTimeout)}
+	if (uArgs.indexOf("nointro")>=0) {dmode = MENU}
 	if (uArgs.indexOf("nomusic")<0) {/*setTimeout(startPlaylist,4900);*/}
 
 	//initialize drawing buffers for lighting
@@ -107,7 +115,7 @@ function restartGame() {
 			gameLevel = level;
 			startGame(true, function(){
 				//set up some light
-				var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",200,0.8);
+				var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",250,0.8);
 				pLight = new SpecialLightContainer(pLight);
 				pLight.drawLight = function(dest,x,y,brightness,mode) {
 					dest.save();
@@ -188,9 +196,11 @@ function showScorescreen() {
 function loadScripts() {
 	include("klass.js");
 	include("utils.js");
+	include("color.js");
 	include("interface.js");
 	include("level/LevelCache.js");
 	include("level/level.js");
+	include("level/editor.js");
 	include("level/Tile.js");
 	include("main.js");
 	include("entities/EntityManager.js");
@@ -211,6 +221,7 @@ function reinitCanvases() {
 
 	//create canvas element
 	canvas = document.createElement("canvas");
+	canvas.oncontextmenu = function(){return false;};
 	canvas.width = screenWidth;
 	canvas.height = screenHeight;
 
@@ -232,6 +243,7 @@ function reinitCanvases() {
 	buffer.width = viewWidth;
 	buffer.height = viewHeight;
 	ctx = buffer.getContext("2d"); //buffer context
+	ctx.translate(-0.5,-0.5);
 
 	//create blood/fx buffer
 	fxbuffer = document.createElement("canvas");

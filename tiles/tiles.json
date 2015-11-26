@@ -10,7 +10,7 @@
 			"name": "floor",
 			"solid": false,
 			"depth": 0,
-			"border": ["grass", "asphalt"]
+			"border": ["grass", "asphalt", "empty"]
 		},
 		{
 			"name": "wall",
@@ -37,7 +37,7 @@
 			"name": "asphalt",
 			"solid": false,
 			"depth": 0,
-			"border": ["grass"]
+			"border": ["grass", "empty"]
 		},
 		{
 			"name": "asphalt_line",

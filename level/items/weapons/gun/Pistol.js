@@ -7,7 +7,7 @@ Pistol = Gun.extend(function(){
 	this.spread = 9;
 	this.spd=30;
 	this.snd = sndGun2;
-	try{this.icon = pistolIcon;}catch(e){}
+	if (typeof pistolIcon !== "undefined") this.icon = pistolIcon;
 	this.type = PISTOL;
 })
 .methods({

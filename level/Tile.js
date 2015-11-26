@@ -43,6 +43,8 @@ var TILE_LIST = [], TILE_MAP = {};
 					BORDER_MATRIX[key][TILE_MAP[vals[j]].id] = 1;
 			}
 		}
+
+		Editor.tilesReady();
 	});
 })();
 

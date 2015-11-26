@@ -2,8 +2,7 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 	this.damage = damage||20;
 	this.xp=null;
 	this.yp=null;
-	try{this.image = imgBullet;}
-	catch (e) {}
+	if (typeof imgBullet !== "undefined") this.image = imgBullet;
 	this.sender = makeEntityReference(sender);
 
 	this.col1 = "255,205,0";
@@ -76,7 +75,7 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 		grad1.addColorStop(0, "rgba("+this.col1+",1)");
 		grad1.addColorStop(0.6, "rgba("+this.col2+",0.4)");
 
-		ctx.lineCap = "round";
+		ctx.lineCap = "square";
 
 		ctx.lineWidth = 2.5;
 		ctx.strokeStyle = grad1;

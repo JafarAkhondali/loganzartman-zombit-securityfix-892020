@@ -1,6 +1,6 @@
 var enableShadowDebug = false;
 var enableShadowCasting = true;
-var enableSoftShadows = true;
+var enableSoftShadows = false;
 
 //http://tavianator.com/fast-branchless-raybounding-box-intersections/
 fmax = function(a,b) {return a<b?b:a;}
@@ -174,9 +174,9 @@ function renderCastShadows() {
 			//draw segment
 			if (!started) {
 				started = true;
-				grctx.moveTo(min.x - viewX, min.y - viewY);
+				grctx.moveTo((min.x - viewX)*lightScale, (min.y - viewY)*lightScale);
 			}
-			else grctx.lineTo(min.x - viewX, min.y - viewY);
+			else grctx.lineTo((min.x - viewX)*lightScale, (min.y - viewY)*lightScale);
 		}
 	}
 

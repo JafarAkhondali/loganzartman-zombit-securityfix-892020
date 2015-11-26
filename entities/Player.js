@@ -1,8 +1,7 @@
 Player = Entity.extend(function(x,y,name,owner){
 	this.name = name;
 	this.owner = owner||window;
-	try {this.image = imgPlayer_W;}
-	catch (e) {}
+	if (typeof imgPlayer_W !== "undefined") this.image = imgPlayer_W;
 	this.spdInc = 0.5;
 	this.inv = new Inventory(7,this);
 	this.friction = 0.2;
@@ -35,8 +34,8 @@ Player = Entity.extend(function(x,y,name,owner){
 
 		//move view to player
 		if (mpMode==CLIENT) {
-			var mOffsetX = (mouseX-viewWidth/2)*viewRange;
-			var mOffsetY = (mouseY-viewHeight/2)*viewRange;
+			var mOffsetX = Editor.enabled?0:(mouseX-viewWidth/2)*viewRange;
+			var mOffsetY = Editor.enabled?0:(mouseY-viewHeight/2)*viewRange;
 			viewTargetX = (viewTargetX*3+(~~(this.x-viewWidth/2+mOffsetX)))/4;
 			viewTargetY = (viewTargetY*3+(~~(this.y-viewHeight/2+mOffsetY)))/4;
 
@@ -84,11 +83,11 @@ Player = Entity.extend(function(x,y,name,owner){
 			ctx.textAlign = 'center';
 			var tw = ctx.measureText(this.name).width;
 
-			ctx.fillStyle = "rgba(0,0,0,0.25)";
-			ctx.fillRect(x-tw/2-2,y-this.image.height/2-13,tw+4,12);
+			// ctx.fillStyle = "rgba(0,0,0,0.25)";
+			// ctx.fillRect(x-tw/2-2,y-this.image.height/2-13,tw+4,12);
 
-			ctx.fillStyle = "rgba(255,255,255,0.5)";
-			ctx.fillText(this.name, x, y-12);
+			// ctx.fillStyle = "rgba(255,255,255,0.5)";
+			// ctx.fillText(this.name, x, y-12);
 
 			ctx.textAlign = 'left';
 		//}
@@ -139,7 +138,7 @@ Player = Entity.extend(function(x,y,name,owner){
 		}
 
 		//process mouse input
-		if (this.owner.mouseLeft) {
+		if (this.owner.mouseLeft && !Editor.enabled) {
 			var item = this.inv.getSelected();
 			if (item instanceof Weapon) {
 				item.fire();

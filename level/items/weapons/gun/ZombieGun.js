@@ -7,7 +7,7 @@ ZombieGun = Gun.extend(function(){
 	this.spread = 5;
 	this.spd=20;
 	this.snd = sndGun2;
-	try{this.icon = pistolIcon;}catch(e){}
+	if (typeof pistolIcon !== "undefined") this.icon = pistolIcon;
 	this.type = ZOMBIEGUN;
 })
 .methods({

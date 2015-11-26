@@ -7,7 +7,7 @@ AssaultRifle = Gun.extend(function(){
 	this.spread = 10;
 	this.spd = 30;
 	this.snd = gunSounds.ar[1][0];
-	try{this.icon = assaultIcon;}catch(e){}
+	if (typeof assaultIcon !== "undefined") this.icon = assaultIcon;
 	this.type = ASSAULTRIFLE;
 })
 .methods({

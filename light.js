@@ -2,17 +2,19 @@ var lightArray = [];
 var lightbuffer, lictx;
 var gradientbuffer, grctx;
 var globalBrightness = 1;
+var lightScale = 0.5;
+var playerLightImage = null;
 
 function initLight() {
 	lightbuffer = document.createElement("canvas");
-	lightbuffer.width = viewWidth;
-	lightbuffer.height = viewHeight;
+	lightbuffer.width = ~~(viewWidth*lightScale);
+	lightbuffer.height = ~~(viewHeight*lightScale);
 	lictx = lightbuffer.getContext("2d");
 	// lictx.scale(lightBufferScale, lightBufferScale);
 
 	gradientbuffer = document.createElement("canvas");
-	gradientbuffer.width = viewWidth;
-	gradientbuffer.height = viewHeight;
+	gradientbuffer.width = ~~(viewWidth*lightScale);
+	gradientbuffer.height = ~~(viewHeight*lightScale);
 	grctx = gradientbuffer.getContext("2d");
 	// grctx.scale(lightBufferScale, lightBufferScale);
 }
@@ -66,6 +68,7 @@ function SpecialLightContainer(light) { //a light that has a custom drawing func
 }
 
 function generateLightImage(color, size, brightness, img) {
+	size = ~~(size*lightScale);
 	var can = document.createElement("canvas");
 	can.width = size;
 	can.height = size;
@@ -83,14 +86,17 @@ function drawLight(dest,x,y,col,size,brightness,mode,img) { //mode0: gradients o
     brightness*=globalBrightness;
 	if (mode<2) {
 		dest.globalAlpha = brightness>1?1:brightness;
-		dest.drawImage(img,~~(x-size*0.5),~~(y-size*0.5),size,size);
+		dest.drawImage(img,~~((x-size*0.5)*lightScale),~~((y-size*0.5)*lightScale));
 	}
 	dest.globalAlpha = 1;
 }
 
 function compositeLight(dest,gco) {
 	dest.globalCompositeOperation = gco;
-	dest.drawImage(lightbuffer,0,0);
+	var is = dest.imageSmoothingEnabled || dest.webkitImageSmoothingEnabled || dest.mozImageSmoothingEnabled;
+	dest.imageSmoothingEnabled = dest.webkitImageSmoothingEnabled = dest.mozImageSmoothingEnabled = true;
+	dest.drawImage(lightbuffer,0,0,~~(1/lightScale*lightbuffer.width),~~(1/lightScale*lightbuffer.height));
+	dest.imageSmoothingEnabled = dest.webkitImageSmoothingEnabled = dest.mozImageSmoothingEnabled = is;	
 	dest.globalCompositeOperation = "source-over";
  }
 function drawAllLights(dest,gbrightness,mode) {
@@ -101,9 +107,9 @@ function drawAllLights(dest,gbrightness,mode) {
 			var y = lightArray[i].getY();
 			var s = lightArray[i].size;
 
-			if (x+s>=viewX && x-s<=viewX+viewWidth && y+s>=viewY && y-s<=viewY+viewHeight) {
+			if (x+s*0.5>=viewX && x-s*0.5<=viewX+viewWidth && y+s*0.5>=viewY && y-s*0.5<=viewY+viewHeight) {
 				if (lightArray[i] instanceof SpecialLightContainer && typeof lightArray[i].drawLight === 'function') {
-					lightArray[i].drawLight(dest,x-viewX,y-viewY,gbrightness,mode);
+					// lightArray[i].drawLight(dest,x-viewX,y-viewY,gbrightness,mode);
 				}
 				else {
 					drawLight(dest,x-viewX,y-viewY,lightArray[i].col,s,lightArray[i].brightness*gbrightness,mode,lightArray[i].img);
@@ -126,7 +132,7 @@ function renderLight2() {
 	if (enableShadowCasting) {
 		renderCastShadows();
 		if (enableSoftShadows) {
-			grctx.globalCompositeOperation = "copy";
+			grctx.globalCompositeOperation = "source-over";
 			grctx.drawImage(gradientbuffer,0,0,gradientbuffer.width*0.5,gradientbuffer.height*0.5);
 		}
 
@@ -135,23 +141,21 @@ function renderLight2() {
 		if (enableSoftShadows) lictx.drawImage(gradientbuffer,0,0,gradientbuffer.width*2,gradientbuffer.height*2);
 		else lictx.drawImage(gradientbuffer, 0, 0);
 	}
-	if (enableLightRendering || enableShadowCasting) {
+	if (false && enableLightRendering || enableShadowCasting) {
 		compositeLight(ctx,newmode?"hard-light":"multiply");
 
 		lictx.globalCompositeOperation = "source-over";
 		clearCanvas(lictx,enableLightRendering?"black":"white");
 
-		var grd = grctx.createRadialGradient(player.x-viewX,player.y-viewY,20,player.x-viewX,player.y-viewY,75);
-		grd.addColorStop(0,"rgb(100,100,100)");
-		grd.addColorStop(1,"black");
-		clearCanvas(grctx, grd);
+		
+		clearCanvas(grctx, "black");
 	}
 }
 
 function clearCanvas(context, color) {
 	var tempa = context.globalCompositeOperation;
 	var tempb = context.globalAlpha;
-	context.globalCompositeOperation = "copy";
+	context.globalCompositeOperation = "source-over";
 	context.globalAlpha = 1;
 	context.fillStyle = color;
 	context.fillRect(0,0,viewWidth,viewHeight);

@@ -4,6 +4,11 @@ var screenHeight = window.innerHeight * (devicePixelRatio ? devicePixelRatio : 1
 var defaultScreenWidth = screenWidth;
 var defaultScreenHeight = screenHeight;
 
+var outrunPalette = [new Color("#D7F522"), new Color("#D43017"), new Color("#07D9D5")];
+var titlePalette = [new Color("#1C141C"), new Color("#D43017"), new Color("#541D54")];
+var lightsPalette = [new Color("#D43017"), new Color("#07D9D5")];
+var textPalette = [new Color("#D7F522"), new Color("#D43017")];
+
 //viewport settings
 var outputScale = 3;
 var viewWidth = screenWidth/outputScale;
@@ -31,6 +36,7 @@ var FADE_IN_TIME = 120;
 var enablePathDebug = false;
 
 var solidRenderedBlocks = [];
+var introTimeout = false;
 
 //ui states
 var UI_UP=0, UI_HOVER=1, UI_DOWN=2;
@@ -75,6 +81,8 @@ function render() {
     if (!renderLocked) { //if the level is not currently being rendered
         renderLocked = true; //lock
 
+        ////////////////////////////////////////////
+        ////////////////////////////////////////////
         if (dmode==GAME) {
             Shake.step();
             viewX = viewTargetX + Shake.out.x;
@@ -120,51 +128,52 @@ function render() {
             renderLight2();
 
             //draw inventory GUI
-            ctx.fillStyle = "rgba(234,240,90,0.3)";
             for (var i=0; i<player.inv.size; i++) {
                 var item = player.inv.get(i);
                 if (item!==null) {
-                    ctx.strokeStyle = i==player.inv.selected?"white":"rgba(244,250,60,0.6)"; //selected slots are white outlined
+                    var sel = i==player.inv.selected;
+                    ctx.fillStyle = outrunPalette[0].addHSL(0,sel?-0.1:0.0,sel?0.2:0.0).setAlpha(0.3);
+                    ctx.strokeStyle = sel?"white":outrunPalette[0].setAlpha(0.6); //selected slots are white outlined
 
                     //draw the icon for this item
-                    var bx = viewWidth-128-(18*(player.inv.size-i));
-                    ctx.fillRect(bx,4,16,16);
-                    ctx.strokeRect(bx,4,16,16);
+                    var bx = viewWidth-140-(20*(player.inv.size-i));
+                    ctx.fillRect(bx,sel?6:8,16,sel?18:16);
+                    ctx.strokeRect(bx,sel?6:8,16,sel?18:16);
                     if (item.icon) {
-                        ctx.drawImage(item.icon, bx, 4);
+                        ctx.drawImage(item.icon, bx, 8);
                     }
                 }
             }
 
             //draw healthbar
-            ctx.fillStyle = "rgba(234,20,53,0.5)";
-            ctx.fillRect(viewWidth-128-(18*(player.inv.size)),22,18*(player.inv.size),8);
-            ctx.fillStyle = "rgba(20,230,53,1)";
-            ctx.fillRect(viewWidth-128-(18*(player.inv.size)),22,18*(player.inv.size)*(player.life/100),8);
+            ctx.fillStyle = outrunPalette[1].setAlpha(0.5);
+            ctx.fillRect(viewWidth-140-(20*(player.inv.size)),26,20*(player.inv.size)-4,8);
+            ctx.fillStyle = outrunPalette[2].setAlpha(0.5);
+            ctx.fillRect(viewWidth-140-(20*(player.inv.size)),26,20*(player.inv.size)*(player.life/100)-4,8);
             ctx.font = '8px "volter"';
             ctx.fillStyle = "white";
-            ctx.fillText(player.life.toFixed(0),~~(viewWidth-128-(18*(player.inv.size)*0.5)-5),28);
+            ctx.fillText(player.life.toFixed(0),~~(viewWidth-140-(20*(player.inv.size)*0.5)-5),32);
 
             //draw selected item GUI
-            ctx.fillStyle = "rgba(234,240,90,0.3)";
-            ctx.strokeStyle = "rgba(244,250,60,0.6)";
-            ctx.fillRect(viewWidth-126,4,112,25);
-            ctx.strokeRect(viewWidth-126,4,112,25);
+            ctx.fillStyle = outrunPalette[0].setAlpha(0.3);
+            ctx.strokeStyle = outrunPalette[0].setAlpha(0.6);
+            ctx.fillRect(viewWidth-135,8,112,25);
+            ctx.strokeRect(viewWidth-135,8,112,25);
 
             ctx.fillStyle = "rgba(255,255,255,1)";
             var ii = player.inv.getSelected();
             ctx.font = '9px "volter"';
-            ctx.fillText(ii.name,~~(viewWidth-118),13);
+            ctx.fillText(ii.name,~~(viewWidth-127),17);
 
             ctx.font = '12px "volter"';
             if (ii instanceof Gun) {
                 ctx.fillStyle=ii.ammo!==0 && ii.ammo!="R"?"white":"red";
-                ctx.fillText("A: "+ii.ammo,~~(viewWidth-118)+0.5,25);
+                ctx.fillText("A: "+ii.ammo,~~(viewWidth-127)+0.5,29);
             }
 
             //draw score
-            ctx.fillStyle = "rgba(234,240,90,0.3)";
-            ctx.strokeStyle = "rgba(244,250,60,0.6)";
+            ctx.fillStyle = outrunPalette[0].setAlpha(0.3);
+            ctx.strokeStyle = outrunPalette[0].setAlpha(0.6);
             ctx.fillRect(viewWidth/2-40,viewHeight-24,80,20);
             ctx.strokeRect(viewWidth/2-40,viewHeight-24,80,20);
 
@@ -263,13 +272,27 @@ function render() {
                 ctx.fillRect(0,0,viewWidth,viewHeight);
                 ctx.globalAlpha = 1;
             }
+
+            if (Editor.enabled) Editor.drawUI();
         }
+
+        ////////////////////////////////////////////
+        ////////////////////////////////////////////
         else if (dmode==INTRO) {
             if (intime==null) {intime=new Date().getTime();}
             var delta = new Date().getTime()-intime;
 
+            var items = [["Programming & Design by", "Nondefault"],["Music by","Mr.Skeltal"],["Graphics by","Canvas2D"]];
+            var time0 = 200, dtime = 300, attack=700, hold=4500, lineheight = 50, moveheight = 10, floatheight = 2;
+            var tmax = dtime*items.length+attack+hold+time0;
+
             //clear screen
-            ctx.fillStyle = "rgb(40,36,38)";
+            var basecol = Color.gradientMix(titlePalette, delta/tmax, true);
+            var gradient = ctx.createLinearGradient(0,viewHeight,0,0);
+            gradient.addColorStop(0, basecol.addHSL(0,-0.05,-0.1));
+            gradient.addColorStop(0.25, basecol.addHSL(0,-0.2,-0.3));
+            gradient.addColorStop(1.0, basecol.addHSL(0,-0.3,-0.5));
+            ctx.fillStyle = gradient;
             ctx.fillRect(0,0,viewWidth,viewHeight);
 
             ctx.font = '12px "volter"';
@@ -280,44 +303,48 @@ function render() {
 
             ctx.globalAlpha = Math.min(1, delta/1000);
 
+            var adelt = 1-Math.min(1100, delta)/1100;
+            adelt = 1-adelt*adelt;
             var posx = viewWidth/2,
-                posy = 20;
-            ctx.drawImage(imgTitle,posx-imgTitle.width/4,posy,imgTitle.width/2,imgTitle.height/2);
+                posy = 20 + 20 - adelt*20;
+            ctx.drawImage(imgTitle,posx-imgTitle.width/4,posy,imgTitle.width/2,imgTitle.height/2+Math.sin(gameTime*0.1)*2);
 
-            if (delta>600) {
-                ctx.globalAlpha = Math.min(1, (delta-600)/1000) - (delta>=2500 ? Math.min(1,(delta-2500)/1000) : 0);
-                ctx.fillStyle = "lightgray";
-                ctx.font = '9px "volter"';
-                ctx.fillText("Programming & Design by",posx, posy + imgTitle.height/2);
-                ctx.fillStyle = "white";
-                ctx.font = '27px "volter"';
-                ctx.fillText("Nondefault",posx, posy + imgTitle.height/2 + 26);
-            }
+
+
+            if (!introTimeout) introTimeout = setTimeout(function(){dmode = MENU;}, tmax);
+
+            items.forEach(function(item,idx){
+                if (delta>(time0+=dtime)) {
+                    var textcol = Color.gradientMix(textPalette, (delta-time0)*0.001, true);
+
+                    var endtime = (time0+attack),
+                        timenow = (delta-time0);
+
+                    adelt = 1-Math.min(attack, timenow)/attack;
+                    adelt = 1-adelt*adelt;
+
+                    var floatval = Math.sin((delta-idx*dtime*0.5)*0.008)*floatheight;
+
+                    ctx.globalAlpha = Math.min(1, timenow/endtime) - (delta>=time0+hold ? Math.min(1,(delta-hold)/endtime) : 0);
+                    // ctx.shadowOffsetX = floatval;
+                    // ctx.shadowColor = textcol.addHSL(0.5,0,0);
+                    ctx.fillStyle = textcol.addHSL(0,0,-0.2);
+                    ctx.font = '9px "volter"';
+                    ctx.fillText(item[0],posx, posy + imgTitle.height/2 + lineheight*idx - adelt*moveheight + moveheight + floatval);
+                    ctx.fillStyle = textcol;
+                    ctx.font = '27px "volter"';
+                    ctx.fillText(item[1],posx, posy + imgTitle.height/2 + 23 + lineheight*idx - adelt*moveheight + moveheight + floatval);
+                    // ctx.shadowOffsetX = 0;
+                }
+            });
 
             ctx.globalAlpha = 1;
 
-            /*if (delta>1500) {
-                ctx.fillStyle = "lightgray";
-                ctx.font = '13px "volter"';
-                ctx.fillText("Graphics & Additional Programming by",viewWidth/2,110+vpos);
-                ctx.fillStyle = "white";
-                ctx.font = '22px "volter"';
-                ctx.fillText("Sachittome",viewWidth/2,130+vpos);
-            }*/
-
-            /*if (delta>2250) {
-                ctx.fillStyle = "lightgray";
-                ctx.font = '9px "volter"';
-                ctx.fillText("Music by",viewWidth/2,150+vpos);
-                ctx.fillStyle = "white";
-                ctx.font = '15px "volter"';
-                ctx.fillText("Sycamore Drive",viewWidth/2,165+vpos);
-                ctx.font = '12px "volter"';
-                ctx.fillText("http://sycamoredrive.co.uk/",viewWidth/2,180+vpos);
-            }*/
-
             ctx.textAlign = 'left';
         }
+
+        ////////////////////////////////////////////
+        ////////////////////////////////////////////
         else if (dmode==MENU) {
             ctx.fillStyle = "rgb(40,36,38)";
             ctx.fillRect(0,0,viewWidth,viewHeight);
@@ -325,25 +352,52 @@ function render() {
             ctx.textAlign = 'center';
             ctx.fillStyle = "white";
 
-            for (var x=-200+Math.sin(gameTime/400)*200; x<viewWidth; x+=tileWidth) {
-                for (var y=-160+Math.sin(gameTime/200)*160; y<viewHeight; y+=tileWidth) {
-                    ctx.drawImage(images[5], ~~x, ~~y);
-                }
+            var basecol = Color.gradientMix(outrunPalette, gameTime*0.01, true);
+            var gradient = ctx.createLinearGradient(0,viewHeight,0,0);
+            gradient.addColorStop(0, basecol.addHSL(0,-0.05,-0.1));
+            gradient.addColorStop(0.25, basecol.addHSL(0,-0.2,-0.3));
+            gradient.addColorStop(1.0, basecol.addHSL(0,-0.3,-0.5));
+
+            ctx.fillStyle = "black";
+            ctx.fillRect(0,0,viewWidth,viewHeight);
+
+            var pw = menuLevel.getWidth()*tileWidth;
+            var extra = viewWidth-pw;
+            for (var xx=0; xx<menuLevel.getWidth()/menuLevel.cache.size; xx++) {
+                var tx = Math.floor((xx+extra)/(menuLevel.cache.size*tileWidth));
+                ctx.drawImage(menuLevel.cache.arr[xx][0], xx*menuLevel.cache.size*tileWidth+extra*0.5, viewHeight*0.67-menuLevel.cache.size*tileHeight*0.5);
             }
+
+            var dh = Math.abs(Math.sin(gameTime*0.1));
+            ctx.drawImage(imgCar, viewWidth*0.5-imgCar.width*0.5, viewHeight*0.67-imgCar.height*0.5+dh, imgCar.width, imgCar.height);
+
+            ctx.globalCompositeOperation = "overlay";
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0,0,viewWidth,viewHeight);
+            ctx.globalCompositeOperation = "source-over";
 
             ctx.fillStyle = "rgba(0,0,0,0.3)";
             ctx.fillRect(0,0,viewWidth,viewHeight);
             ctx.drawImage(imgOverlay,0,0,viewWidth,viewHeight);
 
-            ctx.drawImage(imgTitle,viewWidth/2-imgTitle.width/4,20,imgTitle.width/2,imgTitle.height/2);
+            ctx.drawImage(imgTitle,viewWidth/2-imgTitle.width/4,20,imgTitle.width/2,imgTitle.height/2+Math.sin(gameTime*0.1)*2);
 
-            ctx.fillStyle = uiPlayState===UI_HOVER?"yellow":"white";
-            ctx.fillText("PLAY",viewWidth/2,140);
+            var items = ["PLAY", "HELP"];
+            var states = [uiPlayState, uiHelpState];
+            items.forEach(function(item,idx){
+                var state = states[idx];
+                var textcol = Color.gradientMix(textPalette, (gameTime-idx*100)*0.01, true);
+                var floatval = Math.sin((gameTime-idx*40)*0.08)*2*(state?2:1);
+                ctx.font = (state?"30px":"24px")+" \"volter\"";
+                // ctx.shadowOffsetX = floatval;
+                // ctx.shadowColor = textcol.addHSL(0.5,0,0);
+                ctx.fillStyle = textcol.addHSL(0,0,-0.2);
+                ctx.fillText(item,viewWidth/2,140+30*idx+floatval);
+                // ctx.shadowOffsetX = 0;
+                // ctx.shadowColor = "black";
+            });
 
-            ctx.fillStyle = uiHelpState===UI_HOVER?"yellow":"white";
-            ctx.fillText("HELP",viewWidth/2,170);
-
-            ctx.fillStyle = "red";
+            ctx.fillStyle = "lightgray";
             ctx.font = '9px "volter"';
             ctx.textAlign = "left";
             ctx.fillText("beta v"+VERSION+" "+SUBVER,8, viewHeight-8);
@@ -361,6 +415,10 @@ function render() {
         //copy buffer to screen at proper scale
         sctx.globalAlpha = frameBlend;
         sctx.drawImage(buffer,0,0,screenWidth,screenHeight);
+        // sctx.globalCompositeOperation = "difference";
+       	// sctx.globalAlpha = Math.random()*Math.random()*0.2+Math.abs(Shake.out.x);
+        // sctx.drawImage(buffer,-3-Math.random()*Math.random()*Shake.out.x*4,Math.random()*Shake.out.y*2,screenWidth,screenHeight);
+        // sctx.globalCompositeOperation = "source-over";
         sctx.globalAlpha = 1;
 
         renderLocked = false;
@@ -466,19 +524,36 @@ function drawtile(tile,x,y) {
 
 function drawLoadingScreen(progress) {
     dmode = -1;
+
+    var msg = "preparing...";
+    var w = ctx.measureText(msg).width;
+    var lbx = viewWidth/2-w*0.5, lby = viewHeight/2 + 11;
+
+    // ctx.shadowOffsetY=2+Math.sin(gameTime*0.1)*3;
+    // ctx.shadowOffsetX=Math.sin(gameTime*0.078+0.24)*5;
+    // ctx.shadowColor = "black";
+    // ctx.shadowBlur = 0;
+
+    var basecol = Color.gradientMix(outrunPalette, gameTime*0.01, true);
+    var gradient = ctx.createLinearGradient(lbx,lby,lbx+((progress||1)*w),lby);
+    gradient.addColorStop(0, basecol.addHSL(0,-0.05,-0.1));
+    gradient.addColorStop(1.0, basecol.addHSL(-0.5,-0.05,-0.1));
+
     ctx.fillStyle = "rgb(10,9,9)";
     ctx.fillRect(0,0,viewWidth,viewHeight);
     ctx.font = '24px "volter"';
     ctx.textAlign = 'center';
-    ctx.fillStyle = "white";
-    var msg = "preparing...";
+    ctx.fillStyle = gradient;
     ctx.fillText(msg,viewWidth/2,viewHeight/2);
 
-    var w = ctx.measureText(msg).width;
     ctx.fillStyle = "black";
-    ctx.fillRect(viewWidth/2-w*0.5, viewHeight/2 + 11, w, 1);
-    ctx.fillStyle = "white";
-    ctx.fillRect(viewWidth/2-w*0.5, viewHeight/2 + 11, ~~((progress||1)*w), 1);
+    ctx.fillRect(lbx, lby, w, 4);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(lbx, lby, ~~((progress||1)*w), 4);
+
+    // ctx.shadowOffsetY=0;
+    // ctx.shadowOffsetX=0;
+    // ctx.shadowColor = "black";
 }
 
 //color indexes

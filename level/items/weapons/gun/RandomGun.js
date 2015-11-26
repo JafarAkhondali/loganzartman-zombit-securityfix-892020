@@ -39,7 +39,7 @@ RandomGun = Gun.extend(function(quality){
 		this.col1 = Util.rhue(0.0,1.0,0.2,0.8,0.6,0.8);
 		this.col2 = Util.rhue(0.0,1.0,0.6,1.0,0.2,0.3);
 		this.snd = gunSounds.ar.random();
-		try{this.icon = assaultIcon;}catch(e){}
+		if (typeof assaultIcon !== "undefined") this.icon = assaultIcon;
 		this.type = ASSAULTRIFLE;
 		this.name = this.makeName();
 	},

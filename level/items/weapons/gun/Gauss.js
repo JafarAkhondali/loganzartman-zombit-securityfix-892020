@@ -7,7 +7,7 @@ Gauss = Gun.extend(function(){
 	this.spread = 1;
 	this.spd = 40;
 	this.snd = sndGun2;
-	try{this.icon = gaussIcon;}catch(e){}
+	if (typeof gaussIcon !== "undefined") this.icon = gaussIcon;
 	this.type = GAUSS;
 })
 .methods({

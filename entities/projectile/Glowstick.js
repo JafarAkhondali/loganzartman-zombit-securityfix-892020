@@ -3,12 +3,14 @@ Glowstick = Projectile.extend(function(x,y,owner) {
 	this.y = y;
 	this.owner = makeEntityReference(owner);
 	this.light = null;
-	
+
+	this.light = new EntityLight(this,"rgb("+this.col+")",255,0.8);
+	registerLight(this.light);
+
 	this.brightness = 255;
 	this.col = Math.floor(this.brightness/3)+","+Math.floor(this.brightness)+","+Math.floor(this.brightness/3);
 
-	try {this.image = glowstickIcon;}
-	catch (e) {}
+	if (typeof imgGlowstickIcon !== "undefined") this.image = imgGlowstickIcon;
 })
 .methods({
 	step: function(dlt) {
@@ -22,11 +24,6 @@ Glowstick = Projectile.extend(function(x,y,owner) {
 	},
 	render: function(x,y) {
 		ctx.drawImage(this.image,x-tileWidth/2,y-tileHeight/2,tileWidth,tileHeight);
-
-		if (this.light==null) {
-			this.light = new EntityLight(this,"rgb("+this.col+")",255,0.8);
-			registerLight(this.light);
-		}
 	},
 	destroy: function() {
 		unregisterLight(this.light);

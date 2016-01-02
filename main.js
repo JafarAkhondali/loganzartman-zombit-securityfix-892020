@@ -51,11 +51,9 @@ startGame = function(skipGenerate, callback) {
 
 		playerPathfinder = new Pathfinder(gameLevel, player);
 
-		Zombie.count = 0;
-
 		//tell zombies to spawn continuously
 		spawnInterval = setInterval(function(){
-			if (Zombie.count<ZOMBIE_MAX && gameTime >= 60*20 && spawnEnabled) {
+			if (entityManager.getCount(ZOMBIE)<ZOMBIE_MAX && gameTime >= 60*20 && spawnEnabled) {
 			for (var i=0; i<1; i++) {
 				var dir = Math.random()*Math.PI*2,
 					dist = viewWidth*0.5 + Math.random()*100;

@@ -1,6 +1,4 @@
 var Car = Entity.extend(function(x,y){
-	this.x = x;
-	this.y = y;
 	this.type = -1;
 	this.friction = 0.1;
 	this.image = imgCar;

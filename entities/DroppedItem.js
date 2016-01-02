@@ -16,15 +16,10 @@ DroppedItem = Entity.extend(function(x,y,item){
 	step: function(dlt) {
 		this.supr(dlt);
 		if (Date.now()-this.timestamp>DROPTIMEOUT) {
-			for (en in entityManager.entities) {
-				var ent = entityManager.get(en);
-				if (ent instanceof Player) {
-					if (Math.abs(ent.x-this.x)+Math.abs(ent.y-this.y)<tileWidth) {
-						if (ent.inv.push(this.item)!=false) {
-							this.destroy();
-							break;
-						}
-					}
+			var ent = player;
+			if (Math.abs(ent.x-this.x)+Math.abs(ent.y-this.y)<tileWidth) {
+				if (ent.inv.push(this.item)!=false) {
+					this.destroy();
 				}
 			}
 		}

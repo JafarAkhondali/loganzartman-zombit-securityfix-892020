@@ -21,8 +21,9 @@ var Editor = {
             map[TILE_LIST[i].name] = i;
         }
         Editor.map = map;
-        Editor.tilenames = Object.keys(Editor.map);
-        Editor.gui.add(Editor, "selected", map);
+        // Editor.tilenames = Object.keys(Editor.map);
+        // Editor.gui.add(Editor, "selected", map);
+        Editor.gui.addFolder("Press enter for editor console.");
     },
 
     drawUI: function() {

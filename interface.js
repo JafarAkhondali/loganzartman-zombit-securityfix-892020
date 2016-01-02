@@ -297,7 +297,7 @@ Interface.createGUI = function() {
 };
 
 Interface.chooseFPS = function() {
-	showPrompt("Choose target framerate (FPS):", function(text){
+	Interface.showPrompt("Choose target framerate (FPS):", function(text){
 		try {
 			var fps = parseInt(text);
 			targetFramerate = fps;

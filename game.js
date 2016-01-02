@@ -28,12 +28,12 @@ var enableShaders = false; //this works, but it's probably too slow
 var spawnEnabled = true;
 
 //fps monitoring
-var filterStrength = 20;
+var filterStrength = 10, fpsSampleSize = 20, fpsSampleTimer = 0;
 var frameTime = 0, lastLoop = new Date(), thisLoop;
 var fps = targetFPS;
 
-var VERSION = 132;
-var SUBVER = "pizza llama";
+var VERSION = 133;
+var SUBVER = "ftl edition";
 
 particlesEnabled = true; //duh
 
@@ -53,7 +53,7 @@ window.addEventListener("resize", function(){
     screenWidth = window.innerWidth;
 	screenHeight = window.innerHeight;
 
-	if (devicePixelRatio && devicePixelRatio > 1) {
+	if (devicePixelRatio && devicePixelRatio !== 1) {
 		screenWidth *= devicePixelRatio;
 		screenHeight *= devicePixelRatio;
 	}
@@ -98,14 +98,14 @@ function init() {
 	mpMode = CLIENT; //this is not a sever.  this is for shared code
 
 	//set interval for processing
-	timer = setInterval(step,1000/targetFPS);
+	// timer = setInterval(step,1000/targetFPS);
 
 	//start music
 	//setTimeout(startPlaylist,4900);
 
 	//start rendering
 	Shake.init();
-	requestAnimFrame(render);
+	requestAnimFrame(step);
 }
 
 var mfLight;
@@ -226,9 +226,10 @@ function reinitCanvases() {
 	canvas.height = screenHeight;
 
 	//fix for high density screens
-	if (devicePixelRatio && devicePixelRatio > 1) {
-		var transx = screenWidth*0.5,
-			transy = screenHeight*0.5;
+	if (devicePixelRatio && devicePixelRatio !== 1) {
+		outputScale = Math.ceil(3*devicePixelRatio);
+		var transx = screenWidth*0.25,
+			transy = screenHeight*0.25;
 		var sc = (1/devicePixelRatio).toFixed(2);
 		canvas.style["webkit-transform"] = canvas.style["transform"] = "scale("+sc+","+sc+") " +
 		"translate(-"+transx.toFixed(0)+"px,-"+transy.toFixed(0)+"px)";
@@ -238,7 +239,7 @@ function reinitCanvases() {
 	canvContainer.appendChild(canvas);
 	sctx = canvas.getContext("2d"); //screen context, shouldn't be draw onto usually
 
-	//create invisible buffer canvas
+	//create buffer canvas
 	buffer = document.createElement("canvas");
 	buffer.width = viewWidth;
 	buffer.height = viewHeight;
@@ -290,7 +291,7 @@ function d(s) {
 	//return (60/fps)*s;
 }
 
-tdelta = 1;
+var tdelta = 1;
 window.performance = window.performance || {};
 performance.now = (function() {
   return performance.now       ||
@@ -300,19 +301,24 @@ performance.now = (function() {
          performance.webkitNow ||
          function() { return Date.now(); };
 })();
-prevtime = performance.now();
+var prevtime = performance.now();
+
 function step() {
 	gameTime++;
 	time = performance.now();
 	//console.log("d "+(time-prevtime));
-	tdelta = (time-prevtime)/(1000/targetFPS);
+	if (fpsSampleTimer--<=1) {
+		fpsSampleTimer = fpsSampleSize;
+		tdelta = (time-prevtime)/(1000/targetFPS)/fpsSampleSize;
+		prevtime = time;
+	}
 	//console.log("e "+delta);
 
 	//monitor framerate
 	var thisFrameTime = (thisLoop=time) - lastLoop;
 	frameTime+= (thisFrameTime - frameTime) / filterStrength;
 	lastLoop = thisLoop;
-	fps = (1000/frameTime).toFixed(1);
+	fps = (1000/frameTime);
 
 	if (dmode === GAME) {
 		processStep(tdelta);
@@ -325,7 +331,8 @@ function step() {
 		if (viewY>gameLevel.getHeight()*tileHeight-viewHeight) {viewY = gameLevel.getHeight()*tileHeight-viewHeight;}
 	}
 
-	prevtime = time;
+	render();
+	requestAnimFrame(step);
 }
 
 function godMode() {

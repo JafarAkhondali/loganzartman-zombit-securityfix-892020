@@ -1,8 +1,8 @@
 var lightArray = [];
 var lightbuffer, lictx;
 var gradientbuffer, grctx;
-var globalBrightness = 1;
-var lightScale = 0.5;
+var globalBrightness = 2;
+var lightScale = 1.0;
 var playerLightImage = null;
 
 function initLight() {
@@ -100,7 +100,7 @@ function compositeLight(dest,gco) {
 	dest.globalCompositeOperation = "source-over";
  }
 function drawAllLights(dest,gbrightness,mode) {
-	if (mode>0) {ctx.globalCompositeOperation = "screen";}
+	if (mode>0) {ctx.globalCompositeOperation = "lighter";}
 	for (var i=0; i<lightArray.length; i++) {
 		if (lightArray[i]!==null && lightArray[i].col) {
 			var x = lightArray[i].getX();
@@ -109,7 +109,7 @@ function drawAllLights(dest,gbrightness,mode) {
 
 			if (x+s*0.5>=viewX && x-s*0.5<=viewX+viewWidth && y+s*0.5>=viewY && y-s*0.5<=viewY+viewHeight) {
 				if (lightArray[i] instanceof SpecialLightContainer && typeof lightArray[i].drawLight === 'function') {
-					// lightArray[i].drawLight(dest,x-viewX,y-viewY,gbrightness,mode);
+					lightArray[i].drawLight(dest,x-viewX,y-viewY,gbrightness,mode);
 				}
 				else {
 					drawLight(dest,x-viewX,y-viewY,lightArray[i].col,s,lightArray[i].brightness*gbrightness,mode,lightArray[i].img);

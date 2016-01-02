@@ -21,9 +21,9 @@ var viewRange = 0.5;
 
 var noiseCanvas;
 var noiseCtx;
-var noiseWidth = 128;
-var noiseHeight = 128;
-var noiseIntensity = 0.1;
+var noiseWidth = 64;
+var noiseHeight = 64;
+var noiseIntensity = 100;
 var noiseData;
 
 var INTRO=0,GAME=1,MENU=2;
@@ -32,6 +32,7 @@ var intime = null;
 var showDebug = false, drawParticles = true, drawOverlay = true, tileShadows = true, entityShadows = true, enableLightRendering = true, enableLightTinting = true, enableGlare = true;
 var defaultFrameBlend = 0.95, minFrameBlend = 0.4, frameBlend = defaultFrameBlend;
 var FADE_IN_TIME = 120;
+var fpsUpdateTimer = 0, fpsDisplayValue = 0;
 
 var enablePathDebug = false;
 
@@ -51,7 +52,7 @@ var particles = [];
 var Shake = {
     rx: null,
     ry: null,
-    magnitude: 40,
+    magnitude: 70,
     out: {
         x: 0,
         y: 0
@@ -65,7 +66,7 @@ var Shake = {
         Shake.intensity = Math.min(1, Shake.intensity+intensity);
     },
     step: function() {
-        Shake.intensity *= 0.67;
+        Shake.intensity *= 0.47;
         if (Shake.intensity*Shake.magnitude < 1) Shake.intensity = 0;
         Shake.rx.offset(Shake.intensity*8+1);
         Shake.ry.offset(Shake.intensity*8+1);
@@ -200,12 +201,20 @@ function render() {
 
             //draw fps
             if (showDebug) {
-                ctx.font = '8px monospace';
+                var h=11;
+                ctx.font = '9px volter';
                 ctx.fillStyle = "white";
-                ctx.fillText("FPS: "+(~~fps),4,16);
-                ctx.fillText("Delta: "+(tdelta.toFixed(1)),4,26);
-                ctx.fillText("Facing: "+(player.facing.toFixed(1)),4,36);
-                ctx.fillText("Zombies: "+(Zombie.count),4,46);
+                if (++fpsUpdateTimer > 15) {
+                    fpsUpdateTimer = 0;
+                    fpsDisplayValue = fps;
+                }
+                ctx.fillText("FPS: "+(fpsDisplayValue.toFixed(1)),4.5,16);
+                ctx.fillText("Delta: "+(tdelta.toFixed(2)),4.5,16+h);
+                ctx.fillText("Facing: "+(player.facing.toFixed(1)),4.5,16+2*h);
+                var i=0;
+                for (var key in entityManager.count) {
+                    ctx.fillText("#"+key+": "+entityManager.count[key],4.5,16+3*h+h*(i++));
+                }
             }
 
             //draw chat overlay
@@ -424,7 +433,7 @@ function render() {
         renderLocked = false;
 
         //request another frame
-        requestAnimFrame(render);
+        // requestAnimFrame(render);
     }
 }
 

@@ -190,7 +190,7 @@ Util.CachedRandom = {
 Util.CachedRandom.init();
 
 //fast (pregenerated) randoms. originally used for shaders.
-Util.frandArray = new Array(2000);
+Util.frandArray = new Array(6000);
 for (var i=0; i<Util.frandArray.length; i++) {Util.frandArray[i] = Util.grand();}
 Util.frandPtr = 0;
 Util.frand = function() {

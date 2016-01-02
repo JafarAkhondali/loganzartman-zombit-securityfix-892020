@@ -47,16 +47,15 @@ collisionLine2 = function(circleX,circleY,radius,lineX1,lineY1,lineX2,lineY2) {
 	}
 }
 
-//may not go over 10000
-ENTITY = 10;
-DROPPEDITEM = 9010;
-PLAYER = 110;
-HOSTILE = 210;
-ZOMBIE = 1210;
-PROJECTILE = 310;
-BULLET = 1310;
-PARTICLE = 410;
-BLOODSPLAT = 1410;
+ENTITY = "Entity";
+DROPPEDITEM = "DroppedItem";
+PLAYER = "Player";
+HOSTILE = "Hostile";
+ZOMBIE = "Zombie";
+PROJECTILE = "Projectile";
+BULLET = "Bullet";
+PARTICLE = "Particle";
+BLOODSPLAT = "BloodSplat";
 
 /**
  * Stores and manages all entities.
@@ -69,6 +68,7 @@ EntityManager = function(level) {
 	this.maxDisposables = 10;
 	this.types = []; //types of entities
 	this.grid = null;
+	this.count = {};
 	this.buildGrid();
 };
 
@@ -158,6 +158,15 @@ EntityManager.prototype.register = function(entity) {
 	}
 };
 
+EntityManager.prototype.countEntity = function(entity) {
+	if (typeof entity.type !== "undefined") {
+		if (typeof this.count[entity.type] !== "number")
+			this.count[entity.type] = 0;
+		this.count[entity.type]++;
+		entity._counted = true;
+	}
+};
+
 /**
  * Makes an entity diposable so that it can be disposed.
  * @param entity entity to make disposable
@@ -192,6 +201,8 @@ EntityManager.prototype.unregister = function(entity) {
 	var ind = typeofentity==="number" || typeofentity==="string"?entity:this.entities.indexOf(entity);
 	if (ind>=0) {
 		if (this.freespace.indexOf(ind)<0) {this.freespace.push(ind);}
+		if (this.entities[ind] && typeof this.entities[ind].type !== "undefined" && this.entities[ind]._counted === true)
+			this.count[this.entities[ind].type]--;
 		this.entities[ind] = undefined;
 	}
 };
@@ -238,12 +249,17 @@ EntityManager.prototype.swap = function (slot1, slot2) {
 	this.entities[slot2].arrIndex = slot2;
 };
 
+EntityManager.prototype.getCount = function(type) {
+	if (typeof this.count[type] !== "undefined") return this.count[type];
+	else return 0;
+};
+
 EntityManager.prototype.length = function() {return this.entities.length;};
 
 EntityManager.prototype.clearAll = function() {
 	for (var i=this.entities.length-1; i>=0; i--)
 		if (typeof this.entities[i].destroy === "function") this.entities[i].destroy();
-	Zombie.count = 0;
+	this.count = {};
 	this.entities = [];
 	this.freespace = [];
 };

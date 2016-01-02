@@ -3,8 +3,6 @@ var ZOMBIE_MAX = 50;
 Zombie = Hostile.extend(function(x,y,vr){
 	if (typeof imgZombie !== "undefined") this.image = imgZombie;
 
-	Zombie.count++;
-
 	this.spd=Util.grandr(0.5,1.6);
 	this.visionRadius = 80
 	this.life = Util.irandr(25,ZOMBIEMAXLIFE);
@@ -23,10 +21,8 @@ Zombie = Hostile.extend(function(x,y,vr){
 		this.pathfinder = playerPathfinder;
 
 	this.type = ZOMBIE;
+	entityManager.countEntity(this);
 	this.emitConstruct();
-})
-.statics({
-	count: 0
 })
 .methods({
 	step: function(dlt) {
@@ -55,7 +51,6 @@ Zombie = Hostile.extend(function(x,y,vr){
 	},
 
 	destroy: function() {
-		Zombie.count--;
 		this.supr();
 	}
 });

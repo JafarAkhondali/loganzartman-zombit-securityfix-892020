@@ -12,11 +12,13 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 	this.light2 = null;
 
 	this.type = BULLET;
+	this.time = 0;
 
 	this.emitConstruct();
 })
 .methods({
 	step: function(dlt) {
+		this.time+=dlt;
 		this.xp=this.x;
 		this.yp=this.y;
 		this.supr(dlt);
@@ -63,33 +65,39 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 		}
 
 		if (this.xp!=null) {
-		/*var grad= ctx.createLinearGradient(x, y, this.xp, this.yp);
-		grad.addColorStop(0, "rgba(255,255,255,1)");
-		grad.addColorStop(1, "rgba(255,255,255,0.5)");*/
+			var timer = Math.max(0,6-this.time)/6;
 
-		var grad0= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
-		grad0.addColorStop(0, "rgba(255,255,255,1)");
-		grad0.addColorStop(1, "rgba(255,255,255,0.6)");
+			/*var grad= ctx.createLinearGradient(x, y, this.xp, this.yp);
+			grad.addColorStop(0, "rgba(255,255,255,1)");
+			grad.addColorStop(1, "rgba(255,255,255,0.5)");*/
 
-		var grad1= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
-		grad1.addColorStop(0, "rgba("+this.col1+",1)");
-		grad1.addColorStop(0.6, "rgba("+this.col2+",0.4)");
+			var grad0= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
+			grad0.addColorStop(0, "rgba(255,255,255,1)");
+			grad0.addColorStop(1, "rgba(255,255,255,0.6)");
 
-		ctx.lineCap = "square";
+			var grad1= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
+			grad1.addColorStop(0, "rgba("+this.col1+",1)");
+			grad1.addColorStop(0.6, "rgba("+this.col2+",0.4)");
 
-		ctx.lineWidth = 2.5;
-		ctx.strokeStyle = grad1;
-		ctx.beginPath();
-		ctx.moveTo(x-this.xs, y-this.ys);
-		ctx.lineTo(x,y);
-		ctx.stroke();
+			ctx.lineCap = "butt";
 
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = grad0;
-		ctx.beginPath();
-		ctx.moveTo(x-this.xs, y-this.ys);
-		ctx.lineTo(x+this.xs/20,y+this.ys/20);
-		ctx.stroke();
+			ctx.lineWidth = 2.5+5*timer*timer;
+
+			var xs = this.xs * (1+timer*0.1),
+				ys = this.ys * (1+timer*0.1);
+
+			ctx.strokeStyle = grad1;
+			ctx.beginPath();
+			ctx.moveTo(x-xs, y-ys);
+			ctx.lineTo(x,y);
+			ctx.stroke();
+
+			ctx.lineWidth = 1+1*timer*timer;
+			ctx.strokeStyle = grad0;
+			ctx.beginPath();
+			ctx.moveTo(x-xs, y-ys);
+			ctx.lineTo(x+xs/20,y+ys/20);
+			ctx.stroke();
 		}
 
 	},

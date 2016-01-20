@@ -265,12 +265,14 @@ EntityManager.prototype.clearAll = function() {
 };
 
 getEntityReference = function(erObj) { //works for literals and ER instances
+	return erObj;
 	if (erObj && erObj.arrIndex!=null) {
 		return entityManager.get(erObj.arrIndex);
 	}
 	else {return null;}
 };
 makeEntityReference = function(x) { //works for indexes, entities, and serialized ERs
+	return x;
 	if (typeof x === 'number' || typeof x === 'string') {
 		return {arrIndex: Number(x)};
 	}

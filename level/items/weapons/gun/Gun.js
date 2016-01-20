@@ -24,18 +24,21 @@ Gun = Weapon.extend(function(clipsize,ammo,delay,damage,spread,spd,user) {
 	this.flare.cachedCol = null;
 
 	// alert("meme");
-	this.mfLight = new SpecialLightContainer(new EntityLight(player,"rgb("+this.col1+")",200,2,2,imgLightFlash));
-	var flight = this.mfLight;
-	this.mfLight.drawLight = function(dest,x,y,brightness,mode) {
-		dest.save();
-		dest.globalAlpha = this.brightness;
-		dest.translate(x,y);
-		dest.rotate(player.facing);
-		dest.translate(-x-40,-y-imgLightFlash.height*0.5-24);
-		dest.drawImage(flight.light.img,x,y);
-		dest.restore();
-	};
-	registerLight(this.mfLight);
+	if (this.owner === player) {
+		this.mfLight = new SpecialLightContainer(new EntityLight(this.owner,"rgb("+this.col1+")",200,2,2,imgLightFlash));
+		var flight = this.mfLight;
+		var that = this;
+		this.mfLight.drawLight = function(dest,x,y,brightness,mode) {
+			dest.save();
+			dest.globalAlpha = this.brightness;
+			dest.translate(x,y);
+			dest.rotate(that.owner.facing);
+			dest.translate(-x-40,-y-imgLightFlash.height*0.5-24);
+			dest.drawImage(flight.light.img,x,y);
+			dest.restore();
+		};
+		registerLight(this.mfLight);
+	}
 })
 .methods({
 	step: function() {
@@ -69,7 +72,7 @@ Gun = Weapon.extend(function(clipsize,ammo,delay,damage,spread,spd,user) {
 				for (var i=0; i<this.shot; i++) {
 					blt = this.bullet();
 				}
-				Shake.shake(blt.damage / 100);
+				if (blt) Shake.shake(blt.damage / 100);
 				//console.log("Fired! Ammo: "+this.ammo);
 
 				this.timer=this.delay;

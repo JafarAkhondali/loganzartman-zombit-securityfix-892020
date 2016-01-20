@@ -6,7 +6,7 @@ Splatter = Particle.extend(function(x,y,xs,ys,zs){
 	this.ys = ys;
 	this.zs = zs;
 	this.life = 50;
-	this.grav = 1;
+	this.grav = 0.5;
 	this.maxlife = this.life;
 	try {this.image = imgSplatter[~~(Math.random()*imgSplatter.length)];}
 	catch (e) {this.destroy();}
@@ -17,8 +17,8 @@ Splatter = Particle.extend(function(x,y,xs,ys,zs){
 })
 .methods ({
 	step: function(dlt) {
-		this.ys*=0.9;
-		this.xs*=0.9;
+		this.ys*=0.96;
+		this.xs*=0.96;
 		this.zs-=this.grav;
 		this.z += this.zs;
 		this.supr();

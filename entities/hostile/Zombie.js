@@ -1,5 +1,5 @@
 var ZOMBIEMAXLIFE = 100;
-var ZOMBIE_MAX = 50;
+var ZOMBIE_MAX = 100;
 Zombie = Hostile.extend(function(x,y,vr){
 	if (typeof imgZombie !== "undefined") this.image = imgZombie;
 

@@ -1,10 +1,10 @@
 window.addEventListener('load', function(){
-	var getGlobals = function(){return Object.getOwnPropertyNames(window)};
+	var getGlobals = function(){return Object.getOwnPropertyNames(window);};
 	var preInit = getGlobals();
 	onScriptsLoaded.push(function(){
 		init();
 		var postInit = getGlobals();
-		console.log("Leaked vars to global scope:", postInit.filter(function(item){return preInit.indexOf(item)<0}));
+		console.log("Leaked vars to global scope:", postInit.filter(function(item){return preInit.indexOf(item)<0;}));
 	});
 	loadScripts();
 }, false);
@@ -32,8 +32,8 @@ var filterStrength = 10, fpsSampleSize = 20, fpsSampleTimer = 0;
 var frameTime = 0, lastLoop = new Date(), thisLoop;
 var fps = targetFPS;
 
-var VERSION = 133;
-var SUBVER = "ftl edition";
+var VERSION = 134;
+var SUBVER = "cereal box prize";
 
 particlesEnabled = true; //duh
 
@@ -50,21 +50,8 @@ window.requestAnimFrame = (function(){
 })();
 
 window.addEventListener("resize", function(){
-    screenWidth = window.innerWidth;
-	screenHeight = window.innerHeight;
-
-	if (devicePixelRatio && devicePixelRatio !== 1) {
-		screenWidth *= devicePixelRatio;
-		screenHeight *= devicePixelRatio;
-	}
-
-	defaultScreenWidth = screenWidth;
-	defaultScreenHeight = screenHeight;
-	viewWidth = screenWidth/outputScale;
-	viewHeight = screenHeight/outputScale;
-
-    initLight();
 	reinitCanvases();
+	initLight();
 }, false);
 
 function init() {
@@ -88,7 +75,7 @@ function init() {
 	//parse URL flags
 	var loc = document.location.href;
 	uArgs = loc.lastIndexOf("#")>loc.lastIndexOf("/")?loc.substring(loc.lastIndexOf("#")+1).split("&"):"";
-	if (uArgs.indexOf("nointro")>=0) {dmode = MENU}
+	if (uArgs.indexOf("nointro")>=0) {dmode = MENU;}
 	if (uArgs.indexOf("nomusic")<0) {/*setTimeout(startPlaylist,4900);*/}
 
 	//initialize drawing buffers for lighting
@@ -96,12 +83,6 @@ function init() {
 	loadAudio(); //load audio
 
 	mpMode = CLIENT; //this is not a sever.  this is for shared code
-
-	//set interval for processing
-	// timer = setInterval(step,1000/targetFPS);
-
-	//start music
-	//setTimeout(startPlaylist,4900);
 
 	//start rendering
 	Shake.init();
@@ -119,7 +100,7 @@ function restartGame() {
 				pLight = new SpecialLightContainer(pLight);
 				pLight.drawLight = function(dest,x,y,brightness,mode) {
 					dest.save();
-					dest.globalAlpha = brightness*mode===0?0.5:0;
+					dest.globalAlpha = brightness*mode===0?0.7:0;
 					dest.translate(x,y);
 					dest.rotate(player.facing-Math.PI);
 					dest.translate(-(x+imgFlashlightBeam.width),-(y+imgFlashlightBeam.height/2));
@@ -222,11 +203,14 @@ function reinitCanvases() {
 	//create canvas element
 	canvas = document.createElement("canvas");
 	canvas.oncontextmenu = function(){return false;};
-	canvas.width = screenWidth;
-	canvas.height = screenHeight;
+
+	screenWidth = window.innerWidth;
+	screenHeight = window.innerHeight;
 
 	//fix for high density screens
 	if (devicePixelRatio && devicePixelRatio !== 1) {
+		screenWidth *= devicePixelRatio;
+		screenHeight *= devicePixelRatio;
 		outputScale = Math.ceil(3*devicePixelRatio);
 		var transx = screenWidth*0.25,
 			transy = screenHeight*0.25;
@@ -235,6 +219,13 @@ function reinitCanvases() {
 		"translate(-"+transx.toFixed(0)+"px,-"+transy.toFixed(0)+"px)";
 	}
 
+	defaultScreenWidth = screenWidth;
+	defaultScreenHeight = screenHeight;
+	viewWidth = screenWidth/outputScale;
+	viewHeight = screenHeight/outputScale;
+
+	canvas.width = screenWidth;
+	canvas.height = screenHeight;
 	canvas.style.cursor = "none";
 	canvContainer.appendChild(canvas);
 	sctx = canvas.getContext("2d"); //screen context, shouldn't be draw onto usually

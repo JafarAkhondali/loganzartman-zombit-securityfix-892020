@@ -38,10 +38,10 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 
 				for (var i=0; i<~~(this.damage/10)+1; i++) {
 					var a = ang+Util.grandr(-0.8, 0.8);
-					var spd = Util.grandr(1,10);
+					var spd = Util.grandr(0,6.5);
 					var xx = Math.cos(a)*spd;
 					var yy = Math.sin(a)*spd;
-					var spl = new Splatter(thing.x,thing.y-4,xx,yy,Util.grandr(0,6));
+					var spl = new Splatter(thing.x+Util.grandr(-8,8),thing.y+Util.grandr(-8,8),xx,yy,Util.grandr(0,4));
 					if (yy<0) {spl.depth = 1;}
 				}
 			}
@@ -77,11 +77,11 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 
 			var grad1= ctx.createLinearGradient(x, y, this.xp-viewX, this.yp-viewY);
 			grad1.addColorStop(0, "rgba("+this.col1+",1)");
-			grad1.addColorStop(0.6, "rgba("+this.col2+",0.4)");
+			grad1.addColorStop(0.6, "rgba("+this.col2+",0.2)");
 
 			ctx.lineCap = "butt";
 
-			ctx.lineWidth = 2.5+5*timer*timer;
+			ctx.lineWidth = 4.5+5*timer*timer;
 
 			var xs = this.xs * (1+timer*0.1),
 				ys = this.ys * (1+timer*0.1);

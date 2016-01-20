@@ -96,7 +96,7 @@ function compositeLight(dest,gco) {
 	var is = dest.imageSmoothingEnabled || dest.webkitImageSmoothingEnabled || dest.mozImageSmoothingEnabled;
 	dest.imageSmoothingEnabled = dest.webkitImageSmoothingEnabled = dest.mozImageSmoothingEnabled = true;
 	dest.drawImage(lightbuffer,0,0,~~(1/lightScale*lightbuffer.width),~~(1/lightScale*lightbuffer.height));
-	dest.imageSmoothingEnabled = dest.webkitImageSmoothingEnabled = dest.mozImageSmoothingEnabled = is;	
+	dest.imageSmoothingEnabled = dest.webkitImageSmoothingEnabled = dest.mozImageSmoothingEnabled = is;
 	dest.globalCompositeOperation = "source-over";
  }
 function drawAllLights(dest,gbrightness,mode) {
@@ -145,10 +145,14 @@ function renderLight2() {
 		compositeLight(ctx,newmode?"hard-light":"multiply");
 
 		lictx.globalCompositeOperation = "source-over";
-		clearCanvas(lictx,enableLightRendering?"black":"white");
+		clearCanvas(lictx,Editor.enabled?"rgb(20,20,20)":"black");
 
-		
-		clearCanvas(grctx, "black");
+		var grd = grctx.createRadialGradient(player.x-viewX,player.y-viewY,20,player.x-viewX,player.y-viewY,105);
+		grd.addColorStop(0,"rgb(100,100,100)");
+		grd.addColorStop(1,Editor.enabled ? "gray" : "black");
+		clearCanvas(grctx, grd);
+
+		// clearCanvas(grctx, "rgba(0,0,0,0.2)");
 	}
 }
 

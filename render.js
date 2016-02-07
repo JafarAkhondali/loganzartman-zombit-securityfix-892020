@@ -52,15 +52,23 @@ var particles = [];
 var Shake = {
     rx: null,
     ry: null,
-    magnitude: 70,
+    magnitude: 120,
     out: {
         x: 0,
         y: 0
     },
     intensity: 0,
     init: function() {
-        Shake.rx = new SmoothRandom(1000);
-        Shake.ry = new SmoothRandom(1000);
+    	if (false) {
+	        Shake.rx = new SmoothRandom(1000);
+	        Shake.ry = new SmoothRandom(1000);
+	    }
+	    else {
+	    	Shake.rx = Shake.ry = {
+	    		next: function() {return Math.random();},
+	    		offset: function() {}
+	    	};
+	    }
     },
     shake: function(intensity) {
         Shake.intensity = Math.min(1, Shake.intensity+intensity);

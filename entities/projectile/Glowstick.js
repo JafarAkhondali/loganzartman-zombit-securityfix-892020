@@ -4,7 +4,7 @@ Glowstick = Projectile.extend(function(x,y,owner) {
 	this.owner = makeEntityReference(owner);
 	this.light = null;
 
-	this.light = new EntityLight(this,"rgb("+this.col+")",255,0.8);
+	this.light = new EntityLight(this,"rgb("+this.col+")",255,0.8,1.0);
 	registerLight(this.light);
 
 	this.brightness = 255;

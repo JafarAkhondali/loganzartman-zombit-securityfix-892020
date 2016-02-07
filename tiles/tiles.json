@@ -41,7 +41,7 @@
 		},
 		{
 			"name": "asphalt_line",
-			"src": "7.png",
+			"src": "6.png",
 			"back": "asphalt",
 			"solid": false,
 			"depth": 0,
@@ -53,6 +53,20 @@
 			"3Dsrc": "8-3D.png",
 			"solid": true,
 			"depth": 2
+		},
+		{
+			"name": "sidewalk",
+			"src": "9.png",
+			"solid": false,
+			"depth": 0,
+			"border": ["grass"]
+		},
+		{
+			"name": "tilefloor",
+			"src": "10.png",
+			"solid": false,
+			"depth": 0,
+			"border": ["asphalt"]
 		}
 	]
 }

@@ -127,6 +127,7 @@ var LevelFactory = {
 	    Util.loadJSON(url, function(data){
 			if (data) {
 				var level = LevelFactory.parseLevel(data);
+				if (data.lights) deserializeLights(data.lights);
 				callback(level);
 			}
 			else {
@@ -152,5 +153,15 @@ var LevelFactory = {
 			}
 		}
 		return new Level(level);
+	},
+
+	serializeTiles: function(level) {
+		var data = [];
+		for (var x=0; x<level.getWidth(); x++) {
+			for (var y=0; y<level.getHeight(); y++) {
+				data[(y*level.getWidth())+x] = level.getTile(x,y).id;
+			}
+		}
+		return data;
 	}
 };

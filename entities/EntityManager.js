@@ -258,7 +258,7 @@ EntityManager.prototype.length = function() {return this.entities.length;};
 
 EntityManager.prototype.clearAll = function() {
 	for (var i=this.entities.length-1; i>=0; i--)
-		if (typeof this.entities[i].destroy === "function") this.entities[i].destroy();
+		if (this.entities[i] && typeof this.entities[i].destroy === "function") this.entities[i].destroy();
 	this.count = {};
 	this.entities = [];
 	this.freespace = [];

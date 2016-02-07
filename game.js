@@ -90,8 +90,9 @@ function init() {
 }
 
 var mfLight;
-function restartGame() {
-	LevelFactory.fromFile("level/test.json", function(level){
+function restartGame(levelPath) {
+	if (typeof levelPath === "undefined") levelPath = "level/l0.json";
+	LevelFactory.fromFile(levelPath, function(level){
 		if (level) {
 			gameLevel = level;
 			startGame(true, function(){

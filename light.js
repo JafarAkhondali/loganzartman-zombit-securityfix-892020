@@ -147,7 +147,7 @@ function renderLight2() {
 		lictx.globalCompositeOperation = "source-over";
 		clearCanvas(lictx,Editor.enabled?"rgb(20,20,20)":"black");
 
-		var grd = grctx.createRadialGradient(player.x-viewX,player.y-viewY,20,player.x-viewX,player.y-viewY,105);
+		var grd = grctx.createRadialGradient(player.x-viewX,player.y-viewY,5,player.x-viewX,player.y-viewY,175);
 		grd.addColorStop(0,"rgb(100,100,100)");
 		grd.addColorStop(1,Editor.enabled ? "gray" : "black");
 		clearCanvas(grctx, grd);
@@ -165,6 +165,36 @@ function clearCanvas(context, color) {
 	context.fillRect(0,0,viewWidth,viewHeight);
 	context.globalCompositeOperation = tempa;
 	context.globalAlpha = tempb;
+}
+
+function serializeLights() {
+	var data = [];
+	lightArray.forEach(function(light){
+		if (light instanceof StaticLight) {
+			data.push({
+				type: "Static",
+				x: light.getX(),
+				y: light.getY(),
+				size: light.size,
+				col: light.col,
+				brightness: light.brightness
+			});
+		}
+	});
+	return data;
+}
+
+function deserializeLights(data) {
+	data.forEach(function(light){
+		if (light.type === "Static")
+			lightArray.push(new StaticLight(
+				light.x,
+				light.y,
+				light.col,
+				light.size,
+				light.brightness
+			));
+	});
 }
 
 function addLightsToLevel(level,spacing,color,size,randomness,chanceBroken,brightness) {

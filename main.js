@@ -35,13 +35,13 @@ startGame = function(skipGenerate, callback) {
 		drawLoadingScreen(p*0.95+0.05);
 	}, function() {
 		//populate the level with light fixtures
-		if (mpMode==CLIENT) {addLightsToLevel(gameLevel,196,"rgb(175,151,122)",512,0.4,0.3,1);}
+		// if (mpMode==CLIENT) {addLightsToLevel(gameLevel,196,"rgb(175,151,122)",512,0.4,0.3,1);}
 
 		entityManager = new EntityManager(gameLevel);
 
 		if (mpMode === CLIENT) {
 			//car
-			var zzz = new Car(990,2260);
+			// var zzz = new Car(990,2260);
 
 			player = new Player(~~(gameLevel.getWidth()*tileWidth*0.5),~~(gameLevel.getHeight()*tileWidth*0.5),"Player");
 			player.inv.push(new Pistol());

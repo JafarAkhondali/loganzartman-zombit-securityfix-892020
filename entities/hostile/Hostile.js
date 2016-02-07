@@ -35,7 +35,7 @@ Hostile = Entity.extend(function(x,y,vr){
 		}
 
 		//something I was doing for serialization
-		if (this.target>=0) {this.target = getEntityReference(this.target);}
+		// if (this.target>=0) {this.target = getEntityReference(this.target);}
 
 		//if the hostile is searching for a target, see if it can target the nearby player
 		if (this.target===T_SEARCH) { //need to find a target (the player for now)

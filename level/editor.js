@@ -11,6 +11,11 @@ var Editor = {
     editLights: true,
     lightInteractRange: 8,
     lightIndex: null,
+    lightProps: {
+        col: "#FF0000",
+        size: 256,
+        brightness: 1.0
+    },
 
     createControls: function(gui) {
         gui.add(Editor, "enabled");
@@ -28,6 +33,14 @@ var Editor = {
         Editor.map = map;
         Editor.tilenames = Object.keys(Editor.map);
         // Editor.gui.add(Editor, "selected", map);
+        Editor.gui.add(Editor, "editLights");
+        Editor.gui.add(Editor, "exportLevel");
+        Editor.gui.add(Editor, "loadLevel");
+        Editor.gui.add(Editor, "generateBlankLevel");
+        var ls = Editor.gui.addFolder("Light settings");
+        ls.addColor(Editor.lightProps, "col");
+        ls.add(Editor.lightProps, "size", 1, 1024);
+        ls.add(Editor.lightProps, "brightness", 0, 1);
         Editor.gui.addFolder("Press enter for editor console.");
     },
 
@@ -40,8 +53,8 @@ var Editor = {
             ctx.strokeRect(
                 Math.floor((Editor._x0+viewX)/tileWidth)*tileWidth-viewX,
                 Math.floor((Editor._y0+viewY)/tileHeight)*tileHeight-viewY,
-                Math.ceil(((mouseX)-Editor._x0)/tileWidth)*tileWidth,
-                Math.ceil(((mouseY)-Editor._y0)/tileHeight)*tileHeight
+                Math.floor(((mouseX)-Editor._x0)/tileWidth+1)*tileWidth,
+                Math.floor(((mouseY)-Editor._y0)/tileHeight+1)*tileHeight
             );
         }
 
@@ -66,8 +79,7 @@ var Editor = {
 
                         //outer
                         ctx.lineWidth = 1;
-                        ctx.globalAlpha = selected ? 1 : 0.2;
-                        if (!selected) ctx.setLineDash([10,10]);
+                        ctx.globalAlpha = selected ? 1 : 0.1;
                         ctx.strokeStyle = "white";
                         ctx.beginPath();
                         ctx.arc(
@@ -77,6 +89,12 @@ var Editor = {
                             0,
                             Math.PI*2
                         );
+                        if (selected) {
+                            ctx.globalAlpha = 0.1;
+                            ctx.fillStyle = "white";
+                            ctx.fill();
+                            ctx.globalAlpha = 1;
+                        }
                         ctx.stroke();
 
                         //handle
@@ -152,10 +170,7 @@ var Editor = {
         if (!Editor.enabled) return;
         if (mouseLeft) {
             if (Editor.editLights) {
-                var col = "white"//prompt("Color");
-                var size = 128//parseInt(prompt("size")) || 16;
-                var brightness = 1//parseFloat(prompt("brightness")) || 1.0;
-                var light = new StaticLight(mouseX + viewX, mouseY + viewY, col, size, brightness);
+                var light = new StaticLight(mouseX + viewX, mouseY + viewY, Editor.lightProps.col, Editor.lightProps.size, Editor.lightProps.brightness);
                 registerLight(light);
             }
             else {
@@ -180,7 +195,7 @@ var Editor = {
 
     handleDrag: function(event) {
         if (!Editor.enabled) return;
-        if (mouseLeft) Editor.handleClick(event);
+        if (mouseLeft && !Editor.editLights) Editor.handleClick(event);
     },
 
     handleUp: function(event) {
@@ -191,8 +206,8 @@ var Editor = {
                     Editor.setTile(x, y, Editor.selected);
                 }
             }
-            for (var x = Editor._x0; x<mouseX; x+=gameLevel.cache.size*tileWidth) {
-                for (var y=Editor._y0; y<mouseY; y+=gameLevel.cache.size*tileHeight) {
+            for (var x = Editor._x0; x<mouseX+tileWidth; x+=gameLevel.cache.size*tileWidth) {
+                for (var y = Editor._y0; y<mouseY+tileHeight; y+=gameLevel.cache.size*tileHeight) {
                     var tx = ~~((x + viewX)/tileWidth),
                         ty = ~~((y + viewY)/tileHeight);
                     gameLevel.cache.recacheAt(tx,ty);
@@ -211,5 +226,43 @@ var Editor = {
             }
         }
         cacheShadowPoints(gameLevel);
+    },
+
+    serializeLevel: function() {
+        var level = {
+            name: prompt("Level name:","test"),
+            min_version: VERSION,
+            width: gameLevel.getWidth(),
+            height: gameLevel.getHeight(),
+            lights: serializeLights(),
+            data: LevelFactory.serializeTiles(gameLevel)
+        };
+        return level;
+    },
+
+    exportLevel: function() {
+        var level = Editor.serializeLevel();
+        var text = btoa(JSON.stringify(level));
+        var uri = "data:text/plain;base64," + text;
+        window.open(uri);
+    },
+
+    loadLevel: function() {
+        var path = prompt("Level path:", "level/test.json");
+        cleanupGame();
+        restartGame(path);
+    },
+
+    generateBlankLevel: function() {
+        var w = 100, h = 100;
+        try {
+            w = parseInt(prompt("Level width: ", "100"));
+            h = parseInt(prompt("Level height: ", "100"));
+        }
+        catch (e) {}
+        gameLevel = LevelFactory.makeEmptyRoom(w, h);
+        // cleanupGame();
+        startGame(true, function(){});
+        lightArray = [];
     }
 };

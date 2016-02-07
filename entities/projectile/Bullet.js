@@ -36,9 +36,9 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 				thing.xs += dx*0.05;
 				thing.ys += dy*0.05;
 
-				for (var i=0; i<~~(this.damage/10)+1; i++) {
+				for (var i=0; i<~~(this.damage/6)+1; i++) {
 					var a = ang+Util.grandr(-0.8, 0.8);
-					var spd = Util.grandr(0,6.5);
+					var spd = Util.grandr(0,6.5)*(Math.random()>0.5?-1:1);
 					var xx = Math.cos(a)*spd;
 					var yy = Math.sin(a)*spd;
 					var spl = new Splatter(thing.x+Util.grandr(-8,8),thing.y+Util.grandr(-8,8),xx,yy,Util.grandr(0,4));

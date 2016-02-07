@@ -35,8 +35,8 @@ Zombie = Hostile.extend(function(x,y,vr){
 				this.tys = -1+Math.random()*2;
 				this.mpUpdate();
 			}
-			this.xs = this.txs//this.xs*0.8+0.2*this.txs;
-			this.ys = this.tys//this.ys*0.8+0.2*this.tys;
+			this.xs = this.xs*0.8+0.2*this.txs;
+			this.ys = this.ys*0.8+0.2*this.tys;
 		}
 	},
 

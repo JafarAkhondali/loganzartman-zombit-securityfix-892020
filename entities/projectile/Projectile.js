@@ -23,7 +23,7 @@ Projectile = Entity.extend(function(x,y,sender){
 	    	ent = nearby[ec];
 			if (ent instanceof Entity && !(ent instanceof Item)) {
 				if (ent!=senderObj && ent!=this && !(ent instanceof Projectile) && !(ent instanceof DroppedItem)) {
-					if (collisionLine2(ent.x,ent.y,ent.width*0.5,x1,y1,x2,y2,false)) {
+					if (collisionLine2(ent.x,ent.y,ent.width,x1,y1,x2,y2,false)) {
 						this.collide(ent);
 					}
 				}

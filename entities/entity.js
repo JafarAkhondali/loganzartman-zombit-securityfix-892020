@@ -89,10 +89,14 @@ Entity = klass(function (x,y,noreg) {
 					var len = Math.sqrt(dx*dx + dy*dy);
 					dx /= len;
 					dy /= len;
+					if (len === 0) continue;
 					while (this.isIntersecting(nearby[i])) {
+						var tgtTile = tileAt(this.x + dx, this.y + dy);
+						if (tgtTile && tgtTile.solid) break;
 						this.x += dx;
 						this.y += dy;
 					}
+					this.collideEntity(nearby[i]);
 				}
 			}
 		}
@@ -139,6 +143,38 @@ Entity = klass(function (x,y,noreg) {
 			   a.y1 < b.y2 && a.y2 > b.y1;
 	},
 
+	distanceTo: function(other) {
+		if (other.x && other.y) {
+			var dx = other.x-this.x,
+				dy = other.y-this.y;
+			return Math.sqrt(dx*dx+dy*dy);
+		}
+		return Infinity;
+	},
+
+	canSee: function(other) {
+		if (other.x && other.y) {
+			var dx = other.x - this.x,
+				dy = other.y - this.y,
+				len = Math.sqrt(dx*dx+dy*dy);
+			dx *= tileWidth/len;
+			dy *= tileHeight/len;
+			var x = this.x, y = this.y;
+			var w = gameLevel.getWidth(), h = gameLevel.getHeight();
+			while (x>0 && y>0 && x<w && y<h && (Math.abs(dx) > tileWidth || Math.abs(dy) > tileHeight)) {
+				x += dx;
+				y += dy;
+				dx = other.x - this.x;
+				dy = other.y - this.y;
+				var tile = tileAt(x,y);
+				if (tile && !tile.solid) continue;
+				return false;
+			}
+			return true;
+		}
+		return false;
+	},
+
 	onScreen: function() {
 		return this.x >= viewTargetX &&
 				 this.y >= viewTargetY &&
@@ -177,6 +213,10 @@ Entity = klass(function (x,y,noreg) {
 
 	collide: function(tile) {
 		//override with collision logic
+	},
+
+	collideEntity: function(ent) {
+		console.log("coll");
 	},
 
 	getNearby: function(range) {

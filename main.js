@@ -41,12 +41,12 @@ startGame = function(skipGenerate, callback) {
 
 		if (mpMode === CLIENT) {
 			//car
-			// var zzz = new Car(990,2260);
 
 			player = new Player(~~(gameLevel.getWidth()*tileWidth*0.5),~~(gameLevel.getHeight()*tileWidth*0.5),"Player");
 			player.inv.push(new Pistol());
 			player.inv.push(new AssaultRifle());
 			player.inv.push(new WoodenBat());
+			var zzz = new Car(gameLevel.getWidth()*tileWidth*0.1, gameLevel.getHeight()*tileHeight*0.5);
 		}
 
 		playerPathfinder = new Pathfinder(gameLevel, player);
@@ -78,6 +78,14 @@ startGame = function(skipGenerate, callback) {
 			var tx = spot.x,
 				ty = spot.y;
 			item.disposable = true;
+			var it = new DroppedItem(tx*tileWidth+tileWidth/2, ty*tileHeight+tileHeight/2,item);
+		}
+		for (var i=0; i<10 && spots.length>0; i++) {
+			var item = new MoonDust();
+			var spot = spots.pop();
+			var tx = spot.x,
+				ty = spot.y;
+			item.disposable = false;
 			var it = new DroppedItem(tx*tileWidth+tileWidth/2, ty*tileHeight+tileHeight/2,item);
 		}
 

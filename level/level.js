@@ -95,6 +95,7 @@ onScriptsLoaded.push(function(){
 });
 
 include("level/items/Item.js");
+include("level/items/MoonDust.js");
 include("level/items/weapons/Weapon.js");
 include("level/items/weapons/gun/Gun.js");
 include("level/items/weapons/gun/AssaultRifle.js");

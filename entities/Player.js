@@ -12,6 +12,7 @@ Player = Entity.extend(function(x,y,name,owner){
 	this.healCooldown = 200, this.healTimer = 0, this.healRate = 0.025;
 
 	this.type = PLAYER;
+	this.active = false;
 
 	this.emitConstruct();
 
@@ -21,7 +22,7 @@ Player = Entity.extend(function(x,y,name,owner){
 .methods({
 	step: function(dlt) {
 		this.control(dlt);
-		this.supr(dlt);
+		if (this.active) this.supr(dlt);
 
 		if (Math.abs(this.xs)<0.1) {this.xs = 0;}
 		if (Math.abs(this.ys)<0.1) {this.ys = 0;}
@@ -74,7 +75,7 @@ Player = Entity.extend(function(x,y,name,owner){
 				tile.sound.play();
 			}
 		}
-		this.footstepTimer+=Math.sqrt(this.xs*this.xs+this.ys*this.ys);
+		this.footstepTimer+=Math.sqrt(this.xs*this.xs+this.ys*this.ys)*Util.randr(0.99,1.01);
 	},
 	render: function(x,y) {
 		this.supr(x,y);

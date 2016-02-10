@@ -11,6 +11,8 @@ Hostile = Entity.extend(function(x,y,vr){
 	this.type = HOSTILE;
 	this.pathfinder = null;
 
+	this.otherCollides = true;
+
 	if (typeof player !== "undefined") {
 		var dx = player.x-this.x;
 		var dy = player.y-this.y;

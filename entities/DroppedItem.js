@@ -33,6 +33,13 @@ DroppedItem = Entity.extend(function(x,y,item){
 		}
 		if (this.item.icon) {ctx.drawImage(this.item.icon,x-tileWidth/2,y-tileHeight/2,tileWidth,tileHeight);}
 	},
+	collideEntity: function(entity) {
+		this.supr(entity);
+		if (entity instanceof Car && this.item instanceof MoonDust) {
+			gameCash += this.item.value;
+			this.destroy();
+		}
+	},
 	damage: function() {
 	},
 });

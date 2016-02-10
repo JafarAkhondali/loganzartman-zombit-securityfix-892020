@@ -129,5 +129,6 @@ Pathfinder.prototype.getBestDirection = function(x,y) {
     var magX = Math.abs(sumX),
         magY = Math.abs(sumY);
     var max = magX > magY ? magX : magY;
+    if (max === 0) return [0,0];
     return [sumX/max, sumY/max];
 };

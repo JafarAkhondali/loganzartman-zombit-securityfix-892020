@@ -31,7 +31,7 @@ var dmode = INTRO;
 var intime = null;
 var showDebug = false, drawParticles = true, drawOverlay = true, tileShadows = true, entityShadows = true, enableLightRendering = true, enableLightTinting = true, enableGlare = true;
 var defaultFrameBlend = 0.95, minFrameBlend = 0.4, frameBlend = defaultFrameBlend;
-var FADE_IN_TIME = 120;
+var FADE_IN_TIME = 120, SCREEN_BLACK_TIME = 180;
 var fpsUpdateTimer = 0, fpsDisplayValue = 0;
 
 var enablePathDebug = false;
@@ -164,7 +164,7 @@ function render() {
             ctx.fillText(player.life.toFixed(0),~~(viewWidth-140-(20*(player.inv.size)*0.5)-5),32);
 
             //draw selected item GUI
-            ctx.fillStyle = outrunPalette[0].setAlpha(0.3);
+            ctx.fillStyle = Color.BLACK.setAlpha(0.3);
             ctx.strokeStyle = outrunPalette[0].setAlpha(0.6);
             ctx.fillRect(viewWidth-135,8,112,25);
             ctx.strokeRect(viewWidth-135,8,112,25);
@@ -175,21 +175,22 @@ function render() {
             ctx.fillText(ii.name,~~(viewWidth-127),17);
 
             ctx.font = '12px "volter"';
-            if (ii instanceof Gun) {
-                ctx.fillStyle=ii.ammo!==0 && ii.ammo!="R"?"white":"red";
+            if (typeof ii.ammo !== "undefined") {
+                ctx.fillStyle= (ii.ammo!==0 && ii.ammo!="R")?"white":"red";
                 ctx.fillText("A: "+ii.ammo,~~(viewWidth-127)+0.5,29);
             }
 
             //draw score
-            ctx.fillStyle = outrunPalette[0].setAlpha(0.3);
-            ctx.strokeStyle = outrunPalette[0].setAlpha(0.6);
-            ctx.fillRect(viewWidth/2-40,viewHeight-24,80,20);
-            ctx.strokeRect(viewWidth/2-40,viewHeight-24,80,20);
+            var scoreX = viewWidth - 140 - (20*player.inv.size) - 128;
+            ctx.fillStyle = Color.BLACK.setAlpha(0.3);
+            ctx.strokeStyle = outrunPalette[2].setAlpha(0.6);
+            ctx.fillRect(Math.min(scoreX, viewWidth/2-60),10,120,20);
+            ctx.strokeRect(Math.min(scoreX, viewWidth/2-60),10,120,20);
 
             ctx.font = '13px "volter"';
             ctx.textAlign = 'center';
-            ctx.fillStyle = "white";
-            ctx.fillText(gameScore,viewWidth/2,viewHeight-10);
+            ctx.fillStyle = outrunPalette[2].toRGBString();
+            ctx.fillText("TAKE: $"+("000000" + gameCash).slice(-6),Math.min(scoreX+60, viewWidth/2),24);
             ctx.textAlign = 'left';
 
             //health effects
@@ -283,8 +284,9 @@ function render() {
                 }
             }
 
-            if (gameTime < FADE_IN_TIME) {
-                ctx.globalAlpha = 1-gameTime/FADE_IN_TIME;
+            if (gameTime < FADE_IN_TIME + SCREEN_BLACK_TIME) {
+                if (gameTime > SCREEN_BLACK_TIME) ctx.globalAlpha = 1-(gameTime-SCREEN_BLACK_TIME)/FADE_IN_TIME;
+                else ctx.globalAlpha = 1;
                 ctx.fillStyle = "rgb(10,9,9)";
                 ctx.fillRect(0,0,viewWidth,viewHeight);
                 ctx.globalAlpha = 1;
@@ -299,7 +301,7 @@ function render() {
             if (intime==null) {intime=new Date().getTime();}
             var delta = new Date().getTime()-intime;
 
-            var items = [["Programming & Design by", "Nondefault"],["Music by","Mr.Skeltal"],["Graphics by","Canvas2D"]];
+            var items = [["Programming & Design by", "Nondefault"]];
             var time0 = 200, dtime = 300, attack=700, hold=4500, lineheight = 50, moveheight = 10, floatheight = 2;
             var tmax = dtime*items.length+attack+hold+time0;
 

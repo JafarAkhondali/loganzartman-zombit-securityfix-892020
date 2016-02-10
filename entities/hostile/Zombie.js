@@ -1,19 +1,21 @@
-var ZOMBIEMAXLIFE = 100;
+var ZOMBIEMAXLIFE = 300;
 var ZOMBIE_MAX = 100;
 Zombie = Hostile.extend(function(x,y,vr){
 	if (typeof imgZombie !== "undefined") this.image = imgZombie;
 
 	this.spd=Util.grandr(0.5,1.6);
 	this.visionRadius = 80
-	this.life = Util.irandr(25,ZOMBIEMAXLIFE);
+	this.life = Util.irandr(200,ZOMBIEMAXLIFE);
 	this.maxlife = this.life;
 	this.pointValue = Math.round(0.5*this.life);
 	this.inv.push(new ZombieAttack());
 
 	this.dropchance = 0.035;
-	this.width = 16;
-	this.height = 16;
+	this.width = 8;
+	this.height = 8;
 
+	this.xs = 0;
+	this.ys = 0;
 	this.txs = 0;
 	this.tys = 0;
 
@@ -27,6 +29,8 @@ Zombie = Hostile.extend(function(x,y,vr){
 .methods({
 	step: function(dlt) {
 		this.supr(dlt);
+		this.xs = this.xs*0.8+0.2*this.txs;
+		this.ys = this.ys*0.8+0.2*this.tys;
 
 		if (this.target !== player) {
 			//randumbly wander if no target

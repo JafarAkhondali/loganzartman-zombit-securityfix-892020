@@ -16,7 +16,19 @@ NATURAL_LIST = {};
 NATURAL_LIST[FLOOR] = 25;
 NATURAL_LIST[GRASS] = 50;
 NATURAL_LIST[SIDEWALK] = 40;
-TILE_SOUNDS = [null,1,null,4,4,5,1,1,null];
+TILE_SOUNDS = [
+	null, //0
+	6, //1
+	null, //2
+	4, //3
+	4, //4
+	5, //5
+	6, //6
+	6, //7
+	null, //8
+	6, //9
+	6 //10
+];
 
 var TILE_LIST = [], TILE_MAP = {};
 (function loadTiles(){

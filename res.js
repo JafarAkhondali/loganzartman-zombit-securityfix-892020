@@ -5,6 +5,8 @@ var pistolIcon = new Image();
 pistolIcon.src = "res/icon/pistol.png";
 var assaultIcon = new Image();
 assaultIcon.src = "res/icon/assault.png";
+var shotgunIcon = new Image();
+shotgunIcon.src = "res/icon/shotgun.png";
 var typhoonIcon = new Image();
 typhoonIcon.src = "res/icon/typhoon.png";
 var gaussIcon = new Image();
@@ -75,6 +77,8 @@ var imgFlashlightBeam = new Image();
 imgFlashlightBeam.src = "res/flashlight.png";
 var imgFlare = new Image();
 imgFlare.src = "res/flare.png";
+var imgMoonDust = new Image();
+imgMoonDust.src = "res/dust2.png";
 
 var imgLightRadialMask;
 var imgLightRadial = new Image();

@@ -21,6 +21,7 @@ var tileHeight = 16;
 var items = []; //stores all items (does this need to exist?)
 
 var gameScore = 0; //score...
+var gameCash = 0;
 var gameTime = 0;
 
 //settings
@@ -32,8 +33,8 @@ var filterStrength = 10, fpsSampleSize = 20, fpsSampleTimer = 0;
 var frameTime = 0, lastLoop = new Date(), thisLoop;
 var fps = targetFPS;
 
-var VERSION = 134;
-var SUBVER = "cereal box prize";
+var VERSION = 135;
+var SUBVER = "oblong edition";
 
 particlesEnabled = true; //duh
 
@@ -110,6 +111,8 @@ function restartGame(levelPath) {
 				};
 				registerLight(pLight);
 
+				sndCarStop.play();
+
 				var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",200,0.15);
 				rLight.getX = function(){return player.x;};
 				rLight.getY = function(){return player.y;};
@@ -139,6 +142,7 @@ function endGame() {
 function cleanupGame() {
 	gameTime = 0;
 	gameScore = 0;
+	gameCash = 0;
 	dmode = MENU;
 	gamePaused = true;
 

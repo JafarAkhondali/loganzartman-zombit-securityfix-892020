@@ -34,7 +34,7 @@ var Color = function(args) {
     else if (typeof args === "string") {
         args = args.toLowerCase();
         if (args.indexOf("#") === 0) {
-            var r,g,b;
+            var r,g,b,a=1;
             if (args.length === 7) {
                 r = parseInt(args.substring(1,3),16);
                 g = parseInt(args.substring(3,5),16);
@@ -43,7 +43,7 @@ var Color = function(args) {
             else {
                 throw new Error("Invalid string! Use #NNNNNN");
             }
-            this._setRGB(r,g,b);
+            this._setRGB(r,g,b,a);
         }
         else {
             var components = args.substring(4, args.length-1).split(",");

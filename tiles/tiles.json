@@ -42,15 +42,15 @@
 		{
 			"name": "asphalt_line",
 			"src": "6.png",
-			"back": "asphalt",
+			"back": true,
 			"solid": false,
 			"depth": 0,
 			"border": ["grass"]
 		},
 		{
 			"name": "shelves",
-			"back": "floor",
-			"3Dsrc": "8-3D.png",
+			"back": true,
+			"front": "8_front.png",
 			"solid": true,
 			"depth": 2
 		},
@@ -67,6 +67,28 @@
 			"solid": false,
 			"depth": 0,
 			"border": ["asphalt"]
+		},
+		{
+			"name": "brickwall",
+			"src": "11.png",
+			"front": "11_front.png",
+			"solid": true,
+			"depth": 2
+		},
+		{
+			"name": "woodcounter",
+			"src": "12.png",
+			"front": "12_front.png",
+			"back": true,
+			"solid": true,
+			"depth": 0
+		},
+		{
+			"name": "shrub",
+			"src": "13.png",
+			"back": true,
+			"solid": true,
+			"depth": 1
 		}
 	]
 }

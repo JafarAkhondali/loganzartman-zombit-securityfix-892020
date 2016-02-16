@@ -38,7 +38,7 @@ function rayBoxIntersect(ray, box) {
 function cacheShadowPoints(level) {
 	//returns tile at (x,y) with fail-soft bounds checking
 	var gt = function(x,y) {
-		if (x<0 || y<0 || x>=level.getWidth() || y>=level.getHeight()) return {solid: false};
+		if (x<0 || y<0 || x>=level.getWidth() || y>=level.getHeight()) return {depth: 0};
 		return level.getTile(x,y);
 	}
 
@@ -48,19 +48,19 @@ function cacheShadowPoints(level) {
 	for (var x=0; x<level.getWidth(); x++) {
 		for (var y=0; y<level.getHeight(); y++) {
 			var tile = level.getTile(x,y);
-			if (!tile.solid || consumed.indexOf(tile) >= 0) continue;
+			if (!(tile.depth>1) || consumed.indexOf(tile) >= 0) continue;
 			var dx=0, dy=0;
 
 			//try to find a line by inspecting neighboring tiles
-			if (gt(x+1, y).solid) dx = 1;
-			else if (gt(x, y+1).solid) dy = 1;
-			else if (gt(x-1, y).solid) dx = -1;
-			else if (gt(x, y-1).solid) dy = -1;
-			else tile = {solid: false};
+			if (gt(x+1, y).depth>0) dx = 1;
+			else if (gt(x, y+1).depth>0) dy = 1;
+			else if (gt(x-1, y).depth>0) dx = -1;
+			else if (gt(x, y-1).depth>0) dy = -1;
+			else tile = {depth: 0};
 
 			//follow the line
 			var tx = x, ty = y;
-			while (tx>=0 && y>=0 && tx<level.getWidth() && y<level.getHeight() && tile.solid && consumed.indexOf(tile) < 0) {
+			while (tx>=0 && y>=0 && tx<level.getWidth() && y<level.getHeight() && tile.depth>1 && consumed.indexOf(tile) < 0) {
 				consumed.push(tile);
 				tx += dx;
 				ty += dy;

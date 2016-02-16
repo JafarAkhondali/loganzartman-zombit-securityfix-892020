@@ -35,6 +35,7 @@ var FADE_IN_TIME = 120, SCREEN_BLACK_TIME = 180;
 var fpsUpdateTimer = 0, fpsDisplayValue = 0;
 
 var enablePathDebug = false;
+var enableZombieDebug = false;
 
 var solidRenderedBlocks = [];
 var introTimeout = false;
@@ -108,7 +109,9 @@ function render() {
             if (tileShadows) {drawgameLevel(1);}
 
             updateFxBuffer();
+            ctx.globalCompositeOperation = "multiply";
             ctx.drawImage(fxbuffer,_fxb_offsetX,_fxb_offsetY);
+            ctx.globalCompositeOperation = "source-over";
 
             drawgameLevel(2);
 
@@ -208,6 +211,29 @@ function render() {
             //apply shaders
             if (enableShaders===true) {xshader(xsfx);}
 
+            if (enableZombieDebug) {
+                entityManager.entities.forEach(function(ent) {
+                    if (ent instanceof Zombie) {
+                        if (ent.isOnScreen()) {
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = ent.target === player ? "red" : "yellow";
+                            ctx.strokeRect(
+                                ent.x - ent.width/2 - viewX,
+                                ent.y - ent.height/2 - viewY,
+                                ent.width,
+                                ent.height
+                            );
+                        }
+                        else {
+                            var drawX = Math.min(viewWidth - 4, Math.max(6, ent.x-viewX)),
+                                drawY = Math.min(viewHeight - 4, Math.max(6, ent.y-viewY));
+                            ctx.fillStyle = ent.target === player ? "red" : "yellow";
+                            ctx.fillRect(drawX, drawY, 2, 2);
+                        }
+                    }
+                });
+            }
+
             //draw fps
             if (showDebug) {
                 var h=11;
@@ -301,8 +327,8 @@ function render() {
             if (intime==null) {intime=new Date().getTime();}
             var delta = new Date().getTime()-intime;
 
-            var items = [["Programming & Design by", "Nondefault"]];
-            var time0 = 200, dtime = 300, attack=700, hold=4500, lineheight = 50, moveheight = 10, floatheight = 2;
+            var items = [["Programming & Design by", "Nondefault"],["welcome to the beta, it","has many bugs"],["please let me know","what breaks"]];
+            var time0 = 200, dtime = 500, attack=700, hold=4500, lineheight = 50, moveheight = 10, floatheight = 2;
             var tmax = dtime*items.length+attack+hold+time0;
 
             //clear screen
@@ -351,8 +377,8 @@ function render() {
                     ctx.font = '9px "volter"';
                     ctx.fillText(item[0],posx, posy + imgTitle.height/2 + lineheight*idx - adelt*moveheight + moveheight + floatval);
                     ctx.fillStyle = textcol;
-                    ctx.font = '27px "volter"';
-                    ctx.fillText(item[1],posx, posy + imgTitle.height/2 + 23 + lineheight*idx - adelt*moveheight + moveheight + floatval);
+                    ctx.font = '23px "volter"';
+                    ctx.fillText(item[1].toUpperCase(),posx, posy + imgTitle.height/2 + 25 + lineheight*idx - adelt*moveheight + moveheight + floatval);
                     // ctx.shadowOffsetX = 0;
                 }
             });
@@ -399,7 +425,8 @@ function render() {
             ctx.fillRect(0,0,viewWidth,viewHeight);
             ctx.drawImage(imgOverlay,0,0,viewWidth,viewHeight);
 
-            ctx.drawImage(imgTitle,viewWidth/2-imgTitle.width/4,20,imgTitle.width/2,imgTitle.height/2+Math.sin(gameTime*0.1)*2);
+            var titleX = viewWidth/2-imgTitle.width/4, titleY = 20;
+            ctx.drawImage(imgTitle,titleX,titleY,imgTitle.width/2,imgTitle.height/2+Math.sin(gameTime*0.1)*2);
 
             var items = ["PLAY", "HELP"];
             var states = [uiPlayState, uiHelpState];
@@ -411,15 +438,15 @@ function render() {
                 // ctx.shadowOffsetX = floatval;
                 // ctx.shadowColor = textcol.addHSL(0.5,0,0);
                 ctx.fillStyle = textcol.addHSL(0,0,-0.2);
-                ctx.fillText(item,viewWidth/2,140+30*idx+floatval);
+                ctx.fillText(item,viewWidth/2,145+30*idx+floatval);
                 // ctx.shadowOffsetX = 0;
                 // ctx.shadowColor = "black";
             });
 
-            ctx.fillStyle = "lightgray";
+            ctx.fillStyle = Color.gradientMix(textPalette, (gameTime)*0.006, true);
             ctx.font = '9px "volter"';
-            ctx.textAlign = "left";
-            ctx.fillText("beta v"+VERSION+" "+SUBVER,8, viewHeight-8);
+            ctx.textAlign = "center";
+            ctx.fillText("beta v"+VERSION+" "+SUBVER, ~~(viewWidth/2-2), 106);
             ctx.fillStyle = "white";
             ctx.textAlign = "right";
             ctx.fillText("nondefault.net",viewWidth-8, viewHeight-8);
@@ -480,7 +507,7 @@ function drawgameLevel(mode) {
                 //drawtile(tile,sx,sy);
             }
             else if (mode==1) { //border rendering
-                if (tile.solid) {
+                if (tile.depth > 0) {
                     var tl = gameLevel.getTile(x-1,y);
                     var tt = gameLevel.getTile(x,y-1);
                     var tr = gameLevel.getTile(x+1,y);
@@ -490,7 +517,10 @@ function drawgameLevel(mode) {
                     if (tl && tl.id != tile.id) {ctx.drawImage(imgBorderLeft, sx-offset, sy-offset);}
                     if (tt && tt.id != tile.id) {ctx.drawImage(imgBorderTop, sx-offset, sy-offset);}
                     if (tr && tr.id != tile.id) {ctx.drawImage(imgBorderRight, sx-offset, sy-offset);}
-                    if (tb && tb.id != tile.id) {ctx.drawImage(imgBorderBottom, sx-offset, sy-offset);}
+                    if (tb && tb.id != tile.id) {
+                        var img = tile.hasFront?tile.front:imgBorderBottom;
+                        if (tile.hasFront) ctx.drawImage(img, sx, sy+tileHeight);
+                    }
                 }
 
                 if (tile.depth==1) {
@@ -586,7 +616,7 @@ function colLevel(col,min,max) {
 }
 
 function strokeEllipse(ctx, x, y, w, h) {
-    var kappa = .5522848,
+    var kappa = 0.5522848,
     ox = (w / 2) * kappa, // control point offset horizontal
     oy = (h / 2) * kappa, // control point offset vertical
     xe = x + w,           // x-end

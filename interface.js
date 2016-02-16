@@ -268,6 +268,7 @@ Interface.createGUI = function() {
 	debuginfo.add(window, "showDebug");
 	debuginfo.add(window, "enableShadowDebug");
 	debuginfo.add(window, "enablePathDebug");
+	debuginfo.add(window, "enableZombieDebug");
 
 	var playr = gui.addFolder("Player");
 	playr.add(player, "life").min(1).max(player.maxlife).step(1).listen();

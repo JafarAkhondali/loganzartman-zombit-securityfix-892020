@@ -126,6 +126,24 @@ Util.grandr = function(min,max) {
 	return max<=min?min:Util.grand(max-min)+min;
 };
 
+Util.modes = function(arr) {
+	var counts = {}, keys = [];
+	arr.forEach(function(el){
+		var key = el;
+		if (!(counts.hasOwnProperty(key))) {
+			counts[key] = 0;
+			keys.push(key);
+		}
+		counts[key]++;
+	});
+	var max = keys.reduce(function(max, key) {
+		return counts[key] > max ? counts[key] : max;
+	}, 0);
+	return keys.filter(function(el){
+		return counts[el] === max;
+	});
+};
+
 function SmoothRandom(len) {
     this.len = len;
     this.data = [];

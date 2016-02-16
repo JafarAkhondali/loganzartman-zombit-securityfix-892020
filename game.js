@@ -33,8 +33,8 @@ var filterStrength = 10, fpsSampleSize = 20, fpsSampleTimer = 0;
 var frameTime = 0, lastLoop = new Date(), thisLoop;
 var fps = targetFPS;
 
-var VERSION = 135;
-var SUBVER = "oblong edition";
+var VERSION = 136;
+var SUBVER = "rubber duck debugged";
 
 particlesEnabled = true; //duh
 

@@ -1,16 +1,7 @@
-EMPTY=0, FLOOR=1, WALL=2, PLANT=3, GRASS=4, WOODFLOOR=5, ASPHALT=6, ASPHALT_LINE=7, SHELVES=8, SIDEWALK=9, TILEFLOOR=10;
-NUM_TILES = 11;
+EMPTY=0, FLOOR=1, WALL=2, PLANT=3, GRASS=4, WOODFLOOR=5, ASPHALT=6, ASPHALT_LINE=7, SHELVES=8, SIDEWALK=9, TILEFLOOR=10, BRICKWALL = 11, WOODCOUNTER = 12, SHRUB = 13;
+NUM_TILES = 14;
 
 BORDER_MAP = {};
-// BORDER_MAP[EMPTY] = [];
-// BORDER_MAP[FLOOR] = [GRASS, ASPHALT];
-// BORDER_MAP[WALL] = [];
-// BORDER_MAP[PLANT] = [];
-// BORDER_MAP[GRASS] = [];
-// BORDER_MAP[WOODFLOOR] = [FLOOR, GRASS];
-// BORDER_MAP[ASPHALT] = [GRASS];
-// BORDER_MAP[ASPHALT_LINE] = BORDER_MAP[ASPHALT];
-// BORDER_MAP[SHELVES] = [];
 
 NATURAL_LIST = {};
 NATURAL_LIST[FLOOR] = 25;
@@ -35,6 +26,13 @@ var TILE_LIST = [], TILE_MAP = {};
 	Util.loadJSON("tiles/tiles.json", function(data){
 		tileWidth = tileHeight = data.size;
 		for (var i=0; i<data.tiles.length; i++) {
+			data.tiles[i].hasFront = false;
+			if (typeof data.tiles[i].front !== "undefined") {
+				var url = data.tiles[i].front;
+				data.tiles[i].front = new Image();
+				data.tiles[i].front.src = "tiles/"+url;
+				data.tiles[i].hasFront = true;
+			}
 			TILE_LIST[i] = data.tiles[i];
 			data.tiles[i].id = i;
 			TILE_MAP[data.tiles[i].name] = TILE_LIST[i];
@@ -68,6 +66,11 @@ Tile = function(id,x,y) {
 	this.solid = TILE_LIST[this.id].solid;
 	this.depth = TILE_LIST[this.id].depth;
 	this.sound = TILE_SOUNDS[this.id]===null?null:sndStep[TILE_SOUNDS[this.id]];
+	this.hasFront = TILE_LIST[this.id].hasFront;
+	if (this.hasFront) {
+		this.front = TILE_LIST[this.id].front;
+	}
+	this.hasBack = typeof TILE_LIST[this.id].back !== "undefined";
 	//implement solid
 };
 

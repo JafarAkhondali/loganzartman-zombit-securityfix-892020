@@ -68,8 +68,24 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
     for (xo=0; xo<this.size; xo++) {
         for (yo=0; yo<this.size; yo++) {
             tile = this.level.getTile(x*this.size+xo, y*this.size+yo);
-            if (tile !== null && tile.depth === 0)
+            if (tile !== null && tile.depth <= 1) {
+                if (tile.hasBack) {
+                    var neighbors = [
+                        this.level.getTile(tile.x - 1, tile.y),
+                        this.level.getTile(tile.x + 1, tile.y),
+                        this.level.getTile(tile.x, tile.y - 1),
+                        this.level.getTile(tile.x, tile.y + 1),
+                        {depth: 0, id: 0}
+                    ];
+                    var candidates = Util.modes(neighbors.filter(function(n){
+                        return n.depth === 0;
+                    }).map(function(n){
+                        return n === null ? 0 : n.id;
+                    }));
+                    ctx.drawImage(tileImage(candidates[0]), xo*tileWidth, yo*tileHeight);
+                }
                 ctx.drawImage(tileImage(tile.id), xo*tileWidth, yo*tileHeight);
+            }
         }
     }
 

@@ -143,6 +143,13 @@ Entity = klass(function (x,y,noreg) {
 			   a.y1 < b.y2 && a.y2 > b.y1;
 	},
 
+	isOnScreen: function() {
+		return this.x+this.width/2 >= viewX &&
+		       this.y+this.height/2 >= viewY &&
+			   this.x-this.width/2 <= viewX+viewWidth &&
+			   this.y-this.height/2 <= viewY+viewHeight;
+	},
+
 	distanceTo: function(other) {
 		if (other.x && other.y) {
 			var dx = other.x-this.x,

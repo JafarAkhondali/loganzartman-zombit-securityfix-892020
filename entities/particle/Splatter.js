@@ -29,6 +29,6 @@ Splatter = Particle.extend(function(x,y,xs,ys,zs){
 	},
 	destroy: function() {
 		this.supr();
-		new BloodSplat(this.x, this.y, 0, 0);
+		new BloodSplat(this.x, this.y, 0, 0, Util.randr(0.1,0.4));
 	}
 });

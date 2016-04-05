@@ -53,7 +53,7 @@ var particles = [];
 var Shake = {
     rx: null,
     ry: null,
-    magnitude: 120,
+    magnitude: 60,
     out: {
         x: 0,
         y: 0
@@ -120,7 +120,7 @@ function render() {
                 var ent = entityManager.get(ec);
                 if (ent instanceof Entity) {
                     if (ent.x>viewX && ent.x<viewX+viewWidth && ent.y>viewY && ent.y<viewY+viewHeight) {
-                        ent.render(ent.x-viewX,ent.y-viewY);
+                        ent.render(~~(ent.x-viewX),~~(ent.y-viewY));
                     }
                 }
             }
@@ -193,12 +193,13 @@ function render() {
             ctx.font = '13px "volter"';
             ctx.textAlign = 'center';
             ctx.fillStyle = outrunPalette[2].toRGBString();
-            ctx.fillText("TAKE: $"+("000000" + gameCash).slice(-6),Math.min(scoreX+60, viewWidth/2),24);
+            var cashstr = ("000000" + gameCash).slice(-6);
+            ctx.fillText("TAKE: $"+cashstr.substring(0,3)+","+cashstr.substring(3),Math.min(scoreX+60, viewWidth/2),24);
             ctx.textAlign = 'left';
 
             //health effects
             //calculate blurriness
-            frameBlend = Math.min(defaultFrameBlend,Util.xexp((player.life/player.maxlife),defaultFrameBlend)+minFrameBlend);
+            if (player.active) frameBlend = Math.min(defaultFrameBlend,Util.xexp((player.life/player.maxlife),defaultFrameBlend)+minFrameBlend);
             //draw blood overlay
             var mult = player.life/player.maxlife, scaleAmt = 80;
             ctx.globalAlpha = 1-Util.xexp(mult,1);
@@ -246,9 +247,10 @@ function render() {
                 ctx.fillText("FPS: "+(fpsDisplayValue.toFixed(1)),4.5,16);
                 ctx.fillText("Delta: "+(tdelta.toFixed(2)),4.5,16+h);
                 ctx.fillText("Facing: "+(player.facing.toFixed(1)),4.5,16+2*h);
+                ctx.fillText("Cursor: "+Math.round(mouseX+viewX)+", "+Math.round(mouseY+viewY),4.5,16+3*h);
                 var i=0;
                 for (var key in entityManager.count) {
-                    ctx.fillText("#"+key+": "+entityManager.count[key],4.5,16+3*h+h*(i++));
+                    ctx.fillText("#"+key+": "+entityManager.count[key],4.5,16+4*h+h*(i++));
                 }
             }
 
@@ -660,8 +662,8 @@ function updateFxBuffer() {
         var dx = viewX - _fxb_lx,
             dy = viewY - _fxb_ly;
 
-        var movx = Math.round(dx),
-            movy = Math.round(dy);
+        var movx = Math.floor(dx),
+            movy = Math.floor(dy);
 
         _fxb_ctx.clearRect(0,0,_fxb_canvas.width,_fxb_canvas.height); //clear buffer
         _fxb_ctx.drawImage(fxbuffer,0,0); //store display data in buffer

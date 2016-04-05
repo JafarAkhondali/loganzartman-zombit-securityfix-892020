@@ -21,6 +21,16 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 		this.time+=dlt;
 		this.xp=this.x;
 		this.yp=this.y;
+
+		if (this.xp !== null)
+		for (var i=0,j=3; i<j; i++) {
+			var rnd = Math.random(),
+				dx = (i/j+rnd)*this.xs,
+				dy = (i/j+rnd)*this.ys;
+			var spk = new Spark(this.x-dx, this.y-dy, Util.randr(-0.3,0.3), Util.randr(-0.3,0.3), this.col1, Util.irandr(1,4));
+			spk.gravity = 0;
+		}
+
 		this.supr(dlt);
 		if (Math.abs(this.xs)+Math.abs(this.ys)<3) {this.destroy();}
 	},
@@ -57,11 +67,11 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 	},
 	render: function(x,y) {
 		if (this.light==null) {
-			this.light = new EntityLight(this,"rgba("+this.col1+",1)",40,1.0);
+			this.light = new EntityLight(this,"rgba("+this.col2+",1)",120,0.33);
 			registerLight(this.light);
 
-			this.light2 = new EntityLight(this,"rgba("+this.col2+",1)",120,0.6);
-			registerLight(this.light2);
+			// this.light2 = new EntityLight(this,"rgba("+this.col2+",1)",240,0.33);
+			// registerLight(this.light2);
 		}
 
 		if (this.xp!=null) {
@@ -81,7 +91,7 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 
 			ctx.lineCap = "butt";
 
-			ctx.lineWidth = 4.5+5*timer*timer;
+			ctx.lineWidth = 2.5;
 
 			var xs = this.xs * (1+timer*0.1),
 				ys = this.ys * (1+timer*0.1);
@@ -92,7 +102,7 @@ Bullet = Projectile.extend(function(x,y,damage,sender){
 			ctx.lineTo(x,y);
 			ctx.stroke();
 
-			ctx.lineWidth = 1+1*timer*timer;
+			ctx.lineWidth = 1;
 			ctx.strokeStyle = grad0;
 			ctx.beginPath();
 			ctx.moveTo(x-xs, y-ys);

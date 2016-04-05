@@ -98,21 +98,21 @@ processStep = function(tdelta) {
 		playerPathfinder.recalculate();
 
 		//process entities
-		for (var ec in entityManager.entities) {
+		for (var ec=0, ecm=entityManager.entities.length; ec<ecm; ec++) {
 			var ent = entityManager.get(ec);
 			if (ent instanceof Entity) {ent.step(tdelta);}
 		}
 
 		//process particles
 		if (mpMode==CLIENT) {
-			for (var ec = 0; ec<particles.length; ec++) {
-		    	var prt = particles[ec];
+			for (var pc=0, pcm=particles.length; pc<pcm; pc++) {
+		    	var prt = particles[pc];
 				if (prt instanceof Particle) {prt.step(tdelta);}
 			}
 		}
 
 		//process items (gun timers, etc)
-		for (var ic = 0; ic<items.length; ic++) {
+		for (var ic=0, icm=items.length; ic<icm; ic++) {
 	    	ite = items[ic];
 			if (ite instanceof Item) {ite.step(tdelta);}
 		}

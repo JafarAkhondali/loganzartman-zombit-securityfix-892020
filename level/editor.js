@@ -262,7 +262,7 @@ var Editor = {
         catch (e) {}
         gameLevel = LevelFactory.makeEmptyRoom(w, h);
         // cleanupGame();
-        startGame(true, function(){});
+        startGame(true, startGameFinal);
         lightArray = [];
     }
 };

@@ -72,7 +72,7 @@ Gun = Weapon.extend(function(clipsize,ammo,delay,damage,spread,spd,user) {
 				for (var i=0; i<this.shot; i++) {
 					blt = this.bullet();
 				}
-				if (blt) Shake.shake(blt.damage / 100);
+				if (blt && blt.damage) Shake.shake(blt.damage / 100);
 				//console.log("Fired! Ammo: "+this.ammo);
 
 				this.timer=this.delay;

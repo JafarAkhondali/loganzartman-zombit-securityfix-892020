@@ -309,6 +309,7 @@ include("entities/particle/Particle.js");
 include("entities/particle/BloodSplat.js");
 include("entities/particle/Splatter.js");
 include("entities/particle/Spark.js");
+include("entities/particle/BulletSpark.js");
 include("entities/particle/FloatingText.js");
 include("entities/projectile/Projectile.js");
 include("entities/projectile/Bullet.js");

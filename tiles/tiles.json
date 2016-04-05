@@ -15,6 +15,7 @@
 		{
 			"name": "wall",
 			"solid": true,
+			"front": "2_front.png",
 			"depth": 2
 		},
 		{
@@ -81,7 +82,7 @@
 			"front": "12_front.png",
 			"back": true,
 			"solid": true,
-			"depth": 0
+			"depth": 1
 		},
 		{
 			"name": "shrub",

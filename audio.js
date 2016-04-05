@@ -23,7 +23,7 @@ function loadAudio() {
 	sndHit = loadSoundFile("res/sound/hit",2,0.8);
 	sndKill = loadSoundFile("res/sound/kill",4,0.7);
 	sndGun1 = loadSoundFile("res/sound/gun1",4,0.4);
-	sndGun2 = loadSoundFile("res/sound/gun2",4,0.4);
+	sndGun2 = loadSoundFile("res/sound/gun2",4,0.8);
 	sndGun3 = loadSoundFile("res/sound/gun3",4,0.4);
 	//sndGun4 = loadSoundFile("res/sound/gun4",4,0.8);
 	sndFootstep = loadSoundFile("res/sound/footstep",4,0.2);
@@ -37,13 +37,13 @@ function loadAudio() {
 	sndStep[6] = loadSoundFile("res/sound/step_6",2,0.5);
 
 	gunSounds.ar.push([
-		loadSoundFile("res/sound/AR_1_1",4,0.3),
-		loadSoundFile("res/sound/AR_1_2",4,0.3)
+		loadSoundFile("res/sound/AR_1_1",4,0.8),
+		loadSoundFile("res/sound/AR_1_2",4,0.8)
 	]);
 
 	gunSounds.ar.push([
-		loadSoundFile("res/sound/AR_2_1",4,0.5),
-		loadSoundFile("res/sound/AR_2_2",4,0.5)
+		loadSoundFile("res/sound/AR_2_1",4,0.8),
+		loadSoundFile("res/sound/AR_2_2",4,0.8)
 	]);
 
 	for (var i=0; i<4; i++) {
@@ -82,8 +82,8 @@ function loadSoundFile(src,nchannels,vol) {
 	    source.type= 'audio/mpeg';
 	    source.src= src+'.mp3';
 	} else {
-	    source.type= 'audio/ogg';
-	    source.src= src+'.ogg';
+	    source.type= 'audio/wav';
+	    source.src= src+'.wav';
 	}
 	au.appendChild(source);
 

@@ -223,7 +223,7 @@ Entity = klass(function (x,y,noreg) {
 	},
 
 	collideEntity: function(ent) {
-		console.log("coll");
+		// console.log("coll");
 	},
 
 	getNearby: function(range) {

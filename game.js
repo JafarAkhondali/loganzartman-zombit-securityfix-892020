@@ -96,41 +96,43 @@ function restartGame(levelPath) {
 	LevelFactory.fromFile(levelPath, function(level){
 		if (level) {
 			gameLevel = level;
-			startGame(true, function(){
-				//set up some light
-				var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",250,0.8);
-				pLight = new SpecialLightContainer(pLight);
-				pLight.drawLight = function(dest,x,y,brightness,mode) {
-					dest.save();
-					dest.globalAlpha = brightness*mode===0?0.7:0;
-					dest.translate(x,y);
-					dest.rotate(player.facing-Math.PI);
-					dest.translate(-(x+imgFlashlightBeam.width),-(y+imgFlashlightBeam.height/2));
-					dest.drawImage(imgFlashlightBeam,x,y);
-					dest.restore();
-				};
-				registerLight(pLight);
-
-				sndCarStop.play();
-
-				var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",200,0.15);
-				rLight.getX = function(){return player.x;};
-				rLight.getY = function(){return player.y;};
-				registerLight(rLight);
-
-				var centerLight = new StaticLight(player.x, player.y, "rgba(170,160,240,0.8)", 600, 1);
-				registerLight(centerLight);
-
-				dmode = GAME;
-				gamePaused = false;
-				if (typeof gui === "undefined") {Interface.createGUI();}
-				gameTime = 0;
-			});
+			startGame(true, startGameFinal);
 		}
 		else {
 			throw new Error("LEVEL FAILED TO LOAD");
 		}
 	});
+}
+
+function startGameFinal() {
+	//set up some light
+	var pLight = new EntityLight(player,"rgba(200,150,110,0.5)",250,0.8);
+	pLight = new SpecialLightContainer(pLight);
+	pLight.drawLight = function(dest,x,y,brightness,mode) {
+		dest.save();
+		dest.globalAlpha = brightness*mode===0?0.7:0;
+		dest.translate(x,y);
+		dest.rotate(player.facing-Math.PI);
+		dest.translate(-(x+imgFlashlightBeam.width),-(y+imgFlashlightBeam.height/2));
+		dest.drawImage(imgFlashlightBeam,x,y);
+		dest.restore();
+	};
+	registerLight(pLight);
+
+	sndCarStop.play();
+
+	var rLight = new StaticLight(mouseX,mouseY,"rgba(200,180,110,0.5)",200,0.15);
+	rLight.getX = function(){return player.x;};
+	rLight.getY = function(){return player.y;};
+	registerLight(rLight);
+
+	var centerLight = new StaticLight(player.x, player.y, "rgba(170,160,240,0.8)", 600, 1);
+	registerLight(centerLight);
+
+	dmode = GAME;
+	gamePaused = false;
+	if (typeof gui === "undefined") {Interface.createGUI();}
+	gameTime = 0;
 }
 
 function endGame() {
@@ -244,8 +246,8 @@ function reinitCanvases() {
 
 	//create blood/fx buffer
 	fxbuffer = document.createElement("canvas");
-	fxbuffer.width = viewWidth;
-	fxbuffer.height = viewHeight;
+	fxbuffer.width = viewWidth*2;
+	fxbuffer.height = viewHeight*2;
 	fxctx = fxbuffer.getContext("2d"); //buffer context
 
 	//suggest to browsers not to antialias

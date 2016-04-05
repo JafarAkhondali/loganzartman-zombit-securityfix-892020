@@ -18,6 +18,9 @@ Player = Entity.extend(function(x,y,name,owner){
 
 	this.footstepInterval = 40;
 	this.footstepTimer = 0;
+	this.viewControl = 1.0;
+	this.mOffsetX = 0;
+	this.mOffsetY = 0;
 })
 .methods({
 	step: function(dlt) {
@@ -35,16 +38,16 @@ Player = Entity.extend(function(x,y,name,owner){
 
 		//move view to player
 		if (mpMode==CLIENT) {
-			var mOffsetX = Editor.enabled?0:(mouseX-viewWidth/2)*viewRange;
-			var mOffsetY = Editor.enabled?0:(mouseY-viewHeight/2)*viewRange;
-			viewTargetX = (viewTargetX*3+(~~(this.x-viewWidth/2+mOffsetX)))/4;
-			viewTargetY = (viewTargetY*3+(~~(this.y-viewHeight/2+mOffsetY)))/4;
+			this.mOffsetX += (Editor.enabled?0:(mouseX-viewWidth/2)*viewRange - this.mOffsetX) * Math.max(0.05,this.viewControl);
+			this.mOffsetY += (Editor.enabled?0:(mouseY-viewHeight/2)*viewRange - this.mOffsetY) * Math.max(0.05,this.viewControl);
+			viewTargetX += ((~~(this.x-viewWidth/2+this.mOffsetX))-viewTargetX)/4;
+			viewTargetY += ((~~(this.y-viewHeight/2+this.mOffsetY))-viewTargetY)/4;
 
 			//clip view pos
-			if (viewTargetX<0) {viewTargetX=0;}
-			if (viewTargetX>gameLevel.getWidth()*tileWidth-viewWidth) {viewTargetX = gameLevel.getWidth()*tileWidth-viewWidth;}
-			if (viewTargetY<0) {viewTargetY=0;}
-			if (viewTargetY>gameLevel.getHeight()*tileHeight-viewHeight) {viewTargetY = gameLevel.getHeight()*tileHeight-viewHeight;}
+			// if (viewTargetX<0) {viewTargetX=0;}
+			// if (viewTargetX>gameLevel.getWidth()*tileWidth-viewWidth) {viewTargetX = gameLevel.getWidth()*tileWidth-viewWidth;}
+			// if (viewTargetY<0) {viewTargetY=0;}
+			// if (viewTargetY>gameLevel.getHeight()*tileHeight-viewHeight) {viewTargetY = gameLevel.getHeight()*tileHeight-viewHeight;}
 		}
 
 		//heal player
@@ -144,6 +147,13 @@ Player = Entity.extend(function(x,y,name,owner){
 			if (item instanceof Weapon) {
 				item.fire();
 			}
+		}
+
+		if (this.owner.mouseLeft) {
+			this.viewControl = Math.max(0, this.viewControl-0.05);
+		}
+		else {
+			this.viewControl = Math.min(1, this.viewControl+0.05);
 		}
 
 		if (this.owner.scrolltotal!=0) {

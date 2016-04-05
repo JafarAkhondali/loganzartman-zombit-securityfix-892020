@@ -1,10 +1,11 @@
-Spark = Particle.extend(function(x,y,xs,ys,col) {
+Spark = Particle.extend(function(x,y,xs,ys,col,life) {
 	this.col = col;
 	this.x = x;
 	this.y = y;
 	this.xs = xs;
 	this.ys = ys;
-	this.maxlife = Util.grandr(2,5);
+	if (typeof life === "undefined") life = Util.grandr(2,5);
+	this.maxlife = life;
 	this.life = this.maxlife;
 
 	this.friction = 0.4;

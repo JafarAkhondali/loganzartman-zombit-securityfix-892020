@@ -12,6 +12,7 @@ Particle = klass(function(x,y,xs,ys,life) {
 	this.gravity = 0;
 
 	this.type = PARTICLE;
+	entityManager.countEntity(this);
 })
 .methods({
 	step: function(dlt) {
@@ -32,6 +33,9 @@ Particle = klass(function(x,y,xs,ys,life) {
 		//shift index of other items
 		for (var i=this.arrIndex; i<particles.length; i++) {
 			particles[i].arrIndex-=1;
+		}
+		if (this._counted) {
+			entityManager.count[this.type]--;
 		}
 	},
 });

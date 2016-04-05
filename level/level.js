@@ -102,6 +102,7 @@ include("level/items/weapons/gun/AssaultRifle.js");
 include("level/items/weapons/gun/Gauss.js");
 include("level/items/weapons/gun/GlowstickGun.js");
 include("level/items/weapons/gun/Gun.js");
+include("level/items/weapons/gun/AnyGun.js");
 include("level/items/weapons/gun/NyanGun.js");
 include("level/items/weapons/gun/Pistol.js");
 include("level/items/weapons/gun/RandomGun.js");

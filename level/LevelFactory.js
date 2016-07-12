@@ -124,20 +124,29 @@ var LevelFactory = {
 	},
 
 	fromFile: function(url, callback) {
-	    Util.loadJSON(url, function(data){
-			if (data) {
-				var level = LevelFactory.parseLevel(data);
-				if (data.lights) deserializeLights(data.lights);
-				callback(level);
-			}
-			else {
-				Interface.showAlert("<span style=\"color: red\">Failed to load level!</span>"+
-						  "<br>Level URL: "+url+"<br><br>Note to developers: make "+
-						  "sure you're not running using file:// in Chrome.",function(){
-					cleanupGame();
-				},500,200);
-			}
-		});
+		var loadFromData = function(data, callback) {
+			var level = LevelFactory.parseLevel(data);
+			if (data.lights) deserializeLights(data.lights);
+			callback(level);
+		};
+
+		if (url.indexOf("{") === 0) {
+			loadFromData(JSON.parse(url), callback);
+		}
+		else {
+		    Util.loadJSON(url, function(data){
+				if (data) {
+					loadFromData(data, callback);
+				}
+				else {
+					Interface.showAlert("<span style=\"color: red\">Failed to load level!</span>"+
+							  "<br>Level URL: "+url+"<br><br>Note to developers: make "+
+							  "sure you're not running using file:// in Chrome.",function(){
+						cleanupGame();
+					},500,200);
+				}
+			});
+		}
 	},
 
 	parseLevel: function(parsedJson) {

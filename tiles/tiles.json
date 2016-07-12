@@ -89,7 +89,7 @@
 			"src": "13.png",
 			"back": true,
 			"solid": true,
-			"depth": 1
+			"depth": 0
 		}
 	]
 }

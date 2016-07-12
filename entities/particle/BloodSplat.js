@@ -10,7 +10,8 @@ BloodSplat = Particle.extend(function(x,y,xs,ys,scale){
 	try {this.image = [imgBloodSplat1,imgBloodSplat2,imgBloodSplat3][Math.floor(Math.random()*3)];}
 	catch (e) {}
 
-	this.type = BLOODSPLAT;
+	this.type = PARTICLE;
+	entityManager.countEntity(this);
 })
 .methods ({
 	render: function() {

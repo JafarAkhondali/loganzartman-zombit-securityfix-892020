@@ -217,7 +217,7 @@ function render() {
                     if (ent instanceof Zombie) {
                         if (ent.isOnScreen()) {
                             ctx.lineWidth = 1;
-                            ctx.strokeStyle = ent.target === player ? "red" : "yellow";
+                            ctx.strokeStyle = "hsl("+Math.round(360*ent.aiState/AIState.length)+",100%,50%)";
                             ctx.strokeRect(
                                 ent.x - ent.width/2 - viewX,
                                 ent.y - ent.height/2 - viewY,
@@ -303,13 +303,6 @@ function render() {
                 ctx.fillText("X TO EXIT",viewWidth/2,148);
 
                 ctx.textAlign = 'left';
-            }
-
-            createNoise(noiseIntensity);
-            for (var x=0, w=~~(viewWidth/noiseWidth)+1; x<w; x++) {
-                for (var y=0, h=~~(viewHeight/noiseHeight)+1; y<h; y++) {
-                    ctx.drawImage(noiseCanvas,x*noiseWidth,y*noiseHeight);
-                }
             }
 
             if (gameTime < FADE_IN_TIME + SCREEN_BLACK_TIME) {
@@ -448,7 +441,7 @@ function render() {
             ctx.fillStyle = Color.gradientMix(textPalette, (gameTime)*0.006, true);
             ctx.font = '9px "volter"';
             ctx.textAlign = "center";
-            ctx.fillText("beta v"+VERSION+" "+SUBVER, ~~(viewWidth/2-2), 106);
+            ctx.fillText("beta v"+VERSION+" "+SUBVER, ~~(viewWidth/2-2)-0.5, 106);
             ctx.fillStyle = "white";
             ctx.textAlign = "right";
             ctx.fillText("nondefault.net",viewWidth-8, viewHeight-8);
@@ -488,10 +481,10 @@ function drawgameLevel(mode) {
         initialY = ~~(viewY/tileHeight),
         finalX = ~~((viewX+viewWidth)/tileWidth)+1,
         finalY = ~~((viewY+viewHeight)/tileHeight)+1;
-    if (initialX < 0) initialX = 0;
-    if (initialY < 0) initialY = 0;
-    if (finalX >= gameLevel.getWidth()) finalX = gameLevel.getWidth();
-    if (finalY >= gameLevel.getHeight()) finalY = gameLevel.getHeight();
+    // if (initialX < 0) initialX = 0;
+    // if (initialY < 0) initialY = 0;
+    // if (finalX >= gameLevel.getWidth()) finalX = gameLevel.getWidth();
+    // if (finalY >= gameLevel.getHeight()) finalY = gameLevel.getHeight();
     if (mode === 0) { //correct drawing bounds for chunks
         initialX -= initialX%chunkSize;
         initialY -= initialY%chunkSize;
@@ -508,7 +501,7 @@ function drawgameLevel(mode) {
                 ctx.drawImage(gameLevel.cache.getChunk(x,y), sx, sy);
                 //drawtile(tile,sx,sy);
             }
-            else if (mode==1) { //border rendering
+            else if (mode===1) { //border rendering
                 if (tile.depth > 0) {
                     var tl = gameLevel.getTile(x-1,y);
                     var tt = gameLevel.getTile(x,y-1);
@@ -525,12 +518,12 @@ function drawgameLevel(mode) {
                     }
                 }
 
-                if (tile.depth==1) {
+                if (tile.depth===1) {
                     drawtile(tile,sx,sy);
                 }
             }
-            else if (mode==2) {
-                if (tile.depth==2) {
+            else if (mode===2) {
+                if (tile.depth===2) {
                     solidRenderedBlocks.push(tile);
                     drawtile(tile,sx,sy);
                 }
@@ -546,7 +539,7 @@ function drawgameLevel(mode) {
                     }
                 }
             }
-            else if (mode==3) { //shadow rendering
+            else if (mode===3) { //shadow rendering
                 var tile = gameLevel.getTile(x,y); //get the tile at this position
                 if (tile.solid) {
                     var tl = gameLevel.getTile(x-1,y);
@@ -639,8 +632,8 @@ function strokeEllipse(ctx, x, y, w, h) {
 function createNoise(intensity) {
     var data = noiseData.data;
     for (var i=0; i<noiseWidth*noiseHeight*4; i+=4) {
-        data[i+2] = data[i+1] = data[i] = 0;
-        data[i+3] = Util.ifrand(intensity);
+        data[i+2] = data[i+1] = data[i] = 255 - Util.ifrand(intensity);
+        data[i+3] = 255;
     }
     noiseCtx.putImageData(noiseData,0,0);
 }

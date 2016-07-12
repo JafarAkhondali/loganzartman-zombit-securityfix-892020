@@ -12,7 +12,6 @@ Particle = klass(function(x,y,xs,ys,life) {
 	this.gravity = 0;
 
 	this.type = PARTICLE;
-	entityManager.countEntity(this);
 })
 .methods({
 	step: function(dlt) {

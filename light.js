@@ -124,7 +124,6 @@ function drawAllLights(dest,gbrightness,mode) {
 
 function renderLight2() {
 	if (enableLightRendering) {
-		//first composite: subtract opacity from lit areas of view
 		var newmode = false;
 		lictx.globalCompositeOperation = newmode?"lighter":"screen";
 		drawAllLights(lictx,newmode?0.5:1,0);
@@ -141,7 +140,19 @@ function renderLight2() {
 		if (enableSoftShadows) lictx.drawImage(gradientbuffer,0,0,gradientbuffer.width*2,gradientbuffer.height*2);
 		else lictx.drawImage(gradientbuffer, 0, 0);
 	}
-	if (false && enableLightRendering || enableShadowCasting) {
+	if (enableLightRendering || enableShadowCasting) {
+		// clearCanvas(grctx,"black");
+		// createNoise(20);
+		// for (var x=0, w=~~(viewWidth/noiseWidth)+1; x<w; x++) {
+		// 	for (var y=0, h=~~(viewHeight/noiseHeight)+1; y<h; y++) {
+		// 		grctx.drawImage(noiseCanvas,x*noiseWidth,y*noiseHeight);
+		// 	}
+		// }
+		// grctx.globalCompositeOperation = "lighter";
+		// grctx.drawImage(lightbuffer, 0, 0);
+		// lictx.globalCompositeOperation = "source-over";
+		// lictx.drawImage(gradientbuffer, 0, 0);
+
 		compositeLight(ctx,newmode?"hard-light":"multiply");
 
 		lictx.globalCompositeOperation = "source-over";

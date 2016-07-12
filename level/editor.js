@@ -36,6 +36,7 @@ var Editor = {
         Editor.gui.add(Editor, "editLights");
         Editor.gui.add(Editor, "exportLevel");
         Editor.gui.add(Editor, "loadLevel");
+        Editor.gui.add(Editor, "loadLocal");
         Editor.gui.add(Editor, "generateBlankLevel");
         var ls = Editor.gui.addFolder("Light settings");
         ls.addColor(Editor.lightProps, "col");
@@ -248,9 +249,27 @@ var Editor = {
     },
 
     loadLevel: function() {
-        var path = prompt("Level path:", "level/test.json");
-        cleanupGame();
-        restartGame(path);
+        var path = prompt("Level filename:", "test.json");
+        if (path) {
+            cleanupGame();
+            restartGame("level/"+path);
+        }
+    },
+
+    loadLocal: function() {
+        // var path = prompt("Level path:", "level/test.json");
+        var input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.addEventListener("change", function(event){
+            var reader = new FileReader();
+    		reader.onload = function(e) {
+    			// get loaded data and restart
+                cleanupGame();
+                restartGame(e.target.result);
+    		};
+    		reader.readAsText(this.files[0]);
+        }, false);
+        input.click();
     },
 
     generateBlankLevel: function() {

@@ -1,26 +1,29 @@
 Level = function(levelData) {
 	this.data = levelData;
 	cacheShadowPoints(this);
-}
-Level.prototype.getWidth = function(){return this.data.length;}
-Level.prototype.getHeight = function(){return this.data[0].length;}
+};
+Level.prototype.getWidth = function(){return this.data.length;};
+Level.prototype.getHeight = function(){return this.data[0].length;};
 Level.prototype.getTile = function(x,y) {
-	return this.data[x<0?0:x>this.getWidth()-1?this.getWidth()-1:x][y<0?0:y>this.getHeight()-1?this.getHeight()-1:y];
-}
+	if (x < 0 || x > this.getWidth()-1 || y < 0 || y > this.getHeight()-1) {
+		return 0;
+	}
+	return this.data[x][y];
+};
 Level.prototype.setTile = function(tile,x,y) {
 	this.data[x][y] = tile;
-}
+};
 Level.prototype.chunkSet = function(chunk) {
 	for (var x=chunk.x; x<chunk.x+chunk.w; x++) {
 		for (var y=chunk.y; y<chunk.y+chunk.h; y++) {
 			this.setTile(chunk.tiles[x-chunk.x][y-chunk.y],x,y);
 		}
 	}
-}
+};
 Level.prototype.getChunk = function(x,y,w,h) {
-	var chunk = new Array();
+	var chunk = [];
 	for (var i=0; i<w; i++) {
-		chunk[i] = new Array();
+		chunk[i] = [];
 		for (var j=0; j<h; j++) {
 			chunk[i][j] = null;
 		}
@@ -31,7 +34,7 @@ Level.prototype.getChunk = function(x,y,w,h) {
 		}
 	}
 	return new Chunk(x,y,chunk);
-}
+};
 Level.prototype.getTilesOfTypes = function(types) {
 	var stack = [];
 	for (var x=0; x<this.getWidth(); x++) {
@@ -43,21 +46,7 @@ Level.prototype.getTilesOfTypes = function(types) {
 		}
 	}
 	return stack;
-}
-
-chunkSize = 5;
-Chunk = klass(function (x,y,tiles){
-	this.x = x;
-	this.y = y;
-	this.tiles = tiles;
-	this.w = tiles.length;
-	this.h = tiles[0].length;
-})
-.methods ({
-	getTile: function(x,y) {
-		return tiles[x-this.x][y-this.y];
-	}
-});
+};
 
 include("level/LevelFactory.js");
 include("level/Inventory.js");
@@ -114,6 +103,6 @@ include("level/items/weapons/melee/ZombieAttack.js");
 include("level/items/weapons/gun/ZombieGun.js");
 
 constructItem = function(id) {
-	try {return new itemIdMap[id];}
+	try {return new itemIdMap[id]();}
 	catch (e) {console.log("Bad item ID: "+id); return null;}
-}
+};

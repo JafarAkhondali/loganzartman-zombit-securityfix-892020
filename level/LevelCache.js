@@ -10,6 +10,7 @@ LevelCache = function(level, chunksize, progressCallback, finishedCallback) {
     this._c = 0;
     this._recache_lock = false;
     this.arr = [[]];
+    this.BLANK_CHUNK = this.drawBlankChunk(GRASS);
     this.recache(progressCallback, finishedCallback);
 };
 LevelCache.EXPERIMENTALS = true;
@@ -60,6 +61,20 @@ LevelCache.prototype.makeChunk = function(x,y) {
     img.width = tileWidth * this.size;
     img.height = tileHeight * this.size;
     this.drawChunk(img,x,y);
+    return img;
+};
+LevelCache.prototype.drawBlankChunk = function(type) {
+    var ltemp = this.level;
+    var data = [];
+    for (var i=0; i<this.size; i++) {
+        data[i] = [];
+        for (var j=0; j<this.size; j++) {
+            data[i][j] = type;
+        }
+    }
+    this.level = new Level(data);
+    var img = this.makeChunk(0,0);
+    this.level = ltemp;
     return img;
 };
 LevelCache.prototype.drawChunk = function(canvas,x,y) {
@@ -241,5 +256,8 @@ LevelCache.prototype.drawChunk = function(canvas,x,y) {
 LevelCache.prototype.getChunk = function (tx, ty) {
     var x = tx / this.size,
         y = ty / this.size;
-    return this.arr[~~x][~~y];
+    if (x >= 0 && y >= 0 && x <= this.width-1 && y <= this.height-1) {
+        return this.arr[~~x][~~y];
+    }
+    return this.BLANK_CHUNK;
 };

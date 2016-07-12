@@ -33,8 +33,8 @@ var filterStrength = 10, fpsSampleSize = 20, fpsSampleTimer = 0;
 var frameTime = 0, lastLoop = new Date(), thisLoop;
 var fps = targetFPS;
 
-var VERSION = 136;
-var SUBVER = "rubber duck debugged";
+var VERSION = 137;
+var SUBVER = "close quarters";
 
 particlesEnabled = true; //duh
 
@@ -92,7 +92,7 @@ function init() {
 
 var mfLight;
 function restartGame(levelPath) {
-	if (typeof levelPath === "undefined") levelPath = "level/l0.json";
+	if (typeof levelPath === "undefined") levelPath = "level/cqc.json";
 	LevelFactory.fromFile(levelPath, function(level){
 		if (level) {
 			gameLevel = level;
@@ -281,12 +281,6 @@ var imgOverlay, imgEntityGeneric, imgPlayer;
 //no idea why this exists
 function tileImage(id) {
 	return images[id];
-}
-
-//delta function.  use to make fps scalable
-function d(s) {
-	return s;  //LIES
-	//return (60/fps)*s;
 }
 
 var tdelta = 1;

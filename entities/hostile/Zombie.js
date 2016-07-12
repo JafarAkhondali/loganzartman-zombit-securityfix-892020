@@ -32,6 +32,21 @@ Zombie = Hostile.extend(function(x,y,vr){
 		this.xs = this.xs*0.8+0.2*this.txs;
 		this.ys = this.ys*0.8+0.2*this.tys;
 
+		// var nearby = this.getNearby();
+		// for (var i=nearby.length-1; i>=0; i--) {
+		// 	var zombie = nearby[i];
+		// 	if (zombie instanceof Zombie && zombie !== this) {
+		// 		var dx = zombie.x - this.x,
+		// 			dy = zombie.y - this.y,
+		// 			dist = Math.sqrt(dx*dx+dy*dy),
+		// 			dir = Math.atan2(dy, dx);
+		// 		if (dist < 80) {
+		// 			zombie.x += ((80-dist) / dist)*Math.sin(dir);
+		// 			zombie.y += ((80-dist) / dist)*Math.cos(dir);
+		// 		}
+		// 	}
+		// }
+
 		if (this.target !== player) {
 			//randumbly wander if no target
 			if (Math.random()<0.01) {

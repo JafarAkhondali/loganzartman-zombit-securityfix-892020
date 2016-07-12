@@ -13,7 +13,8 @@ Splatter = Particle.extend(function(x,y,xs,ys,zs){
 
 	this.depth = -1;
 
-	this.type = BLOODSPLAT;
+	this.type = PARTICLE;
+	entityManager.countEntity(this);
 })
 .methods ({
 	step: function(dlt) {

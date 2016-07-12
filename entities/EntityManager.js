@@ -108,9 +108,10 @@ EntityManager.prototype.getNearby = function(entity, range) {
 	if (range === 0) return this.grid[pos.x][pos.y] || [];
 	else {
 		var list = [];
-		for (var xo = -range; xo <= range && pos.x+xo < this.grid.length && pos.x+xo >= 0; xo++) {
-			for (var yo = -range; yo <= range && pos.y+yo < this.grid[0].length && pos.y+yo >= 0; yo++) {
-				list.push.apply(list, this.grid[pos.x+xo][pos.y+yo]);
+		for (var xo = -range; xo <= range; xo++) {
+			for (var yo = -range; yo <= range; yo++) {
+				if (pos.x+xo < this.grid.length && pos.x+xo >= 0 && pos.y+yo < this.grid[0].length && pos.y+yo >= 0)
+					list.push.apply(list, this.grid[pos.x+xo][pos.y+yo]);
 			}
 		}
 		return list;

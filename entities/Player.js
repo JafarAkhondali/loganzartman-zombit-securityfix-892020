@@ -115,10 +115,10 @@ Player = Entity.extend(function(x,y,name,owner){
 	*/
 	control: function(dlt) {
 		//accept keyboard input
-		if (this.owner.keys[VK_A]) {this.image=imgPlayer_A;this.xs-=d(this.spdInc*dlt);}
-		if (this.owner.keys[VK_D]) {this.image=imgPlayer_D;this.xs+=d(this.spdInc*dlt);}
-		if (this.owner.keys[VK_W]) {this.image=imgPlayer_W;this.ys-=d(this.spdInc*dlt);}
-		if (this.owner.keys[VK_S]) {this.image=imgPlayer_S;this.ys+=d(this.spdInc*dlt);}
+		if (this.owner.keys[VK_A]) {this.image=imgPlayer_A;this.xs-=(this.spdInc*dlt);}
+		if (this.owner.keys[VK_D]) {this.image=imgPlayer_D;this.xs+=(this.spdInc*dlt);}
+		if (this.owner.keys[VK_W]) {this.image=imgPlayer_W;this.ys-=(this.spdInc*dlt);}
+		if (this.owner.keys[VK_S]) {this.image=imgPlayer_S;this.ys+=(this.spdInc*dlt);}
 
 		//inv selection keys
 		for (var nk=49; nk<58; nk++) {
@@ -149,12 +149,13 @@ Player = Entity.extend(function(x,y,name,owner){
 			}
 		}
 
-		if (this.owner.mouseLeft) {
-			this.viewControl = Math.max(0, this.viewControl-0.05);
-		}
-		else {
-			this.viewControl = Math.min(1, this.viewControl+0.05);
-		}
+		this.viewControl = 1.0;
+		// if (this.owner.mouseLeft) {
+		// 	this.viewControl = Math.max(0, this.viewControl-0.05);
+		// }
+		// else {
+		// 	this.viewControl = Math.min(1, this.viewControl+0.05);
+		// }
 
 		if (this.owner.scrolltotal!=0) {
 			var invpos = (this.inv.selected+this.owner.scrolltotal)%this.inv.size;

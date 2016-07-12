@@ -14,6 +14,7 @@ BulletSpark = Particle.extend(function(x,y,xs,ys,col,life) {
 	this.height = 0;
 
 	this.type = PARTICLE;
+	entityManager.countEntity(this);
 })
 .statics({
 	img: (function(){

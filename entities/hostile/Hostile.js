@@ -1,5 +1,13 @@
 T_SEARCH=-1;
 var TOO_FAR = 1000;
+
+var AIState = {
+	length: 4,
+	NULL: 0,
+	SEARCH: 1,
+	PATHFIND: 2,
+	DIRECT: 3
+};
 Hostile = Entity.extend(function(x,y,vr){
 	this.target = T_SEARCH;
 	this.visionRadius = vr||50;
@@ -12,6 +20,7 @@ Hostile = Entity.extend(function(x,y,vr){
 	this.pathfinder = null;
 
 	this.otherCollides = true;
+	this.aiState = AIState.NULL;
 
 	if (typeof player !== "undefined") {
 		var dx = player.x-this.x;
@@ -41,6 +50,7 @@ Hostile = Entity.extend(function(x,y,vr){
 
 		//if the hostile is searching for a target, see if it can target the nearby player
 		if (this.target===T_SEARCH) { //need to find a target (the player for now)
+			this.aiState = AIState.SEARCH;
 			var nearby = this.getNearby(2);
 			if (nearby.indexOf(player) >= 0) {
 				//todo: raycast for line of sight
@@ -52,6 +62,7 @@ Hostile = Entity.extend(function(x,y,vr){
 		}
 		//the hostile has a target, follow it
 		else {
+			this.aiState = AIState.NULL;
 			var targ = getEntityReference(this.target);
 
 			//sanity check
@@ -64,7 +75,8 @@ Hostile = Entity.extend(function(x,y,vr){
 			var targetDir = 0;
 
 			//if the target is some distance away, get direction from the pathfinder
-			if (targetDist > tileWidth*2 && this.pathfinder !== null) {
+			if (targetDist > tileWidth*3 && this.pathfinder !== null) {
+				this.aiState = AIState.PATHFIND;
 				var targetDx = this.pathfinder.getBestDirection(
 					Math.floor(this.x/tileWidth),
 					Math.floor(this.y/tileHeight)
@@ -79,6 +91,7 @@ Hostile = Entity.extend(function(x,y,vr){
 			}
 			//if the target is close by, move straight towards it
 			else {
+				this.aiState = AIState.DIRECT;
 				targetDir = Util.pointDir(this.x,this.y,targ.x,targ.y);
 			}
 

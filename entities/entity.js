@@ -47,9 +47,14 @@ Entity = klass(function (x,y,noreg) {
 		var sx = Math.abs(dlt*this.xs);
 		var sy = Math.abs(dlt*this.ys);
 
-		//move for xspeed
-		var xm = this.xs>0?1:-1;
-		for (var xx=0; xx<~~sx; xx++) {
+		//integrated x/y movement
+		var xm = this.xs > 0 ? 1 : -1;
+		var ym = this.ys > 0 ? 1 : -1;
+		var mm = Math.max(sx,sy);
+		if (Math.abs(sx) > Math.abs(sy)) ym /= sx/sy;
+		else xm /= sy/sx;
+		for (var i=0; i<~~mm; i++) {
+			//x step and collision
 			var ctile = tileAt(this.x+xm+(xm*this.width*0.5),this.y);
 			if (ctile!==null && !ctile.solid) {
 				this.x+=xm;
@@ -59,13 +64,8 @@ Entity = klass(function (x,y,noreg) {
 				this.xs=0;
 				break;
 			}
-		}
-		var curtile = tileAt(this.x+(this.xs*dlt)%1+(xm*this.width*0.5),this.y);
-		if (curtile!==null && !curtile.solid) {this.x+=(this.xs*dlt)%1;}
 
-		//move for yspeed
-		var ym = this.ys>0?1:-1;
-		for (var yy=0; yy<~~sy; yy++) {
+			//y step and collision
 			var ctile = tileAt(this.x,this.y+ym+(ym*this.height*0.5));
 			if (ctile!==null && !ctile.solid) {
 				this.y+=ym;
@@ -76,6 +76,9 @@ Entity = klass(function (x,y,noreg) {
 				break;
 			}
 		}
+		//fractional movements
+		var curtile = tileAt(this.x+(this.xs*dlt)%1+(xm*this.width*0.5),this.y);
+		if (curtile!==null && !curtile.solid) {this.x+=(this.xs*dlt)%1;}
 		curtile = tileAt(this.x,this.y+((this.ys*dlt)%1)+(ym*this.height*0.5));
 		if (curtile!==null && !curtile.solid) {this.y+=(this.ys*dlt)%1;}
 

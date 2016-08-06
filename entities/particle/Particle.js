@@ -9,6 +9,7 @@ Particle = klass(function(x,y,xs,ys,life) {
 	if (typeof imgBloodSplat !== "undefined") this.image = imgBloodSplat;
 
 	this.depth = 1;
+	this.friction = 0;
 	this.gravity = 0;
 
 	this.type = PARTICLE;
@@ -18,6 +19,8 @@ Particle = klass(function(x,y,xs,ys,life) {
 		this.x+=this.xs;
 		this.y+=this.ys;
 		this.ys+=this.gravity;
+		this.xs *= 1-this.friction;
+		this.ys *= 1-this.friction;
 
 		this.life-=1;
 		if (this.life<0) {this.destroy();}

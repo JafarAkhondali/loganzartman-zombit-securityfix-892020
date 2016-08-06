@@ -38,6 +38,8 @@ function StaticLight(x,y,col,size,brightness,life,img) { //a light that is drawn
 	this.brightness = brightness;
 	this.img = generateLightImage(col,size,brightness,img);
 	this.life = life ? life : Infinity;
+	this.maxlife = this.life;
+	this.destroyOnDie = false;
 	this.getX = function() {return this.x;};
 	this.getY = function() {return this.y;};
 	this.resetLife = function(t) {this.life = t; this.brightness = 1;};
@@ -50,6 +52,8 @@ function EntityLight(entity,col,size,brightness,life,img) { //a light that follo
 	this.brightness = brightness;
 	this.img = generateLightImage(col,size,brightness,img);
 	this.life = life ? life : Infinity;
+	this.maxlife = this.life;
+	this.destroyOnDie = false;
 	this.getX = function() {return this.entity.x;};
 	this.getY = function() {return this.entity.y;};
 	this.resetLife = function(t) {this.life = t; this.brightness = 1;};
@@ -63,6 +67,7 @@ function SpecialLightContainer(light) { //a light that has a custom drawing func
 	this.col = this.light.col||null;
 	this.brightness = this.light.brightness||null;
 	this.life = this.light.life;
+	this.maxlife = this.life;
 	this.resetLife = function(t) {this.life = t; this.brightness = 1;};
 	//define this.drawLight(dest,[brightness])
 }
@@ -112,11 +117,16 @@ function drawAllLights(dest,gbrightness,mode) {
 					lightArray[i].drawLight(dest,x-viewX,y-viewY,gbrightness,mode);
 				}
 				else {
-					drawLight(dest,x-viewX,y-viewY,lightArray[i].col,s,lightArray[i].brightness*gbrightness,mode,lightArray[i].img);
+					drawLight(dest,x-viewX,y-viewY,lightArray[i].col,s,lightArray[i].brightness*gbrightness*(lightArray[i].life/lightArray[i].maxlife),mode,lightArray[i].img);
 				}
 			}
 
-			if (lightArray[i].life-- <= 0) lightArray[i].brightness = 0;
+			if (lightArray[i].life-- <= 0) {
+				lightArray[i].brightness = 0;
+				if (lightArray[i].destroyOnDie) {
+					unregisterLight(lightArray[i]);
+				}
+			}
 		}
 	}
 	if (mode>0) {ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;}

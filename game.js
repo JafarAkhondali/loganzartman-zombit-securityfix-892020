@@ -32,9 +32,10 @@ var spawnEnabled = true;
 var filterStrength = 10, fpsSampleSize = 20, fpsSampleTimer = 0;
 var frameTime = 0, lastLoop = new Date(), thisLoop;
 var fps = targetFPS;
+var globalTimescale = 1.0;
 
-var VERSION = 137;
-var SUBVER = "close quarters";
+var VERSION = 138;
+var SUBVER = "go edition";
 
 particlesEnabled = true; //duh
 
@@ -62,22 +63,23 @@ function init() {
 
 	reinitCanvases();
 
-	LevelFactory.fromFile("level/menu.json", function(level){
+	LevelFactory.fromFile("level/menu.json", function completed(level){
 		if (level) {
 			menuLevel = level;
-			menuLevel.cache = new LevelCache(menuLevel, 9, function(p){
+			menuLevel.cache = new LevelCache(menuLevel, 9, function progress(p){
 
-			}, function() {
-
+			}, function completed() {
+				//parse URL flags
+				var loc = document.location.href;
+				_urlFlags = loc.lastIndexOf("#")>loc.lastIndexOf("/")?loc.substring(loc.lastIndexOf("#")+1).split("&"):"";
+				if (_urlFlags.indexOf("nointro")>=0) {cleanupGame();}
+				if (_urlFlags.indexOf("nomusic")<0) {/*setTimeout(startPlaylist,4900);*/}
 			});
 		}
+		else {
+			Interface.showAlert("Failed to load menu.<br>Please report to developer or try reloading.");
+		}
 	});
-
-	//parse URL flags
-	var loc = document.location.href;
-	uArgs = loc.lastIndexOf("#")>loc.lastIndexOf("/")?loc.substring(loc.lastIndexOf("#")+1).split("&"):"";
-	if (uArgs.indexOf("nointro")>=0) {dmode = MENU;}
-	if (uArgs.indexOf("nomusic")<0) {/*setTimeout(startPlaylist,4900);*/}
 
 	//initialize drawing buffers for lighting
 	initLight();

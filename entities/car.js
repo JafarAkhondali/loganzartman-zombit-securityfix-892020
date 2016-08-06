@@ -11,6 +11,8 @@ var Car = Entity.extend(function(x,y){
 	this.stopped = false;
 	this.stopping = false;
 	this.y0 = this.y;
+
+	this.moved = _urlFlags.indexOf("nointro")>=0;
 })
 .methods({
 	step: function(delta) {

@@ -305,7 +305,7 @@ function render() {
                 ctx.textAlign = 'left';
             }
 
-            if (gameTime < FADE_IN_TIME + SCREEN_BLACK_TIME) {
+            if (gameTime < FADE_IN_TIME + SCREEN_BLACK_TIME && _urlFlags.indexOf("nointro")<0) {
                 if (gameTime > SCREEN_BLACK_TIME) ctx.globalAlpha = 1-(gameTime-SCREEN_BLACK_TIME)/FADE_IN_TIME;
                 else ctx.globalAlpha = 1;
                 ctx.fillStyle = "rgb(10,9,9)";

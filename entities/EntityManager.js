@@ -299,10 +299,10 @@ onScriptsLoaded.push(function(){
 });
 
 //include entities
-include("entities/Entity.js");
+include("entities/entity.js");
 include("entities/Player.js");
 include("entities/LaserRenderer.js");
-include("entities/Car.js");
+include("entities/car.js");
 include("entities/DroppedItem.js");
 include("entities/hostile/Hostile.js");
 include("entities/hostile/Zombie.js");

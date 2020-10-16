@@ -194,7 +194,7 @@ function loadScripts() {
 	include("level/Tile.js");
 	include("main.js");
 	include("entities/EntityManager.js");
-	include("level/Pathfinder.js");
+	include("level/pathfinder.js");
 	include("render.js");
 	include("caster.js");
 	include("light.js");

@@ -158,7 +158,7 @@ Player = Entity.extend(function(x,y,name,owner){
 		// }
 
 		if (this.owner.scrolltotal!=0) {
-			var invpos = (this.inv.selected+this.owner.scrolltotal)%this.inv.size;
+			var invpos = (this.inv.selected+(~~this.owner.scrolltotal))%this.inv.size;
 			this.inv.select(invpos<0?this.inv.size+invpos:invpos);
 			this.owner.scrolltotal = 0;
 		}

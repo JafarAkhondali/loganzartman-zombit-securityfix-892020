@@ -34,8 +34,8 @@ var frameTime = 0, lastLoop = new Date(), thisLoop;
 var fps = targetFPS;
 var globalTimescale = 1.0;
 
-var VERSION = 138;
-var SUBVER = "go edition";
+var VERSION = 139;
+var SUBVER = "classic edition";
 
 particlesEnabled = true; //duh
 
